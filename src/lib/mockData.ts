@@ -73,6 +73,18 @@ const mockExperience: Experience[] = [
     role: "Assistant Professor",
     description: "Began academic career in 2015, teaching and conducting research in networking and communication systems. Published extensively in top-tier journals.",
   },
+  {
+    company: "Academic Journals & Conferences",
+    duration: "2024 - 2025",
+    role: "Reviewer & Guest Editor",
+    description: "Served as Reviewer, Session Chair, and Guest Editor for multiple top-tier international journals and conferences.",
+  },
+  {
+    company: "International Conferences (ICCCNT, ICICV, ICPCSN, ICREC)",
+    duration: "2024 - 2025",
+    role: "Conference Chair & Presenter",
+    description: "Presented research and chaired sessions at 16th ICCCNT 2025, 6th ICICV 2025, 4th IC Networks & Cryptology, ICPCSN 2025, ICAICCIT 2024, and 2nd WCONF.",
+  },
 ];
 
 const mockResearchPapers: ResearchPaper[] = [
@@ -245,6 +257,54 @@ const mockProjects: PortfolioProject[] = [
     category: "Quantum Computing",
     image: "/assets/images/latest-portfolio/portfoli-img-4.jpg",
     description: "Research project on quantum cryptography techniques for secure communication in IoT networks.",
+    link: "#",
+  },
+  {
+    id: "5",
+    title: "Device to Analyse Cement Quality",
+    category: "IoT & Industrial",
+    image: "/assets/images/latest-portfolio/portfoli-img-1.jpg",
+    description: "A patented hardware device utilizing localized sensors to analyze the quality metrics of cement.",
+    link: "#",
+  },
+  {
+    id: "6",
+    title: "Smart Logistics Tracking and Monitoring Device",
+    category: "IoT & Supply Chain",
+    image: "/assets/images/latest-portfolio/portfoli-img-2.jpg",
+    description: "A patented smart logistics tracking and remote monitoring device utilizing GPS and cellular IoT connectivity.",
+    link: "#",
+  },
+  {
+    id: "7",
+    title: "IoT Weather Station Airship",
+    category: "IoT & Environment",
+    image: "/assets/images/latest-portfolio/portfoli-img-3.jpg",
+    description: "A patented aerial IoT weather station airship capable of comprehensive atmospheric data collection.",
+    link: "#",
+  },
+  {
+    id: "8",
+    title: "Device For Measuring Ph Value of Fluid",
+    category: "Hardware Sensor",
+    image: "/assets/images/latest-portfolio/portfoli-img-4.jpg",
+    description: "A patented hardware sensor designed for highly accurate real-time measurement of fluid pH values.",
+    link: "#",
+  },
+  {
+    id: "9",
+    title: "Noise Pollution and Light Pollution Control System",
+    category: "Smart City",
+    image: "/assets/images/latest-portfolio/portfoli-img-1.jpg",
+    description: "A patented smart city architecture system for monitoring and mitigating urban noise and light pollution.",
+    link: "#",
+  },
+  {
+    id: "10",
+    title: "AI Based Brain Cancer Detection Device",
+    category: "AI & Healthcare",
+    image: "/assets/images/latest-portfolio/portfoli-img-2.jpg",
+    description: "A patented diagnostic tool leveraging neural networks for early-stage brain cancer detection.",
     link: "#",
   },
 ];

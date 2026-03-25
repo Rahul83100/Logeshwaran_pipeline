@@ -32,8 +32,8 @@ export default function CounterStats({ profile }: CounterStatsProps) {
 
   const counters = [
     { value: profile.projectsCompleted, suffix: "+", label: "Research Publications" },
-    { value: 10, suffix: "+", label: "Books Published" },
-    { value: profile.clientReviews, suffix: "+", label: "Patents Granted" },
+    { value: 10, suffix: "+", label: "Patents Granted" },
+    { value: profile.clientReviews, suffix: "+", label: "Awards & Recognitions" },
     { value: profile.happyClients, suffix: "+", label: "Google Scholar Citations" },
   ];
 

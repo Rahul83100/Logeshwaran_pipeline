@@ -32,9 +32,6 @@ export default async function Home() {
       {/* Banner / Hero */}
       <Banner profile={profile} />
 
-      {/* Service Cards */}
-      <ServiceCards skills={skills} />
-
       {/* Counter Stats */}
       <CounterStats profile={profile} />
 
@@ -49,9 +46,6 @@ export default async function Home() {
 
       {/* Portfolio Grid */}
       <PortfolioGrid projects={projects} />
-
-      {/* Testimonial Slider */}
-      <TestimonialSlider testimonials={testimonials} />
 
       {/* Contact Form */}
       <ContactForm />
