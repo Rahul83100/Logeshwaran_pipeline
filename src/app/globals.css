@@ -1,26 +1,103 @@
-@import "tailwindcss";
+/* 
+ * Global Styles for Logishoren Portfolio
+ * The primary styling comes from the Reeni template CSS loaded via <link> tags in layout.tsx
+ * This file is for additional custom styles and overrides only
+ */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============ ADMIN PANEL STYLES ============ */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.admin-sidebar {
+  width: 260px;
+  background: #1a1a2e;
+  color: #fff;
+  padding: 20px;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.admin-content {
+  margin-left: 260px;
+  padding: 30px;
+  flex: 1;
+  background: #f5f5f5;
+  min-height: 100vh;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.admin-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+.admin-card h3 {
+  margin-bottom: 16px;
+  font-size: 18px;
+  color: #333;
+}
+
+/* ============ RBAC STYLES ============ */
+.access-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.access-banner button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.private-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: #667eea;
+}
+
+.private-badge i {
+  font-size: 12px;
+}
+
+/* ============ CUSTOM OVERRIDES ============ */
+.page-stub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.page-stub h2 {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.page-stub p {
+  font-size: 16px;
+  color: #666;
 }
