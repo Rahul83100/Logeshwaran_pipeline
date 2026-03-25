@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 /* 
  * Global Styles for Logishoren Portfolio
  * The primary styling comes from the Reeni template CSS loaded via <link> tags in layout.tsx
@@ -108,7 +109,7 @@
    These styles will be merged with Anagha's portfolio CSS later.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 
 /* ---------- CSS Variables ---------- */
 :root {

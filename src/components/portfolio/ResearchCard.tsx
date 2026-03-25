@@ -9,9 +9,8 @@ export default function ResearchCard({ paper }: ResearchCardProps) {
   return (
     <div className="col-lg-6 col-md-6 col-sm-12">
       <div
-        className={`education-experience-card tmponhover tmp-scroll-trigger tmp-fade-in animation-order-1 ${
-          paper.is_private ? "private-paper-overlay" : ""
-        }`}
+        className={`education-experience-card tmponhover tmp-scroll-trigger tmp-fade-in animation-order-1 ${paper.is_private ? "private-paper-overlay" : ""
+          }`}
       >
         {paper.is_private && (
           <div className="lock-badge">
@@ -37,7 +36,7 @@ export default function ResearchCard({ paper }: ResearchCardProps) {
             : paper.abstract}
         </p>
         {paper.is_private ? (
-          <Link href="/access-request" className="request-access-btn" style={{ marginTop: "10px", display: "inline-flex" }}>
+          <Link href="/request-access" className="request-access-btn" style={{ marginTop: "10px", display: "inline-flex" }}>
             <i className="fa-solid fa-lock"></i> Request Access
           </Link>
         ) : (
