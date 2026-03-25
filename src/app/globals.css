@@ -1,103 +1,437 @@
-/* 
- * Global Styles for Logishoren Portfolio
- * The primary styling comes from the Reeni template CSS loaded via <link> tags in layout.tsx
- * This file is for additional custom styles and overrides only
- */
+/* ============================================================
+   RBAC System Styles
+   Matching the Reeni template's dark premium aesthetic.
+   These styles will be merged with Anagha's portfolio CSS later.
+   ============================================================ */
 
-/* ============ ADMIN PANEL STYLES ============ */
-.admin-layout {
-  display: flex;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ---------- CSS Variables ---------- */
+:root {
+  --rbac-bg: #0a0a0f;
+  --rbac-surface: #12121a;
+  --rbac-surface-hover: #1a1a26;
+  --rbac-border: #2a2a3a;
+  --rbac-text: #e4e4e8;
+  --rbac-text-secondary: #9393a5;
+  --rbac-accent: #6c5ce7;
+  --rbac-accent-hover: #7f70f0;
+  --rbac-accent-glow: rgba(108, 92, 231, 0.25);
+  --rbac-success: #00d68f;
+  --rbac-success-bg: rgba(0, 214, 143, 0.1);
+  --rbac-error: #ff5e5e;
+  --rbac-error-bg: rgba(255, 94, 94, 0.1);
+  --rbac-radius: 12px;
+  --rbac-radius-sm: 8px;
+  --rbac-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Reset & Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--rbac-bg);
+  color: var(--rbac-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---------- RBAC Page Layout ---------- */
+.rbac-page {
   min-height: 100vh;
-}
-
-.admin-sidebar {
-  width: 260px;
-  background: #1a1a2e;
-  color: #fff;
-  padding: 20px;
-  position: fixed;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-.admin-content {
-  margin-left: 260px;
-  padding: 30px;
-  flex: 1;
-  background: #f5f5f5;
-  min-height: 100vh;
-}
-
-.admin-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  margin-bottom: 20px;
-}
-
-.admin-card h3 {
-  margin-bottom: 16px;
-  font-size: 18px;
-  color: #333;
-}
-
-/* ============ RBAC STYLES ============ */
-.access-banner {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  padding: 2rem 1rem;
+  background:
+    radial-gradient(circle at 20% 20%, var(--rbac-accent-glow), transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(108, 92, 231, 0.08), transparent 50%),
+    var(--rbac-bg);
 }
 
-.access-banner button {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #fff;
-  padding: 4px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
+.rbac-container {
+  width: 100%;
+  max-width: 540px;
+  animation: rbacFadeIn 0.6s ease-out;
 }
 
-.private-badge {
+@keyframes rbacFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Page Header ---------- */
+.rbac-page-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.rbac-back-link {
+  display: inline-block;
+  color: var(--rbac-text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  transition: color var(--rbac-transition);
+}
+
+.rbac-back-link:hover {
+  color: var(--rbac-accent);
+}
+
+.rbac-page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, #fff, var(--rbac-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.rbac-page-subtitle {
+  color: var(--rbac-text-secondary);
+  font-size: 0.95rem;
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ---------- Form ---------- */
+.rbac-form {
+  background: var(--rbac-surface);
+  border: 1px solid var(--rbac-border);
+  border-radius: var(--rbac-radius);
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.rbac-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.rbac-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--rbac-text);
+}
+
+.rbac-required {
+  color: var(--rbac-accent);
+}
+
+.rbac-input,
+.rbac-textarea {
+  width: 100%;
+  background: var(--rbac-bg);
+  border: 1px solid var(--rbac-border);
+  border-radius: var(--rbac-radius-sm);
+  padding: 0.75rem 1rem;
+  color: var(--rbac-text);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color var(--rbac-transition), box-shadow var(--rbac-transition);
+  outline: none;
+}
+
+.rbac-input:focus,
+.rbac-textarea:focus {
+  border-color: var(--rbac-accent);
+  box-shadow: 0 0 0 3px var(--rbac-accent-glow);
+}
+
+.rbac-input:disabled,
+.rbac-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.rbac-input::placeholder,
+.rbac-textarea::placeholder {
+  color: var(--rbac-text-secondary);
+  opacity: 0.6;
+}
+
+.rbac-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.rbac-code-input {
+  font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+  font-size: 1.25rem;
+  letter-spacing: 0.15em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.rbac-hint {
+  font-size: 0.8rem;
+  color: var(--rbac-text-secondary);
+  margin-top: 0.5rem;
+}
+
+/* ---------- Buttons ---------- */
+.rbac-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(102, 126, 234, 0.1);
-  border: 1px solid rgba(102, 126, 234, 0.3);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  color: #667eea;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--rbac-accent);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.85rem 2rem;
+  border: none;
+  border-radius: var(--rbac-radius-sm);
+  cursor: pointer;
+  transition: background var(--rbac-transition), box-shadow var(--rbac-transition), transform var(--rbac-transition);
 }
 
-.private-badge i {
-  font-size: 12px;
+.rbac-btn:hover:not(:disabled) {
+  background: var(--rbac-accent-hover);
+  box-shadow: 0 4px 20px var(--rbac-accent-glow);
+  transform: translateY(-1px);
 }
 
-/* ============ CUSTOM OVERRIDES ============ */
-.page-stub {
+.rbac-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.rbac-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.rbac-btn-submit {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* ---------- Spinner ---------- */
+.rbac-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: rbacSpin 0.6s linear infinite;
+}
+
+@keyframes rbacSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Success Card ---------- */
+.rbac-success-card {
+  background: var(--rbac-surface);
+  border: 1px solid var(--rbac-border);
+  border-radius: var(--rbac-radius);
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+
+.rbac-success-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  background: var(--rbac-success-bg);
+  color: var(--rbac-success);
+  font-size: 1.75rem;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 60vh;
+}
+
+.rbac-success-card h3 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.rbac-success-card p {
+  color: var(--rbac-text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* ---------- Error Message ---------- */
+.rbac-error-message {
+  background: var(--rbac-error-bg);
+  border: 1px solid rgba(255, 94, 94, 0.2);
+  border-radius: var(--rbac-radius-sm);
+  padding: 0.75rem 1rem;
+  color: var(--rbac-error);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ---------- Links ---------- */
+.rbac-link {
+  color: var(--rbac-accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--rbac-transition);
+}
+
+.rbac-link:hover {
+  color: var(--rbac-accent-hover);
+  text-decoration: underline;
+}
+
+/* ---------- Page Footer ---------- */
+.rbac-page-footer {
   text-align: center;
-  padding: 40px 20px;
+  margin-top: 1.5rem;
+  color: var(--rbac-text-secondary);
+  font-size: 0.875rem;
 }
 
-.page-stub h2 {
-  font-size: 32px;
-  margin-bottom: 12px;
+.rbac-form-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rbac-border);
+  color: var(--rbac-text-secondary);
+  font-size: 0.875rem;
 }
 
-.page-stub p {
-  font-size: 16px;
-  color: #666;
+/* ---------- Private Content Badge ---------- */
+.rbac-private-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: var(--rbac-surface);
+  border: 1px solid var(--rbac-border);
+  border-radius: var(--rbac-radius-sm);
+  text-align: center;
+}
+
+.rbac-badge-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--rbac-text-secondary);
+  font-size: 0.85rem;
+}
+
+.rbac-badge-icon {
+  color: var(--rbac-accent);
+  font-size: 0.9rem;
+}
+
+.rbac-badge-text {
+  font-weight: 500;
+}
+
+.rbac-badge-link {
+  color: var(--rbac-accent);
+  font-size: 0.8rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--rbac-transition);
+}
+
+.rbac-badge-link:hover {
+  color: var(--rbac-accent-hover);
+  text-decoration: underline;
+}
+
+/* ---------- Access Status Banner ---------- */
+.rbac-access-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, var(--rbac-accent), #4834d4);
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  z-index: 9999;
+  box-shadow: 0 -4px 20px rgba(108, 92, 231, 0.3);
+}
+
+.rbac-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.rbac-banner-icon {
+  font-size: 1rem;
+}
+
+.rbac-banner-text {
+  color: #fff;
+}
+
+.rbac-banner-revoke {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--rbac-transition);
+}
+
+.rbac-banner-revoke:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .rbac-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .rbac-page-title {
+    font-size: 1.6rem;
+  }
+
+  .rbac-form {
+    padding: 1.5rem;
+  }
+
+  .rbac-code-input {
+    font-size: 1.1rem;
+  }
+
+  .rbac-access-banner {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+  }
 }
