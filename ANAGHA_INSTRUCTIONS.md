@@ -7,11 +7,16 @@ Your primary goal is to use your Antigravity AI to migrate the missing data from
 
 **CRITICAL RULE: Do not make any structural, architectural, backend, or layout changes to the website. The authentication and layout systems are finalized. You are only updating the data and fixing the hero image.**
 
+### Important Links for You and Antigravity
+Here are the critical links you will need for this task (if your Antigravity agent needs them for context):
+- **Project Repository:** `https://github.com/Rahul83100/Logeshwaran_pipeline.git`
+- **Christ University Faculty Source:** Visit the official Christ University (Deemed to be University) website and navigate to Dr. Logeshwaran J's faculty profile page to find the original publication and achievement lists.
+
 ## Step-by-Step Instructions
 
 ### Step 1: Review the Current Site
-- Pull the latest code from this repository.
-- Run `npm run dev` to start the localhost server.
+- Clone or pull the latest code from the repository: `git clone https://github.com/Rahul83100/Logeshwaran_pipeline.git`
+- Run `npm install` and then `npm run dev` to start the localhost server.
 - Browse the sections (Articles, Book Chapters, Patents, Awards, etc.) to see exactly which sub-details and lists are currently pending or missing context.
 
 ### Step 2: Capture the Source Data
@@ -22,10 +27,10 @@ Your primary goal is to use your Antigravity AI to migrate the missing data from
 - Open your Antigravity assistant.
 - Upload all the screenshots you took.
 - Give Antigravity the following exact prompt:
-  > *"Here are the screenshots of Dr. Logeshwaran's full academic details from the university portal. Please update all the pending sub-details and data arrays in the website's code to match this information perfectly. **CRITICAL:** Do NOT change the existing website layout, colors, or backend architecture. Only update the data/text entries to ensure the site is fully populated."*
+  > *"Here are the screenshots of Dr. Logeshwaran's full academic details from the university portal. Please update all the pending sub-details and data arrays in the website's code to match this information perfectly. Use the repository context if needed. **CRITICAL:** Do NOT change the existing website layout, colors, or backend architecture. Only update the data/text entries to ensure the site is fully populated."*
 
 ### Step 4: Fix the Profile Image Animation
 - In the same or a new prompt, ask Antigravity to fix the alignment of Dr. Logeshwaran's profile image on the homepage.
 - Explicitly ask Antigravity to **add the live effect / infinite loop animation** that was originally present in the base template so the website looks dynamic and premium again.
 
-Once Antigravity completes these updates, verify the data on your localhost, commit the changes, and push them to the repository!
+Once Antigravity completes these updates, verify the data on your localhost, commit the changes, and push them back to the GitHub repository!
