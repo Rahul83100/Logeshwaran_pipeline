@@ -16,16 +16,17 @@ export default function Banner({ profile }: BannerProps) {
           <div className="row align-items-center">
             <div className="col-lg-6 order-lg-2">
               <div className="banner-right-content">
-                <div className="image-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="image-wrapper hero-image-animated" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                   <Image
-                    className="tmp-scroll-trigger tmp-zoom-in animation-order-1"
+                    className="tmp-scroll-trigger tmp-zoom-in animation-order-1 hero-profile-img"
                     src={profile.bannerImage}
                     alt={profile.name}
                     width={450}
                     height={550}
                     priority
                     style={{
-                      maxWidth: '100%',
+                      width: '100%',
+                      maxWidth: '450px',
                       height: 'auto',
                       maxHeight: '550px',
                       objectFit: 'cover',
