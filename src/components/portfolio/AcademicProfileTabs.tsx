@@ -95,7 +95,7 @@ function AccordionItem({ item, index, expandedKey, setExpandedKey }: { item: any
     // Some simple yellow highlights for specific row content items if needed
     // The UI screenshot implies a yellowish background for the rows:
     return (
-        <div style={{ marginBottom: '15px', borderLeft: '4px solid #e60000', background: isExpanded ? '#f5f5dc' : '#f5f5dc', border: '1px solid #e0e0e0', borderLeftWidth: '4px', borderRadius: '4px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+        <div className="accordion-item-animated" style={{ marginBottom: '15px', borderLeft: '4px solid #e60000', background: isExpanded ? '#f5f5dc' : '#f5f5dc', border: '1px solid #e0e0e0', borderLeftWidth: '4px', borderRadius: '4px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
             <button
                 onClick={() => setExpandedKey(isExpanded ? null : (item.title + "-" + index))}
                 style={{ width: '100%', padding: '16px 20px', background: 'transparent', color: '#000', border: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', textAlign: 'left' }}
@@ -180,7 +180,7 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
 
                 <div className="row">
                     {/* Sticky Sidebar */}
-                    <div className="col-lg-4 col-md-5 d-none d-md-block">
+                    <div className="col-lg-6 col-md-6 d-none d-md-block">
                         <div style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '20px 0', position: 'sticky', top: '100px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
                             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                 {academicTabs.map((tabObj) => (
@@ -214,9 +214,9 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                     </div>
 
                     {/* Main Content Areas */}
-                    <div className="col-lg-8 col-md-7 mt-5 mt-md-0">
+                    <div className="col-lg-6 col-md-6 mt-5 mt-md-0">
                         {/* Profile Section */}
-                        <div id="profile" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
+                        <div id="profile" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px', minHeight: '420px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }} className="tmp-fade-in">
                             <h3 style={{ marginBottom: '20px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Personal Profile</h3>
                             <div style={{ display: 'flex', gap: '30px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
                                 <Image src={profile?.profileImage || "/assets/images/logo/man.png"} alt={profile?.name || "Profile"} width={150} height={150} style={{ borderRadius: '8px', border: '1px solid #eeeeee' }} />
@@ -227,7 +227,12 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
+                {/* Centered Data Cards Container */}
+                <div className="row justify-content-center mt-5">
+                    <div className="col-lg-10">
                         {/* Articles in Journals Section */}
                         <div id="articles" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
                             <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Articles in Journals</h3>
