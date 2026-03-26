@@ -15,7 +15,16 @@ Here are the critical links you will need for this task (if your Antigravity age
 ## Step-by-Step Instructions
 
 ### Step 1: Review the Current Site
-- Clone or pull the latest code from the repository: `git clone https://github.com/Rahul83100/Logeshwaran_pipeline.git`
+- Clone the repository (if you haven't): `git clone https://github.com/Rahul83100/Logeshwaran_pipeline.git`
+- **GET LATEST CODE:** If you already have it, run:
+  ```bash
+  git checkout develop
+  git pull origin develop
+  ```
+- **CREATE YOUR BRANCH:** Always work on your own branch:
+  ```bash
+  git checkout -b feature/anagha-data-populate
+  ```
 - Run `npm install` and then `npm run dev` to start the localhost server.
 - Browse the sections (Articles, Book Chapters, Patents, Awards, etc.) to see exactly which sub-details and lists are currently pending or missing context.
 
@@ -33,4 +42,16 @@ Here are the critical links you will need for this task (if your Antigravity age
 - In the same or a new prompt, ask Antigravity to fix the alignment of Dr. Logeshwaran's profile image on the homepage.
 - Explicitly ask Antigravity to **add the live effect / infinite loop animation** that was originally present in the base template so the website looks dynamic and premium again.
 
-Once Antigravity completes these updates, verify the data on your localhost, commit the changes, and push them back to the GitHub repository!
+Once Antigravity completes these updates, verify the data on your localhost.
+
+### Step 5: Review & Commit
+- **COMMIT LOCALLY:** When done, run:
+  ```bash
+  git add .
+  git commit -m "feat: populate academic data and fix profile animation"
+  ```
+- **STOP & NOTIFY RAHUL:** Do NOT push to GitHub yet. Send a message to Rahul to review your changes on your screen or via a screenshot.
+- **PUSH (ONLY AFTER APPROVAL):** Once Rahul says "OK", push your branch:
+  ```bash
+  git push origin feature/anagha-data-populate
+  ```

@@ -21,7 +21,11 @@ git clone https://github.com/Rahul83100/Logeshwaran_pipeline.git
 cd Logeshwaran_pipeline
 
 # ⚠️ ALWAYS pull the latest code before starting any work!
-git pull origin main
+git checkout develop
+git pull origin develop
+
+# 🌿 CREATE YOUR OWN BRANCH
+git checkout -b feature/meedhansh-auth-fix
 
 # Install dependencies (run this every time you pull)
 npm install
@@ -30,7 +34,7 @@ npm install
 npm run dev
 ```
 
-> **IMPORTANT:** Every single time you sit down to work, run `git pull origin main` first to make sure you have the latest code. Do NOT start making changes on outdated code.
+> **IMPORTANT:** Every single time you sit down to work, run the commands above to stay on `develop` and get the latest code. Do NOT start making changes on outdated code. Always use your `feature/meedhansh-auth-fix` branch for work.
 
 The site will be live at **http://localhost:3000**
 
@@ -209,15 +213,21 @@ The admin email is **Rahul's personal Gmail**. Since all approval/denial emails 
 ## 🚨 Git Rules — VERY IMPORTANT
 
 ```bash
-# ✅ You CAN do this:
+# ✅ ALWAYS work on your branch:
+git checkout feature/meedhansh-auth-fix
+
+# ✅ Stage and commit locally:
 git add .
 git commit -m "feat: add toast notifications and fix auth flow"
 
-# ❌ DO NOT do this without Rahul's permission:
-git push origin main
+# 🛑 STOP! Notify Rahul.
+# Do NOT push until Rahul has reviewed your work.
+
+# 🚀 Push ONLY after approval:
+git push origin feature/meedhansh-auth-fix
 ```
 
-**Only commit. Do NOT push until Rahul gives you the go-ahead.**
+**Only commit locally. Do NOT push until Rahul gives you the go-ahead.**
 
 ---
 
