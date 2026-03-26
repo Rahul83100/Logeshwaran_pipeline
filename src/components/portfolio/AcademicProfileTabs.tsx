@@ -60,7 +60,7 @@ const mappedPatents = mockPatents.map((p: any) => ({
 }));
 
 const mappedProjects = mockProjects.map((p: any) => ({
-    year: "1",
+    year: "",
     title: p.title,
     details: [
         { label: "Category", value: p.category },
@@ -95,7 +95,7 @@ function AccordionItem({ item, index, expandedKey, setExpandedKey }: { item: any
     // Some simple yellow highlights for specific row content items if needed
     // The UI screenshot implies a yellowish background for the rows:
     return (
-        <div style={{ marginBottom: '15px', borderLeft: '4px solid #e60000', background: isExpanded ? '#f5f5dc' : '#f5f5dc', border: '1px solid #e0e0e0', borderLeftWidth: '4px', borderRadius: '4px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+        <div className="accordion-item-animated" style={{ marginBottom: '15px', borderLeft: '4px solid #e60000', background: isExpanded ? '#f5f5dc' : '#f5f5dc', border: '1px solid #e0e0e0', borderLeftWidth: '4px', borderRadius: '4px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
             <button
                 onClick={() => setExpandedKey(isExpanded ? null : (item.title + "-" + index))}
                 style={{ width: '100%', padding: '16px 20px', background: 'transparent', color: '#000', border: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', textAlign: 'left' }}
@@ -152,6 +152,25 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    const scrollToSection = (e: any, id: string) => {
+        e.preventDefault();
+        setExpandedKey(null);
+        setActiveSection(id);
+        const element = document.getElementById(id);
+        if (element) {
+            const offset = 100; // Offset for sticky header
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = element.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    };
+
     // Helper function to render grouped data by year
     const renderYearGroup = (data: any[], typePrefix: string) => {
         const years = Array.from(new Set(data.map(item => item.year))).sort((a, b) => {
@@ -161,7 +180,7 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
 
         return years.map(year => (
             <div key={`${typePrefix}-${year}`} style={{ display: 'flex', gap: '20px', flexDirection: 'column', marginBottom: '30px' }}>
-                <div style={{ fontWeight: 700, fontSize: '18px', color: '#000', width: '100px' }}>{year}</div>
+                {year && <div style={{ fontWeight: 700, fontSize: '18px', color: '#000', width: '100px' }}>{year}</div>}
                 <div style={{ flex: 1, borderTop: '2px solid #e60000', paddingTop: '20px' }}>
                     {data.filter(item => item.year === year).map((item, index) => (
                         <AccordionItem key={`${typePrefix}-${year}-${index}`} item={item} index={index} expandedKey={expandedKey} setExpandedKey={setExpandedKey} />
@@ -180,14 +199,14 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
 
                 <div className="row">
                     {/* Sticky Sidebar */}
-                    <div className="col-lg-4 col-md-5 d-none d-md-block">
+                    <div className="col-lg-5 col-md-5 d-none d-md-block">
                         <div style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '20px 0', position: 'sticky', top: '100px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
                             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                 {academicTabs.map((tabObj) => (
                                     <li key={tabObj.name}>
                                         <a
                                             href={`#${tabObj.id}`}
-                                            onClick={() => setExpandedKey(null)}
+                                            onClick={(e) => scrollToSection(e, tabObj.id)}
                                             style={{
                                                 width: '100%',
                                                 textAlign: 'left',
@@ -214,20 +233,25 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                     </div>
 
                     {/* Main Content Areas */}
-                    <div className="col-lg-8 col-md-7 mt-5 mt-md-0">
+                    <div className="col-lg-7 col-md-7 mt-5 mt-md-0">
                         {/* Profile Section */}
-                        <div id="profile" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
-                            <h3 style={{ marginBottom: '20px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Personal Profile</h3>
-                            <div style={{ display: 'flex', gap: '30px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-                                <Image src={profile?.profileImage || "/assets/images/logo/man.png"} alt={profile?.name || "Profile"} width={150} height={150} style={{ borderRadius: '8px', border: '1px solid #eeeeee' }} />
-                                <div style={{ flex: 1, minWidth: '250px' }}>
-                                    <h4 style={{ margin: '0 0 5px 0', color: '#000' }}>{profile?.name || "Dr LOGESHWARAN J, ME, PhD"}</h4>
-                                    <p style={{ color: '#e60000', fontWeight: 600, textTransform: 'uppercase', fontSize: '14px', letterSpacing: '1px' }}>{profile?.subtitle || "ASSISTANT PROFESSOR"}</p>
-                                    <p style={{ color: '#666', marginTop: '15px' }}>{profile?.bio || "A dedicated researcher and professor specializing in artificial intelligence and machine learning."}</p>
+                        <div id="profile" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderTop: '6px solid #e60000', borderRadius: '12px', padding: '45px', marginBottom: '40px', boxShadow: '0 15px 45px rgba(0,0,0,0.1)', scrollMarginTop: '100px', minHeight: '420px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }} className="tmp-fade-in">
+                            <h3 style={{ marginBottom: '25px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '28px', fontWeight: 700 }}>Personal Profile</h3>
+                            <div style={{ display: 'flex', gap: '35px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                                <Image src={profile?.profileImage || "/assets/images/logo/man.png"} alt={profile?.name || "Profile"} width={160} height={160} style={{ borderRadius: '12px', border: '1px solid #eeeeee', boxShadow: '0 5px 15px rgba(0,0,0,0.05)' }} />
+                                <div style={{ flex: 1, minWidth: '280px' }}>
+                                    <h4 style={{ margin: '0 0 10px 0', color: '#000', fontSize: '26px' }}>{profile?.name || "Dr LOGESHWARAN J, ME, PhD"}</h4>
+                                    <p style={{ color: '#e60000', fontWeight: 650, textTransform: 'uppercase', fontSize: '15px', letterSpacing: '1.2px' }}>{profile?.subtitle || "ASSISTANT PROFESSOR"}</p>
+                                    <p style={{ color: '#555', marginTop: '18px', fontSize: '16px', lineHeight: '1.6' }}>{profile?.bio || "A dedicated researcher and professor specializing in artificial intelligence and machine learning."}</p>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
+                {/* Centered Data Cards Container */}
+                <div className="row justify-content-center mt-5">
+                    <div className="col-lg-10">
                         {/* Articles in Journals Section */}
                         <div id="articles" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
                             <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Articles in Journals</h3>

@@ -8,6 +8,28 @@ export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const scrollToSection = (e: any, targetId: string) => {
+    // Only smooth scroll if we are on the same page
+    if (window.location.pathname === "/") {
+      const id = targetId.replace("/#", "").replace("#", "");
+      const element = document.getElementById(id);
+      if (element) {
+        e.preventDefault();
+        setMobileMenuOpen(false);
+        const offset = 100; // Offset for sticky header
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+
   return (
     <>
       {/* Header */}
@@ -23,14 +45,14 @@ export default function Header() {
                 </div>
                 <nav className="tmp-mainmenu-nav d-none d-xl-block">
                   <ul className="tmp-mainmenu">
-                    <li><Link href="/#profile">Profile</Link></li>
-                    <li><Link href="/#articles">Journals</Link></li>
-                    <li><Link href="/#books">Books</Link></li>
-                    <li><Link href="/#conferences">Conferences</Link></li>
-                    <li><Link href="/#patents">Patents</Link></li>
-                    <li><Link href="/#projects">Projects</Link></li>
-                    <li><Link href="/#workshops">Workshops</Link></li>
-                    <li><Link href="/#awards">Awards</Link></li>
+                    <li><Link href="/#profile" onClick={(e) => scrollToSection(e, "profile")}>Profile</Link></li>
+                    <li><Link href="/#articles" onClick={(e) => scrollToSection(e, "articles")}>Journals</Link></li>
+                    <li><Link href="/#books" onClick={(e) => scrollToSection(e, "books")}>Books</Link></li>
+                    <li><Link href="/#conferences" onClick={(e) => scrollToSection(e, "conferences")}>Conferences</Link></li>
+                    <li><Link href="/#patents" onClick={(e) => scrollToSection(e, "patents")}>Patents</Link></li>
+                    <li><Link href="/#projects" onClick={(e) => scrollToSection(e, "projects")}>Projects</Link></li>
+                    <li><Link href="/#workshops" onClick={(e) => scrollToSection(e, "workshops")}>Workshops</Link></li>
+                    <li><Link href="/#awards" onClick={(e) => scrollToSection(e, "awards")}>Awards</Link></li>
                   </ul>
                 </nav>
                 <div className="tmp-header-right">
@@ -165,14 +187,14 @@ export default function Header() {
               </div>
             </div>
             <ul className="tmp-mainmenu">
-              <li><Link href="/#profile" onClick={() => setMobileMenuOpen(false)}>Profile</Link></li>
-              <li><Link href="/#articles" onClick={() => setMobileMenuOpen(false)}>Journals</Link></li>
-              <li><Link href="/#books" onClick={() => setMobileMenuOpen(false)}>Books</Link></li>
-              <li><Link href="/#conferences" onClick={() => setMobileMenuOpen(false)}>Conferences</Link></li>
-              <li><Link href="/#patents" onClick={() => setMobileMenuOpen(false)}>Patents</Link></li>
-              <li><Link href="/#projects" onClick={() => setMobileMenuOpen(false)}>Projects</Link></li>
-              <li><Link href="/#workshops" onClick={() => setMobileMenuOpen(false)}>Workshops</Link></li>
-              <li><Link href="/#awards" onClick={() => setMobileMenuOpen(false)}>Awards</Link></li>
+              <li><Link href="/#profile" onClick={(e) => scrollToSection(e, "profile")}>Profile</Link></li>
+              <li><Link href="/#articles" onClick={(e) => scrollToSection(e, "articles")}>Journals</Link></li>
+              <li><Link href="/#books" onClick={(e) => scrollToSection(e, "books")}>Books</Link></li>
+              <li><Link href="/#conferences" onClick={(e) => scrollToSection(e, "conferences")}>Conferences</Link></li>
+              <li><Link href="/#patents" onClick={(e) => scrollToSection(e, "patents")}>Patents</Link></li>
+              <li><Link href="/#projects" onClick={(e) => scrollToSection(e, "projects")}>Projects</Link></li>
+              <li><Link href="/#workshops" onClick={(e) => scrollToSection(e, "workshops")}>Workshops</Link></li>
+              <li><Link href="/#awards" onClick={(e) => scrollToSection(e, "awards")}>Awards</Link></li>
             </ul>
             <div className="social-wrapper mt--40">
               <span className="subtitle">Find with me</span>
