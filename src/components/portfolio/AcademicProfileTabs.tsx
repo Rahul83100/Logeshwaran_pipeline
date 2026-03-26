@@ -14,131 +14,80 @@ const academicTabs = [
     { name: "Awards / Achievements / Others", id: "awards" },
 ];
 
-const mockArticles = [
-    {
-        year: "2025",
-        title: "Toward Smart 5G and 6G: Standardization of AI-Native Network Architectures and Semantic Communication Protocols",
-        details: [
-            { label: "Name of Journal", value: "IEEE Communications Standards Magazine" },
-            { label: "Date Of Publication", value: "15-Aug-2025" },
-            { label: "Category", value: "Article in Research Journal" },
-            { label: "Author Name(s)", value: "LOGESHWARAN J, et al." },
-            { label: "Indexing Agency", value: "Web of Science and Scopus" },
-        ]
-    },
-    {
-        year: "2025",
-        title: "Optimizing resource management using hybrid metaheuristic algorithm for fog layer design in edge computing",
-        details: [
-            { label: "Name of Journal", value: "Systems and Soft Computing" },
-            { label: "Date Of Publication", value: "11-Jun-2025" },
-            { label: "Category", value: "Article in Research Journal" },
-            { label: "Sole Authored /Co Authored", value: "Co-Author" },
-            { label: "Author Name(s)", value: "LOGESHWARAN J, SANJAIKANTH E, SANTHOSH PARAMASIVAM, et al." },
-            { label: "URL", value: "https://www.sciencedirect.com/journal/systems-and-soft-computing" },
-            { label: "Indexing Agency", value: "Web of Science and Scopus" },
-        ]
-    },
-    { year: "2025", title: "An enhanced performance analysis of load based resource sharing framework for MIMO systems in 5G communication systems", details: [] },
-    { year: "2025", title: "An improved LSTM based thermal prediction and control algorithm for battery management system in hybrid electric vehicles", details: [] },
-    
-    // 2024
-    { year: "2024", title: "Design and Optimization of a MXene-Based Terahertz Surface Plasmon Resonance Sensor for Malaria Detection", details: [] },
-    { year: "2024", title: "Hybrid optimization for efficient 6G IoT traffic management and multi-routing strategy", details: [] },
-    { year: "2024", title: "Improving crop production using an agro-deep learning framework in precision agriculture", details: [] },
-    { year: "2024", title: "Multi-Model Traffic Forecasting in Smart Cities using Graph Neural Networks and Transformer-based Multi-Source Visual Fusion for Intelligent Transportation Management", details: [] },
-    { year: "2024", title: "A reliable inter-domain routing framework for autonomous systems using hybrid Blockchain", details: [] },
-    { year: "2024", title: "The feasibility analysis of load based resource optimization algorithm for cooperative communication in 5G wireless ad-hoc networks", details: [] },
-    { year: "2024", title: "Enhancing mobility management in 5G networks using deep residual LSTM model", details: [] }
-];
+import { mockResearchPapers, mockBookChapters, mockConferences, mockPatents, mockWorkshops, mockAwards, mockProjects } from "@/lib/mockData";
 
-const mockBooks = [
-    {
-        year: "2025",
-        title: "An Improved AI-Based Low Latency Data Transmission in 5G Communication Systems",
-        details: [
-            { label: "Type of Book", value: "Chapter" },
-            { label: "Title", value: "Lecture Notes in Networks and Systems" },
-            { label: "ISBN", value: "978-981-96-3313-5" },
-            { label: "Month/Year", value: "Jul 2025" }
-        ]
-    },
-    { year: "2025", title: "Energy Efficient Smart Scheduling for Multi-path Routing Using Deep Learning", details: [] }
-];
+const mappedArticles = mockResearchPapers.map((p: any) => ({
+    year: p.year,
+    title: p.title,
+    details: [
+        { label: "Journal", value: p.journal },
+        { label: "Authors", value: p.authors.join(', ') },
+        { label: "Abstract", value: p.abstract }
+    ]
+}));
 
-const mockConferences = [
-    // 2025
-    { year: "2025", title: "3rd International Conference on Intelligent Cyber Physical Systems and Internet of Things (ICoICI-2025)", details: [] },
-    { year: "2025", title: "Sixteenth International Conference on Computing, Communication and Networking Technologies (ICCCNT 2025)", details: [] },
-    { year: "2025", title: "Sixteenth International Conference on Computing, Communication and Networking Technologies (ICCCNT 2025)", details: [] },
-    { year: "2025", title: "Sixteenth International Conference on Computing, Communication and Networking Technologies (ICCCNT 2025)", details: [] },
-    { year: "2025", title: "6th International Conference on Intelligent Communication Technologies and Virtual Mobile Networks (ICICV-2025)", details: [] },
-    { year: "2025", title: "6th International Conference on Intelligent Communication Technologies and Virtual Mobile Networks (ICICV-2025)", details: [] },
-    { year: "2025", title: "4th International Conference On Networks And Cryptology", details: [] },
-    { year: "2025", title: "4th International Conference On Networks And Cryptology", details: [] },
-    { year: "2025", title: "International Conference on Pervasive Computing and Social Networking (ICPCSN-2025)", details: [] },
-    { year: "2025", title: "International Conference On Wireless Technologies,Networks And Science 2025", details: [] },
+const mappedBooks = mockBookChapters.map((p: any) => ({
+    year: p.year,
+    title: p.title,
+    details: [
+        { label: "Book Title", value: p.bookTitle },
+        { label: "ISBN", value: p.isbn },
+        { label: "Month/Year", value: p.month }
+    ]
+}));
 
-    // 2024
-    { year: "2024", title: "2024 2nd International Conference on Advances in Computation, Communication and Information Technology (ICAICCIT)", details: [] },
-    { year: "2024", title: "2024 2nd International Conference on Advances in Computation, Communication and Information Technology (ICAICCIT)", details: [] },
-    { year: "2024", title: "2024 2nd International Conference on Advances in Computation, Communication and Information Technology (ICAICCIT)", details: [] },
-    { year: "2024", title: "International Conference on Renewable Energy and Conservation (ICREC 2024)", details: [] },
-    { year: "2024", title: "2nd World Conference on Communication & Computing (WCONF)", details: [] },
-    { year: "2024", title: "15th International Conference on Computing Communication and Networking Technologies (ICCCNT)", details: [] },
-    { year: "2024", title: "15th International Conference on Computing Communication and Networking Technologies (ICCCNT)", details: [] },
-    { year: "2024", title: "15th International Conference on Computing Communication and Networking Technologies (ICCCNT)", details: [] },
-    { year: "2024", title: "15th International Conference on Computing Communication and Networking Technologies (ICCCNT)", details: [] }
-];
+const mappedConferences = mockConferences.map((p: any) => ({
+    year: p.year,
+    title: p.conference,
+    details: [
+        { label: "Presentation Title", value: p.presentationTitle || 'None' },
+        { label: "Role", value: p.role },
+        { label: "Organiser", value: p.organiser },
+        { label: "Level", value: p.level },
+        { label: "Date", value: p.date }
+    ]
+}));
 
-const mockPatents = [
-    // 2024
-    { year: "2024", title: "IOT INTEGRATED HEALTHCARE MONITORING AND ALERT SYSTEM", details: [] },
-    { year: "2024", title: "DEVICE TO ANALYSE CEMENT QUALITY", details: [] },
-    { year: "2024", title: "SOLAR POWERED AIR POLLUTION MONITORING SYSTEM", details: [] },
-    { year: "2024", title: "IMPORTANCE OF MARKETING RESEARCH IN ENHANCING THE SERVICE LEVEL OF MANUFACTURING COMPANY", details: [] },
-    { year: "2024", title: "SMART LOGISTICS TRACKING AND MONITORING DEVICE", details: [] },
-    { year: "2024", title: "IOT Whether Station Airship", details: [] },
-    { year: "2024", title: "IOT BASED HEART MONITORING SYSTEM", details: [] },
-    { year: "2024", title: "DEVICE FOR MEASURING PH VALUE OF FLUID", details: [] },
-    { year: "2024", title: "NOISE POLLUTION AND LIGHT POLLUTION CONTROL SYSTEM", details: [] },
-    { year: "2024", title: "AI BASED BRAIN CANCER DETECTION DEVICE", details: [] }
-];
+const mappedPatents = mockPatents.map((p: any) => ({
+    year: p.year,
+    title: p.title,
+    details: [
+        { label: "Inventors", value: p.inventors },
+        { label: "Granted Date", value: p.grantedDate },
+        { label: "Patent Number", value: p.patentNumber },
+        { label: "Field", value: p.fieldOfInvention }
+    ]
+}));
 
-const mockProjectsList = [
-    { year: "1", title: "Quantum Cryptography for Secure Communication in IoT Networks", details: [] }
-];
+const mappedProjects = mockProjects.map((p: any) => ({
+    year: "1",
+    title: p.title,
+    details: [
+        { label: "Category", value: p.category },
+        { label: "Description", value: p.description }
+    ]
+}));
 
-const mockWorkshops = [
-    {
-        year: "2025",
-        title: "Machine Learning from Data to Decisions",
-        details: [
-            { label: "Name of the Organiser", value: "EICT Academy IIT Roorkee" },
-            { label: "Level", value: "National" },
-            { label: "Role", value: "Participant" },
-            { label: "Date", value: "2025-09-17" },
-        ]
-    },
-    { year: "2025", title: "Foundations of Artificial Intelligence: Concepts, Techniques, and Applications", details: [] },
-    { year: "2025", title: "Exploring IoT in the Digital Era: From Smart Devices to Intelligent Systems", details: [] },
-    { year: "2025", title: "Faculty Development Programme 2025", details: [] },
-];
+const mappedWorkshops = mockWorkshops.map((p: any) => ({
+    year: p.year,
+    title: p.title,
+    details: [
+        { label: "Organiser", value: p.organiser },
+        { label: "Level", value: p.level },
+        { label: "Role", value: p.role },
+        { label: "Date", value: p.date }
+    ]
+}));
 
-const mockAwards = [
-    {
-        year: "2024",
-        title: "Reviewer",
-        details: [
-            { label: "Name of the Awards/Achievements", value: "Reviewer" },
-            { label: "Description", value: "Associate Reviewer in Discover Computing Journal associated with Springer Nature" },
-            { label: "Organisation", value: "Springer Nature" },
-            { label: "Month/Year", value: "18 October 2024" },
-        ]
-    },
-    { year: "2024", title: "World Top 2% Scientist (in 2024)", details: [] },
-    { year: "2024", title: "Guest Editor", details: [] },
-];
+const mappedAwards = mockAwards.map((p: any) => ({
+    year: p.year,
+    title: p.title,
+    details: [
+        { label: "Description", value: p.description },
+        { label: "Organisation", value: p.organisation },
+        { label: "Date", value: p.date }
+    ]
+}));
 
 function AccordionItem({ item, index, expandedKey, setExpandedKey }: { item: any, index: number, expandedKey: string | null, setExpandedKey: any }) {
     const isExpanded = expandedKey === (item.title + "-" + index);
@@ -282,43 +231,43 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         {/* Articles in Journals Section */}
                         <div id="articles" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
                             <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Articles in Journals</h3>
-                            {renderYearGroup(mockArticles, "articles")}
+                            {renderYearGroup(mappedArticles, "articles")}
                         </div>
                         
                         {/* Book Chapters / Articles Section */}
                         <div id="books" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
                              <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Book Chapters</h3>
-                             {renderYearGroup(mockBooks, "books")}
+                             {renderYearGroup(mappedBooks, "books")}
                         </div>
                         
                         {/* Conferences Section */}
                         <div id="conferences" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
                              <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Participation in Seminars/Conferences/Symposium</h3>
-                             {renderYearGroup(mockConferences, "conferences")}
+                             {renderYearGroup(mappedConferences, "conferences")}
                         </div>
                         
                         {/* Patents Section */}
                         <div id="patents" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
                              <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Patents</h3>
-                             {renderYearGroup(mockPatents, "patents")}
+                             {renderYearGroup(mappedPatents, "patents")}
                         </div>
                         
                         {/* Research Projects Section */}
                         <div id="projects" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
                              <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Research Project</h3>
-                             {renderYearGroup(mockProjectsList, "projects")}
+                             {renderYearGroup(mappedProjects, "projects")}
                         </div>
 
                         {/* Workshops Section */}
                         <div id="workshops" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
                             <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Workshops / FDP / Training Programmes</h3>
-                            {renderYearGroup(mockWorkshops, "workshops")}
+                            {renderYearGroup(mappedWorkshops, "workshops")}
                         </div>
 
                         {/* Awards Section */}
                         <div id="awards" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
                             <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Awards / Achievements / Others</h3>
-                            {renderYearGroup(mockAwards, "awards")}
+                            {renderYearGroup(mappedAwards, "awards")}
                         </div>
 
                     </div>

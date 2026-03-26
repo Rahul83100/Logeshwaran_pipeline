@@ -72,6 +72,55 @@ export interface ResearchPaper {
   doi?: string;
 }
 
+export interface BookChapter {
+  id: string;
+  title: string;
+  bookTitle: string;
+  isbn: string;
+  year: number;
+  month: string;
+}
+
+export interface ConferenceParticipation {
+  id: string;
+  conference: string;
+  role: string;
+  presentationTitle: string;
+  date: string;
+  organiser: string;
+  level: string;
+  year: number;
+}
+
+export interface Patent {
+  id: string;
+  title: string;
+  inventors: string;
+  grantedDate: string;
+  patentNumber: string;
+  fieldOfInvention: string;
+  year: number;
+}
+
+export interface Workshop {
+  id: string;
+  title: string;
+  organiser: string;
+  level: string;
+  role: string;
+  date: string;
+  year: number;
+}
+
+export interface Award {
+  id: string;
+  title: string;
+  description: string;
+  organisation: string;
+  date: string;
+  year: number;
+}
+
 export interface BlogPost {
   id: string;
   title: string;
