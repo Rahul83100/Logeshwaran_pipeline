@@ -18,47 +18,19 @@ export default function Header() {
               <div className="header-content">
                 <div className="logo">
                   <Link href="/">
-                    <Image
-                      className="logo-dark"
-                      src="/assets/images/logo/logo-white.png"
-                      alt="Dr. Logishoren — Portfolio"
-                      width={150}
-                      height={40}
-                    />
-                    <Image
-                      className="logo-white"
-                      src="/assets/images/logo/logo-white.png"
-                      alt="Dr. Logishoren — Portfolio"
-                      width={150}
-                      height={40}
-                    />
+                    <h3 style={{ margin: 0, fontWeight: 700, color: '#000', letterSpacing: '1px', fontSize: '22px' }}>Dr. Logeshwaran <span style={{ color: '#e60000' }}>J</span></h3>
                   </Link>
                 </div>
                 <nav className="tmp-mainmenu-nav d-none d-xl-block">
                   <ul className="tmp-mainmenu">
-                    <li>
-                      <Link href="/">Home</Link>
-                    </li>
-                    <li>
-                      <Link href="/about">About</Link>
-                    </li>
-                    <li>
-                      <Link href="/research">Research</Link>
-                    </li>
-                    <li className="has-dropdown">
-                      <Link href="/blog">
-                        Blog
-                        <i className="fa-regular fa-chevron-down"></i>
-                      </Link>
-                      <ul className="submenu">
-                        <li>
-                          <Link href="/blog">All Posts</Link>
-                        </li>
-                      </ul>
-                    </li>
-                    <li>
-                      <Link href="/contact">Contact</Link>
-                    </li>
+                    <li><Link href="/#profile">Profile</Link></li>
+                    <li><Link href="/#articles">Journals</Link></li>
+                    <li><Link href="/#books">Books</Link></li>
+                    <li><Link href="/#conferences">Conferences</Link></li>
+                    <li><Link href="/#patents">Patents</Link></li>
+                    <li><Link href="/#projects">Projects</Link></li>
+                    <li><Link href="/#workshops">Workshops</Link></li>
+                    <li><Link href="/#awards">Awards</Link></li>
                   </ul>
                 </nav>
                 <div className="tmp-header-right">
@@ -101,20 +73,7 @@ export default function Header() {
           <div className="inner">
             <div className="top-area">
               <Link href="/" className="logo">
-                <Image
-                  className="logo-dark"
-                  src="/assets/images/logo/white-logo-reeni.png"
-                  alt="Logo"
-                  width={150}
-                  height={40}
-                />
-                <Image
-                  className="logo-white"
-                  src="/assets/images/logo/logo-white.png"
-                  alt="Logo"
-                  width={150}
-                  height={40}
-                />
+                <h3 className="logo-text-adaptive" style={{ margin: 0, fontWeight: 700, letterSpacing: '1px', fontSize: '22px' }}>Dr. Logeshwaran <span style={{ color: '#e60000' }}>J</span></h3>
               </Link>
               <div className="close-icon-area">
                 <button
@@ -193,20 +152,7 @@ export default function Header() {
             <div className="header-top">
               <div className="logo">
                 <Link href="/" className="logo-area">
-                  <Image
-                    className="logo-dark"
-                    src="/assets/images/logo/white-logo-reeni.png"
-                    alt="Logo"
-                    width={150}
-                    height={40}
-                  />
-                  <Image
-                    className="logo-white"
-                    src="/assets/images/logo/logo-white.png"
-                    alt="Logo"
-                    width={150}
-                    height={40}
-                  />
+                  <h3 className="logo-text-adaptive" style={{ margin: 0, fontWeight: 700, letterSpacing: '1px', fontSize: '22px' }}>Dr. Logeshwaran <span style={{ color: '#e60000' }}>J</span></h3>
                 </Link>
               </div>
               <div className="close-menu">
@@ -219,21 +165,14 @@ export default function Header() {
               </div>
             </div>
             <ul className="tmp-mainmenu">
-              <li>
-                <Link href="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
-              </li>
-              <li>
-                <Link href="/about" onClick={() => setMobileMenuOpen(false)}>About</Link>
-              </li>
-              <li>
-                <Link href="/research" onClick={() => setMobileMenuOpen(false)}>Research</Link>
-              </li>
-              <li>
-                <Link href="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
-              </li>
-              <li>
-                <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
-              </li>
+              <li><Link href="/#profile" onClick={() => setMobileMenuOpen(false)}>Profile</Link></li>
+              <li><Link href="/#articles" onClick={() => setMobileMenuOpen(false)}>Journals</Link></li>
+              <li><Link href="/#books" onClick={() => setMobileMenuOpen(false)}>Books</Link></li>
+              <li><Link href="/#conferences" onClick={() => setMobileMenuOpen(false)}>Conferences</Link></li>
+              <li><Link href="/#patents" onClick={() => setMobileMenuOpen(false)}>Patents</Link></li>
+              <li><Link href="/#projects" onClick={() => setMobileMenuOpen(false)}>Projects</Link></li>
+              <li><Link href="/#workshops" onClick={() => setMobileMenuOpen(false)}>Workshops</Link></li>
+              <li><Link href="/#awards" onClick={() => setMobileMenuOpen(false)}>Awards</Link></li>
             </ul>
             <div className="social-wrapper mt--40">
               <span className="subtitle">Find with me</span>

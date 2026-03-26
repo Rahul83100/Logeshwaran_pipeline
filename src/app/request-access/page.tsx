@@ -24,14 +24,6 @@ export default function RequestAccessPage() {
 
         <AccessRequestForm />
 
-        <div className="rbac-page-footer">
-          <p>
-            Already have an access code?{' '}
-            <a href="/access" className="rbac-link">
-              Enter your code here
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   )

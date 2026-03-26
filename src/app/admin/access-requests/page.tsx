@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { collection, getDocs, updateDoc, doc, orderBy, query, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, getDoc, updateDoc, setDoc, doc, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 interface AccessRequest {
@@ -11,7 +11,8 @@ interface AccessRequest {
     institution: string;
     reason: string;
     status: string;
-    access_code: string | null;
+    uid?: string;
+    access_code?: string | null;
     created_at: { toDate: () => Date } | null;
     approved_at: { toDate: () => Date } | null;
     expires_at: { toDate: () => Date } | null;
@@ -43,36 +44,83 @@ export default function AccessRequestsManagement() {
     }
 
     async function handleApprove(id: string) {
-        setProcessingId(id);
-        const accessCode = generateAccessCode();
-        const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+        try {
+            setProcessingId(id);
+            const requestRef = doc(db, 'access_requests', id);
+            const requestDoc = await getDoc(requestRef);
+            if (!requestDoc.exists()) throw new Error('Request not found');
+            const data = requestDoc.data();
+            
+            await updateDoc(requestRef, {
+                status: 'approved',
+                approved_at: serverTimestamp(),
+            });
 
-        await updateDoc(doc(db, 'access_requests', id), {
-            status: 'approved',
-            access_code: accessCode,
-            approved_at: serverTimestamp(),
-            expires_at: expiresAt,
-        });
+            if (data.uid) {
+                await setDoc(doc(db, 'users', data.uid), { access_level: 'private' }, { merge: true });
+            }
 
-        // Show the code to the admin so they can share it
-        alert(`Access approved!\n\nAccess Code: ${accessCode}\n\nShare this code with the requester. It expires in 30 days.\n\n(In production, this would be sent via email automatically)`);
+            const res = await fetch('/api/send-approval-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'approve',
+                    email: data.requester_email,
+                    name: data.requester_name
+                })
+            });
+            const resData = await res.json();
+            if (!res.ok) throw new Error(resData.error || 'Failed to dispatch email');
 
-        await loadRequests();
-        setProcessingId(null);
+            await loadRequests();
+            alert('Access approved! The user has been granted global private access.');
+        } catch (err: any) {
+            alert('Error approving request: ' + err.message);
+        } finally {
+            setProcessingId(null);
+        }
     }
 
     async function handleDeny(id: string) {
         if (!confirm('Deny this access request?')) return;
-        setProcessingId(id);
-        await updateDoc(doc(db, 'access_requests', id), { status: 'denied' });
-        await loadRequests();
-        setProcessingId(null);
+        try {
+            setProcessingId(id);
+            const requestRef = doc(db, 'access_requests', id);
+            const requestDoc = await getDoc(requestRef);
+            if (!requestDoc.exists()) throw new Error('Request not found');
+            const data = requestDoc.data();
+
+            await updateDoc(requestRef, { status: 'denied' });
+
+            const res = await fetch('/api/send-approval-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'deny',
+                    email: data.requester_email,
+                    name: data.requester_name
+                })
+            });
+            const resData = await res.json();
+            if (!res.ok) throw new Error(resData.error || 'Failed to dispatch email');
+
+            await loadRequests();
+            alert('Request denied. The denial email dispatch was triggered.');
+        } catch (err: any) {
+            alert('Error denying request: ' + err.message);
+        } finally {
+            setProcessingId(null);
+        }
     }
 
     async function handleRevoke(id: string) {
-        if (!confirm('Revoke this access? The code will no longer work.')) return;
+        if (!confirm('Revoke this access? The user will immediately lose access.')) return;
         setProcessingId(id);
-        await updateDoc(doc(db, 'access_requests', id), { status: 'revoked', access_code: null });
+        const reqDoc = await getDoc(doc(db, 'access_requests', id));
+        if (reqDoc.exists() && reqDoc.data().uid) {
+            await updateDoc(doc(db, 'users', reqDoc.data().uid), { access_level: 'public' });
+        }
+        await updateDoc(doc(db, 'access_requests', id), { status: 'revoked' });
         await loadRequests();
         setProcessingId(null);
     }
@@ -155,9 +203,9 @@ export default function AccessRequestsManagement() {
                                         {req.approved_at?.toDate && ` · Approved: ${req.approved_at.toDate().toLocaleString()}`}
                                         {req.expires_at?.toDate && ` · Expires: ${req.expires_at.toDate().toLocaleDateString()}`}
                                     </p>
-                                    {req.access_code && req.status === 'approved' && (
+                                    {req.status === 'approved' && req.uid && (
                                         <div style={{ marginTop: '8px', padding: '8px 12px', background: '#f0f0ff', borderRadius: '6px', fontFamily: 'monospace', fontSize: '14px', color: '#667eea' }}>
-                                            Access Code: <strong>{req.access_code}</strong>
+                                            Profile Unlocked (UID: {req.uid.substring(0, 8)}...)
                                         </div>
                                     )}
                                 </div>

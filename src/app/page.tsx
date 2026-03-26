@@ -17,6 +17,7 @@ import {
   getTestimonials,
   getBlogPosts,
 } from "@/lib/firestore";
+import AcademicProfileTabs from "@/components/portfolio/AcademicProfileTabs";
 
 export default async function Home() {
   const profile = await getProfile();
@@ -35,13 +36,14 @@ export default async function Home() {
       {/* Counter Stats */}
       <CounterStats profile={profile} />
 
-      {/* Skill Bars */}
-      <SkillBars skills={skills} />
-
       {/* Education Timeline + Experience */}
       <EducationTimeline education={education} />
       <div className="container">
         <ExperienceSection experience={experience} />
+      </div>
+
+      <div style={{ marginTop: '80px' }}>
+        <AcademicProfileTabs profile={profile} />
       </div>
 
       {/* Portfolio Grid */}

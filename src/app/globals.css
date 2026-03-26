@@ -540,4 +540,5 @@ body {
     gap: 0.5rem;
     padding: 0.75rem 1rem;
   }
-}
+}.logo-text-adaptive { color: var(--color-white); }
+.header--sticky.sticky .logo-text-adaptive { color: var(--color-black); }

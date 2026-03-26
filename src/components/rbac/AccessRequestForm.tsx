@@ -1,7 +1,13 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/components/auth/AuthProvider'
+import Link from 'next/link'
 
 export default function AccessRequestForm() {
+  const { user, userData, loading } = useAuth()
+  const router = useRouter()
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -10,6 +16,17 @@ export default function AccessRequestForm() {
   })
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+
+  // Pre-fill fields once user data arrives
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: userData?.name || user.displayName || prev.name,
+        email: user.email || prev.email
+      }))
+    }
+  }, [user, userData])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -27,14 +44,13 @@ export default function AccessRequestForm() {
       const res = await fetch('/api/request-access', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, uid: user?.uid }),
       })
 
       const data = await res.json()
 
       if (res.ok && data.success) {
         setStatus('success')
-        setFormData({ name: '', email: '', institution: '', reason: '' })
       } else {
         setStatus('error')
         setErrorMessage(data.error || 'Something went wrong. Please try again.')
@@ -45,27 +61,70 @@ export default function AccessRequestForm() {
     }
   }
 
+  // Loading state
+  if (loading) {
+    return <div style={{ textAlign: 'center', padding: '50px' }}><p style={{ color: '#9393a5' }}>Loading...</p></div>
+  }
+
+  // NOT LOGGED IN — Show sign up / log in prompt
+  if (!user) {
+    return (
+      <div className="rbac-success-card" style={{ textAlign: 'center' }}>
+        <div className="rbac-success-icon">🔐</div>
+        <h3>Account Required</h3>
+        <p style={{ marginBottom: '25px' }}>
+          To request access to private research papers, you need to create an account first.
+        </p>
+        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link href="/signup" className="tmp-btn rbac-btn rbac-btn-submit" style={{ textDecoration: 'none' }}>
+            Sign Up
+          </Link>
+          <Link href="/login?redirect=/request-access" className="tmp-btn rbac-btn" style={{ textDecoration: 'none' }}>
+            Log In
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  // Already has access
+  if (userData?.access_level === 'private') {
+    return (
+      <div className="rbac-success-card">
+        <div className="rbac-success-icon">🔓</div>
+        <h3>You already have Full Access</h3>
+        <p>Your account is permanently unlocked. You can view all private research papers and content.</p>
+        <button className="tmp-btn rbac-btn" onClick={() => router.push('/')}>Return to Portfolio</button>
+      </div>
+    )
+  }
+
+  // Success state
   if (status === 'success') {
     return (
       <div className="rbac-success-card">
         <div className="rbac-success-icon">✓</div>
         <h3>Request Submitted Successfully!</h3>
         <p>
-          Your access request has been sent to Prof. Logishoren for review. 
-          You will receive an access code via email once approved.
+          Your access request has been sent to Prof. Logishoren for review.
+          You will receive an email once your account is approved. After that, simply log in to view all private content.
         </p>
-        <button
-          className="tmp-btn rbac-btn"
-          onClick={() => setStatus('idle')}
-        >
-          Submit Another Request
+        <button className="tmp-btn rbac-btn" onClick={() => router.push('/')}>
+          Return to Portfolio
         </button>
       </div>
     )
   }
 
+  // LOGGED IN — Show form with Name/Email locked, only Institution & Reason editable
   return (
     <form onSubmit={handleSubmit} className="rbac-form">
+      <div style={{ background: 'rgba(108, 92, 231, 0.1)', border: '1px solid rgba(108, 92, 231, 0.3)', borderRadius: '8px', padding: '15px', marginBottom: '20px' }}>
+        <p style={{ margin: 0, fontSize: '14px', color: '#9393a5' }}>
+          Logged in as <strong style={{ color: '#6c5ce7' }}>{user.email}</strong>
+        </p>
+      </div>
+
       <div className="rbac-form-group">
         <label htmlFor="name" className="rbac-label">
           Full Name <span className="rbac-required">*</span>
@@ -76,10 +135,9 @@ export default function AccessRequestForm() {
           type="text"
           required
           value={formData.name}
-          onChange={handleChange}
-          placeholder="Enter your full name"
+          readOnly
           className="rbac-input"
-          disabled={status === 'submitting'}
+          style={{ opacity: 0.6, cursor: 'not-allowed' }}
         />
       </div>
 
@@ -93,10 +151,9 @@ export default function AccessRequestForm() {
           type="email"
           required
           value={formData.email}
-          onChange={handleChange}
-          placeholder="your.email@example.com"
+          readOnly
           className="rbac-input"
-          disabled={status === 'submitting'}
+          style={{ opacity: 0.6, cursor: 'not-allowed' }}
         />
       </div>
 

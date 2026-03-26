@@ -3,7 +3,8 @@ import "@/styles/globals.css";
 import "./globals.css";
 import Header from "@/components/portfolio/Header";
 import Footer from "@/components/portfolio/Footer";
-import AccessStatusBanner from "@/components/rbac/AccessStatusBanner";
+import ConditionalWrapper from "@/components/layout/ConditionalWrapper";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 
 export const metadata: Metadata = {
   title: "Dr. Logishoren — Researcher & Professor Portfolio",
@@ -32,10 +33,15 @@ export default function RootLayout({
         <link rel="stylesheet" href="/assets/css/style.css" />
       </head>
       <body className="tmp-white-version">
-        <AccessStatusBanner />
-        <Header />
-        {children}
-        <Footer />
+        <AuthProvider>
+          <ConditionalWrapper>
+            <Header />
+          </ConditionalWrapper>
+          {children}
+          <ConditionalWrapper>
+            <Footer />
+          </ConditionalWrapper>
+        </AuthProvider>
       </body>
     </html>
   );

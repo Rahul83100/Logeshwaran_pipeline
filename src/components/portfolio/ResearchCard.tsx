@@ -1,25 +1,45 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import type { ResearchPaper } from "@/lib/firestore";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 interface ResearchCardProps {
   paper: ResearchPaper;
 }
 
 export default function ResearchCard({ paper }: ResearchCardProps) {
+  const { userData, loading } = useAuth();
+  const [hasAccess, setHasAccess] = useState(false);
+
+  useEffect(() => {
+    if (userData?.access_level === 'private') {
+      setHasAccess(true);
+    } else {
+      setHasAccess(false);
+    }
+  }, [userData]);
+
+  // Loading state delay to prevent flashing locked content
+  if (loading) return <div className="col-lg-6 col-md-6 col-sm-12"><div className="education-experience-card" style={{ height: '300px', opacity: 0.5 }}></div></div>;
+
+  const isLocked = paper.is_private && !hasAccess;
+
   return (
     <div className="col-lg-6 col-md-6 col-sm-12">
       <div
-        className={`education-experience-card tmponhover tmp-scroll-trigger tmp-fade-in animation-order-1 ${paper.is_private ? "private-paper-overlay" : ""
+        className={`education-experience-card tmponhover tmp-scroll-trigger tmp-fade-in animation-order-1 ${isLocked ? "private-paper-overlay" : ""
           }`}
       >
-        {paper.is_private && (
+        {isLocked && (
           <div className="lock-badge">
             <i className="fa-solid fa-lock"></i> Private
           </div>
         )}
         <h4 className="edu-sub-title">{paper.journal} • {paper.year}</h4>
         <h2 className="edu-title" style={{ fontSize: "20px", lineHeight: "1.4" }}>
-          {paper.is_private ? (
+          {isLocked ? (
             <span>{paper.title}</span>
           ) : (
             <Link href={`/research/${paper.slug}`} style={{ color: "inherit", textDecoration: "none" }}>
@@ -31,13 +51,13 @@ export default function ResearchCard({ paper }: ResearchCardProps) {
           <strong>Authors:</strong> {paper.authors.join(", ")}
         </p>
         <p className="edu-para">
-          {paper.is_private
+          {isLocked
             ? paper.abstract.substring(0, 100) + "..."
             : paper.abstract}
         </p>
-        {paper.is_private ? (
-          <Link href="/request-access" className="request-access-btn" style={{ marginTop: "10px", display: "inline-flex" }}>
-            <i className="fa-solid fa-lock"></i> Request Access
+        {isLocked ? (
+          <Link href="/signup" className="request-access-btn" style={{ marginTop: "10px", display: "inline-flex" }}>
+            <i className="fa-solid fa-lock"></i> Sign Up to Request Access
           </Link>
         ) : (
           <Link

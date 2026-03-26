@@ -78,12 +78,27 @@ const mockExperience: Experience[] = [
     duration: "2024 - 2025",
     role: "Reviewer & Guest Editor",
     description: "Served as Reviewer, Session Chair, and Guest Editor for multiple top-tier international journals and conferences.",
+    details: [
+      { label: "Role", value: "Reviewer" },
+      { label: "Description", value: "Associate Reviewer in Discover Computing Journal associated with Springer Nature" },
+      { label: "Organisation", value: "Springer Nature" },
+      { label: "Month/Year", value: "18 October 2024" },
+      { label: "Other Titles", value: "World Top 2% Scientist (in 2024), Guest Editor" }
+    ]
   },
   {
     company: "International Conferences (ICCCNT, ICICV, ICPCSN, ICREC)",
     duration: "2024 - 2025",
     role: "Conference Chair & Presenter",
     description: "Presented research and chaired sessions at 16th ICCCNT 2025, 6th ICICV 2025, 4th IC Networks & Cryptology, ICPCSN 2025, ICAICCIT 2024, and 2nd WCONF.",
+    details: [
+      { label: "Workshop Name", value: "Machine Learning from Data to Decisions" },
+      { label: "Organiser", value: "EICT Academy IIT Roorkee" },
+      { label: "Level", value: "National" },
+      { label: "Role", value: "Participant" },
+      { label: "Date", value: "2025-09-17" },
+      { label: "Additional Trainings", value: "Foundations of Artificial Intelligence: Concepts, Techniques, and Applications" }
+    ]
   },
 ];
 

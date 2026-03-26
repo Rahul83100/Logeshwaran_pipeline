@@ -55,6 +55,7 @@ export interface Experience {
   role: string;
   description: string;
   order?: number;
+  details?: { label: string; value: string }[];
 }
 
 export interface ResearchPaper {

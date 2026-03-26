@@ -31,9 +31,10 @@ export default function CodeEntryForm() {
       const data = await res.json()
 
       if (data.valid) {
-        // Store access level in localStorage
+        // Store access level and 30-day device expiration in localStorage
         localStorage.setItem('rbac_access_code', trimmedCode)
         localStorage.setItem('rbac_access_level', 'private')
+        localStorage.setItem('rbac_access_expiry', (Date.now() + 30 * 24 * 60 * 60 * 1000).toString())
         setStatus('success')
 
         // Brief delay to show success state, then redirect

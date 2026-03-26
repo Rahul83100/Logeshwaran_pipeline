@@ -1,14 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import SkillBars from "@/components/portfolio/SkillBars";
-import EducationTimeline from "@/components/portfolio/EducationTimeline";
-import ExperienceSection from "@/components/portfolio/ExperienceSection";
 import {
   getProfile,
-  getSkills,
-  getEducation,
-  getExperience,
 } from "@/lib/firestore";
+import AcademicProfileTabs from "@/components/portfolio/AcademicProfileTabs";
 
 export const metadata: Metadata = {
   title: "About — Dr. Logishoren",
@@ -18,9 +13,6 @@ export const metadata: Metadata = {
 
 export default async function AboutPage() {
   const profile = await getProfile();
-  const skills = await getSkills();
-  const education = await getEducation();
-  const experience = await getExperience();
 
   return (
     <>
@@ -105,18 +97,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* Skills */}
-      <SkillBars skills={skills} />
-
-      {/* Education */}
-      <EducationTimeline education={education} />
-
-      {/* Experience */}
-      <section className="tmp-section-gapTop">
-        <div className="container">
-          <ExperienceSection experience={experience} />
-        </div>
-      </section>
+      <AcademicProfileTabs profile={profile} />
     </>
   );
 }

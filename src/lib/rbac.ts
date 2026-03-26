@@ -12,7 +12,18 @@
  */
 export function getAccessLevel(): 'public' | 'private' {
   if (typeof window === 'undefined') return 'public'
-  return localStorage.getItem('rbac_access_level') === 'private' ? 'private' : 'public'
+  
+  const level = localStorage.getItem('rbac_access_level')
+  if (level !== 'private') return 'public'
+
+  // Enforce 30-day device limit
+  const expiry = localStorage.getItem('rbac_access_expiry')
+  if (expiry && Date.now() > parseInt(expiry, 10)) {
+    clearAccess()
+    return 'public'
+  }
+  
+  return 'private'
 }
 
 /**
@@ -32,6 +43,7 @@ export function clearAccess(): void {
   if (typeof window === 'undefined') return
   localStorage.removeItem('rbac_access_code')
   localStorage.removeItem('rbac_access_level')
+  localStorage.removeItem('rbac_access_expiry')
 }
 
 /**
