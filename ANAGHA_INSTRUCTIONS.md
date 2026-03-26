@@ -1,58 +1,55 @@
-# Instructions for Anagha & Antigravity AI (Data Entry & Polish)
+# Instructions for Anagha & Antigravity AI — Phase 2 (Integration & Data Entry)
 
-Hi Anagha! Please paste this entire document into your Antigravity assistant.
+Hi Anagha! Great job on gathering the data. However, your previous work was done on an older version of the codebase. Rahul has since implemented a brand new **Auth System, Admin Dashboard, and Academic Tabbed UI**. 
+
+**Your next task is to re-integrate those 61 data entries and the profile animation into the NEW structure.**
 
 ### 🤖 DIRECTIVE FOR ANTIGRAVITY AI:
-1. **PULL LATEST CODE:** Immediately run `git checkout develop` and `git pull origin develop`.
-2. **CREATE BRANCH:** Create a new branch: `git checkout -b feature/anagha-data-populate`.
-3. **DO THE WORK:** Follow the tasks in "Step 2 & 3" below.
-4. **COMMIT LOCALLY:** Once work is done, run `git add .` and `git commit -m "feat: populate academic data and fix profile animation"`.
-5. **🛑 STOP & WAIT:** DO NOT PUSH. Tell Anagha: "Tasks complete and committed locally. Please ask Rahul to review before I push."
-6. **PUSH ONLY AFTER APPROVAL:** Only run `git push origin feature/anagha-data-populate` after Rahul has approved.
+1. **PULL LATEST CODE:** Immediately run:
+   ```bash
+   git checkout develop
+   git pull origin develop
+   ```
+2. **CREATE NEW BRANCH:** Always start a fresh branch for this phase:
+   ```bash
+   git checkout -b feature/anagha-data-integration
+   ```
+3. **RESEARCH THE NEW UI:** 
+   - Look at `src/components/portfolio/AcademicProfileTabs.tsx`. This is where all the tabbed data (Articles, Books, Patents, etc.) is now handled.
+   - Look at `src/app/page.tsx` and `src/lib/mockData.ts` to see how the data is being passed to these tabs.
+   - Look at the new authentication system (Login/Signup).
 
-## Your Objective
-Your primary goal is to use your Antigravity AI to migrate the missing data from the Christ University Faculty portal into this new website, and to fix the profile image animation. 
+4. **INTEGRATE YOUR DATA:** Your previous report showed **61 new entries** (12 Research Papers, 2 Book Chapters, 19 Conferences, 10 Patents, 6 Workshops, 12 Awards). 
+   - **MIGRATE THIS DATA:** Add these entries into the arrays in `src/lib/mockData.ts` or `src/lib/firestore.ts` (whichever is being used as the primary source).
+   - **ENSURE TABS SHOW DATA:** Verify that all categories (Patents, Awards, Workshops, etc.) show up correctly in the `AcademicProfileTabs` component on the homepage.
+   - **HANDLE PRIVATE CONTENT:** You mentioned 2 private papers. Ensure these are marked with an `access_level: "private"` (or similar field used in the new RBAC system) so only logged-in/approved users can see them.
 
-**CRITICAL RULE: Do not make any structural, architectural, backend, or layout changes to the website. The authentication and layout systems are finalized. You are only updating the data and fixing the hero image.**
+5. **RESTORE ANIMATION:** Re-apply the **infinite loop floating + glow animation** to the hero image, but ensure it works with the current `src/components/portfolio/Banner.tsx` and `src/styles/globals.css`. 
 
-### Important Links for You and Antigravity
-Here are the critical links you will need for this task (if your Antigravity agent needs them for context):
-- **Project Repository:** `https://github.com/Rahul83100/Logeshwaran_pipeline.git`
-- **Christ University Faculty Source:** Visit the official Christ University (Deemed to be University) website and navigate to Dr. Logeshwaran J's faculty profile page to find the original publication and achievement lists.
+6. **COMMIT LOCALLY:** Once done, run:
+   ```bash
+   git add .
+   git commit -m "feat: integrate 61 academic entries and re-apply hero animation to new UI"
+   ```
 
-## Step-by-Step Instructions
+7. **🛑 STOP & WAIT:** Send a message to Anagha: "Integration complete. Please ask Rahul to review the new Academic Tabs and Animation on localhost:3000 before I push."
 
-### Step 1: Initial Setup (AI should do this automatically)
-- If not already cloned: `git clone https://github.com/Rahul83100/Logeshwaran_pipeline.git`
-- **GET LATEST:** `git checkout develop` && `git pull origin develop`
-- **START BRANCH:** `git checkout -b feature/anagha-data-populate`
-- Run `npm install` and then `npm run dev`.
-- Analyze the site structure to prepare for data entry.
+8. **PUSH ONLY AFTER APPROVAL:** `git push origin feature/anagha-data-integration`.
 
-### Step 2: Capture the Source Data
-- Go to the official **Christ University Faculty Website** for Dr. Logeshwaran J.
-- Take clear screenshots of **all** the remaining details and sub-details from his university profile that are missing from our local website.
+---
 
-### Step 3: Automate the Updates with Antigravity
-- Open your Antigravity assistant.
-- Upload all the screenshots you took.
-- Give Antigravity the following exact prompt:
-  > *"Here are the screenshots of Dr. Logeshwaran's full academic details from the university portal. Please update all the pending sub-details and data arrays in the website's code to match this information perfectly. Use the repository context if needed. **CRITICAL:** Do NOT change the existing website layout, colors, or backend architecture. Only update the data/text entries to ensure the site is fully populated."*
+## 📜 Your Reference: The Data You Already Found
+(For Antigravity to use as context for re-entry):
 
-### Step 4: Fix the Profile Image Animation
-- In the same or a new prompt, ask Antigravity to fix the alignment of Dr. Logeshwaran's profile image on the homepage.
-- Explicitly ask Antigravity to **add the live effect / infinite loop animation** that was originally present in the base template so the website looks dynamic and premium again.
+**Total New Entries:** 61
+- **Research Papers:** 12 total (10 public, 2 private).
+- **Book Chapters:** 2 entries.
+- **Conferences:** 19 entries.
+- **Patents:** 10 entries.
+- **Workshops/FDP:** 6 entries.
+- **Awards/Achievements:** 12 entries.
 
-Once Antigravity completes these updates, verify the data on your localhost.
-
-### Step 5: Review & Commit
-- **COMMIT LOCALLY:** When done, run:
-  ```bash
-  git add .
-  git commit -m "feat: populate academic data and fix profile animation"
-  ```
-- **STOP & NOTIFY RAHUL:** Do NOT push to GitHub yet. Send a message to Rahul to review your changes on your screen or via a screenshot.
-- **PUSH (ONLY AFTER APPROVAL):** Once Rahul says "OK", push your branch:
-  ```bash
-  git push origin feature/anagha-data-populate
-  ```
+**Animation Specs:**
+- **Float:** 12px vertical float, 4s infinite loop.
+- **Glow:** Purple-blue gradient glow animation.
+- **CSS Classes:** `.hero-image-animated`, `.hero-profile-img`.
