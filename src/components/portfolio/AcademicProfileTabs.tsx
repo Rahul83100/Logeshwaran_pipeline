@@ -60,7 +60,7 @@ const mappedPatents = mockPatents.map((p: any) => ({
 }));
 
 const mappedProjects = mockProjects.map((p: any) => ({
-    year: "1",
+    year: "",
     title: p.title,
     details: [
         { label: "Category", value: p.category },
@@ -161,7 +161,7 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
 
         return years.map(year => (
             <div key={`${typePrefix}-${year}`} style={{ display: 'flex', gap: '20px', flexDirection: 'column', marginBottom: '30px' }}>
-                <div style={{ fontWeight: 700, fontSize: '18px', color: '#000', width: '100px' }}>{year}</div>
+                {year && <div style={{ fontWeight: 700, fontSize: '18px', color: '#000', width: '100px' }}>{year}</div>}
                 <div style={{ flex: 1, borderTop: '2px solid #e60000', paddingTop: '20px' }}>
                     {data.filter(item => item.year === year).map((item, index) => (
                         <AccordionItem key={`${typePrefix}-${year}-${index}`} item={item} index={index} expandedKey={expandedKey} setExpandedKey={setExpandedKey} />
