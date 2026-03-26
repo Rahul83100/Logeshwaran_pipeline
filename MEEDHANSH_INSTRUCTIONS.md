@@ -1,6 +1,14 @@
-# 🔧 Tasks for Meedhansh — Auth System & Access Control
+# Instructions for Meedhansh & Antigravity AI — Auth System & Access Control
 
-Hi Meedhansh! Your assignment is to **fix and enhance the Login, Signup, and Private Access Request system** for Dr. Logeshwaran's portfolio website. Read everything carefully before writing a single line of code.
+Hi Meedhansh! Please paste this entire document into your Antigravity assistant.
+
+### 🤖 DIRECTIVE FOR ANTIGRAVITY AI:
+1. **PULL LATEST CODE:** Immediately run `git checkout develop` and `git pull origin develop`.
+2. **CREATE BRANCH:** Create a new branch: `git checkout -b feature/meedhansh-auth-fix`.
+3. **DO THE WORK:** Implement the Tasks 1-5 listed in this document.
+4. **COMMIT LOCALLY:** Once work is done, run `git add .` and `git commit -m "feat: enhance auth system and access request flow"`.
+5. **🛑 STOP & WAIT:** DO NOT PUSH. Tell Meedhansh: "Tasks complete and committed locally. Please ask Rahul to review before I push."
+6. **PUSH ONLY AFTER APPROVAL:** Only run `git push origin feature/meedhansh-auth-fix` after Rahul has approved.
 
 ---
 

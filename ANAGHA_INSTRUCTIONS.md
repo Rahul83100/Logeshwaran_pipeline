@@ -1,6 +1,14 @@
-# Pending Tasks for Anagha (Data Entry & Polish)
+# Instructions for Anagha & Antigravity AI (Data Entry & Polish)
 
-Hi Anagha! Please follow these instructions carefully to finalize the data population for Dr. Logeshwaran's portfolio website.
+Hi Anagha! Please paste this entire document into your Antigravity assistant.
+
+### 🤖 DIRECTIVE FOR ANTIGRAVITY AI:
+1. **PULL LATEST CODE:** Immediately run `git checkout develop` and `git pull origin develop`.
+2. **CREATE BRANCH:** Create a new branch: `git checkout -b feature/anagha-data-populate`.
+3. **DO THE WORK:** Follow the tasks in "Step 2 & 3" below.
+4. **COMMIT LOCALLY:** Once work is done, run `git add .` and `git commit -m "feat: populate academic data and fix profile animation"`.
+5. **🛑 STOP & WAIT:** DO NOT PUSH. Tell Anagha: "Tasks complete and committed locally. Please ask Rahul to review before I push."
+6. **PUSH ONLY AFTER APPROVAL:** Only run `git push origin feature/anagha-data-populate` after Rahul has approved.
 
 ## Your Objective
 Your primary goal is to use your Antigravity AI to migrate the missing data from the Christ University Faculty portal into this new website, and to fix the profile image animation. 
@@ -14,19 +22,12 @@ Here are the critical links you will need for this task (if your Antigravity age
 
 ## Step-by-Step Instructions
 
-### Step 1: Review the Current Site
-- Clone the repository (if you haven't): `git clone https://github.com/Rahul83100/Logeshwaran_pipeline.git`
-- **GET LATEST CODE:** If you already have it, run:
-  ```bash
-  git checkout develop
-  git pull origin develop
-  ```
-- **CREATE YOUR BRANCH:** Always work on your own branch:
-  ```bash
-  git checkout -b feature/anagha-data-populate
-  ```
-- Run `npm install` and then `npm run dev` to start the localhost server.
-- Browse the sections (Articles, Book Chapters, Patents, Awards, etc.) to see exactly which sub-details and lists are currently pending or missing context.
+### Step 1: Initial Setup (AI should do this automatically)
+- If not already cloned: `git clone https://github.com/Rahul83100/Logeshwaran_pipeline.git`
+- **GET LATEST:** `git checkout develop` && `git pull origin develop`
+- **START BRANCH:** `git checkout -b feature/anagha-data-populate`
+- Run `npm install` and then `npm run dev`.
+- Analyze the site structure to prepare for data entry.
 
 ### Step 2: Capture the Source Data
 - Go to the official **Christ University Faculty Website** for Dr. Logeshwaran J.
