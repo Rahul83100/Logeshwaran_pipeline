@@ -1,38 +1,66 @@
-# Dr. Logeshwaran J — Portfolio Development Log & Summary
+# 📝 Project Status Summary: Dr. Logeshwaran Portfolio
 
-This document serves as a comprehensive record of all architectural changes, features, and fixes implemented to transform the base Next.js portfolio template into a fully customized, data-rich academic portal for Dr. Logeshwaran.
-
----
-
-## 1. Complete Template Scrubbing & Branding
-- **Watermark Removal:** Successfully scrubbed all placeholder "Reeni" template watermarks, filler imagery, and generic test text across the app.
-- **Dynamic Adaptive Logo:** Removed the hardcoded image logos and built a responsive text-based logo (`Dr. Logeshwaran J`) in the Header. It natively adapts its color (Black/White) dynamically based on the user's scroll position and the sticky header state.
-- **Clean Homepage:** Stripped away irrelevant template sections (e.g., generic pricing cards, fake services) to ensure a strictly professional, academic focus.
-
-## 2. Advanced Navigation & Routing System
-- **Flattened Header Menu:** Removed the broken dropdown menus and flattened the primary navigation bar to cleanly display all 8 core academic categories (Profile, Journals, Books, Conferences, Patents, Projects, Workshops, Awards).
-- **Next.js Native Search Params:** Completely rewrote the navigation architecture. Instead of failing Single-Page App (SPA) hash scrolls, the links now use Next.js Query Parameters (e.g., `/?tab=workshops#academic`).
-- **Precision Scrolling & Tab Syncing:** Clicking any top navigation link now natively commands the browser to smoothly scroll down exactly to the "Faculty Details" section, automatically forcing the React tab state to open the correct nested data without reloading the page.
-
-## 3. The "Christ University" Expandable UI Widget
-- **`AcademicProfileTabs` Component:** Built a robust, horizontal-split dashboard directly on the Homepage to house the vast amount of academic records cleanly.
-- **Interactive Accordion Sub-Information:** Inspired by the `m.christuniversity.in` portal, all deeply nested data (e.g., indexing status, role, year, impact factors) is hidden behind clinical "expand" buttons (`+`). Users can click on specific papers or workshops to uniquely slide open the sub-details, managing screen real-estate perfectly.
-
-## 4. Deep Academic Data Scraping & Seeding
-- **Comprehensive Structure:** Mapped out and exported vast arrays of Dr. Logeshwaran's actual academic data, including over 10 Patents, dozens of International Conferences, and exact journal metrics.
-- **Firebase Integration:** Connected the entire frontend to Google Firebase (Firestore).
-- **Automated Seeding Pipeline:** Created an `/api/seed` endpoint that takes the mapped nested JSON data and safely pushes it into the production Firestore database, bypassing the need for manual data entry.
-
-## 5. Secure Admin RBAC & Email SendGrid Integration
-- **Admin Dashboard Fixes:** Fixed a critical bug in the `/admin/access-requests` portal where approving a user was writing directly to the database but bypassing the email trigger.
-- **Encrypted Code Dispatch:** The "Approve" button now securely hits the Next.js API route (`/api/approve-access`). 
-- **SendGrid Delivery:** Upon approval, the system now successfully utilizes the SendGrid API to automatically generate and email the 16-character secure access code directly to the requester's inbox.
+This document provides a high-level overview of the project's current state, recent achievements, and ongoing tasks for collaborators. Use this file as context for any new Antigravity sessions.
 
 ---
 
-### Project Status: Deployment Ready
-The portfolio is completely fundamentally sound. The UI is flawlessly responsive, the database connections are secure, the interactions mirror top-tier university portals, and all bugs regarding routing and disappearing logos have been fully squashed.
+## 🚀 Current Architecture
+- **Framework:** Next.js 16.2.1 (Turbopack)
+- **Styling:** Vanilla CSS + Bootstrap 5.3
+- **Backend:** Firebase 12.11 (Authentication + Firestore)
+- **Data Source:** Christ University Faculty Portal
+- **Main Branch:** `develop`
 
-**Next Steps for the Admin:**
-1. Execute the one-time database seed via `http://localhost:3000/api/seed` (ensure Firestore read/write rules are temporarily open).
-2. Deploy the `main` branch to Vercel/Netlify for production access.
+---
+
+## ✅ Major Achievements (Rahul)
+1. **Auth & RBAC System:** Implemented Firebase-based authentication with Role-Based Access Control. Users can sign up and request "Private" access.
+2. **Admin Dashboard:** Created a functional admin area (`/admin/dashboard`) to manage users and access requests. 
+3. **Academic Tabbed UI:** Built a dynamic tabbed interface (`AcademicProfileTabs.tsx`) that consolidates Articles, Books, Patents, Awards, and Workshops.
+4. **Private Content Management:** Implemented a "Lock/Unlock" logic for research papers. Private papers are blurred/locked for public users.
+5. **Admin Approval Loop:** Integrated SendGrid for email triggers. Admins receive emails to Approve/Deny users directly from their inbox.
+
+---
+
+## 👩‍💻 Collaborator Status
+
+### 🎨 Anagha (UI/UX & Data Entry)
+- **Current Task:** Integrating the 61 entries gathered from the university portal.
+- **Progress:** 
+  - Successfully merged 61 academic entries into `mockData.ts`.
+  - Restored the infinite loop "floating + glow" animation on the hero image.
+  - Fixed MacBook image responsiveness alignment.
+- **Workflow:** Working on `feature/anagha-data-integration`.
+
+### 🔐 Meedhansh (Auth Flow Polish)
+- **Current Task:** Finalizing the signup validation and redirect logic.
+- **Objectives:** 
+  - Add "Re-enter Password" validation to Signup.
+  - Implement strict redirect: Locked Paper → Login → Request Access Page.
+  - Ensure Admin approval grants permanent/device-independent access.
+- **Workflow:** Working on `feature/meedhansh-final-auth`.
+
+---
+
+## 🛠️ How to Resume Work
+1. **Get Latest Code:**
+   ```bash
+   git checkout develop
+   git pull origin develop
+   ```
+2. **Run Locally:**
+   ```bash
+   npm install
+   npm run dev
+   ```
+   Server runs at **http://localhost:3000**
+
+---
+
+## 📂 Key Files for Reference
+- `src/components/auth/AuthProvider.tsx` — Global auth state.
+- `src/components/portfolio/AcademicProfileTabs.tsx` — Main data display tabs.
+- `src/lib/mockData.ts` — Central repository for academic data.
+- `src/app/admin//` — All admin-side logic.
+- `ANAGHA_INSTRUCTIONS.md` — Detailed tasks for Anagha.
+- `MEEDHANSH_INSTRUCTIONS.md` — Detailed tasks for Meedhansh.
