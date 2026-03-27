@@ -1,55 +1,46 @@
-# Instructions for Anagha & Antigravity AI — Phase 2 (Integration & Data Entry)
+# Instructions for Anagha & Antigravity AI — Phase 3 (UI Cleanup & Content Updates)
 
-Hi Anagha! Great job on gathering the data. However, your previous work was done on an older version of the codebase. Rahul has since implemented a brand new **Auth System, Admin Dashboard, and Academic Tabbed UI**. 
-
-**Your next task is to re-integrate those 61 data entries and the profile animation into the NEW structure.**
+Hi Anagha! For today, we are focusing on polishing the Home Page UI and updating project content. Please follow these instructions carefully.
 
 ### 🤖 DIRECTIVE FOR ANTIGRAVITY AI:
-1. **PULL LATEST CODE:** Immediately run:
-   ```bash
-   git checkout develop
-   git pull origin develop
-   ```
-2. **CREATE NEW BRANCH:** Always start a fresh branch for this phase:
-   ```bash
-   git checkout -b feature/anagha-data-integration
-   ```
-3. **RESEARCH THE NEW UI:** 
-   - Look at `src/components/portfolio/AcademicProfileTabs.tsx`. This is where all the tabbed data (Articles, Books, Patents, etc.) is now handled.
-   - Look at `src/app/page.tsx` and `src/lib/mockData.ts` to see how the data is being passed to these tabs.
-   - Look at the new authentication system (Login/Signup).
 
-4. **INTEGRATE YOUR DATA:** Your previous report showed **61 new entries** (12 Research Papers, 2 Book Chapters, 19 Conferences, 10 Patents, 6 Workshops, 12 Awards). 
-   - **MIGRATE THIS DATA:** Add these entries into the arrays in `src/lib/mockData.ts` or `src/lib/firestore.ts` (whichever is being used as the primary source).
-   - **ENSURE TABS SHOW DATA:** Verify that all categories (Patents, Awards, Workshops, etc.) show up correctly in the `AcademicProfileTabs` component on the homepage.
-   - **HANDLE PRIVATE CONTENT:** You mentioned 2 private papers. Ensure these are marked with an `access_level: "private"` (or similar field used in the new RBAC system) so only logged-in/approved users can see them.
+1. **PULL LATEST CODE:** Ensure you are working on Rahul's current version:
+   ```bash
+   git checkout main
+   git pull origin main
+   ```
 
-5. **RESTORE ANIMATION:** Re-apply the **infinite loop floating + glow animation** to the hero image, but ensure it works with the current `src/components/portfolio/Banner.tsx` and `src/styles/globals.css`. 
+2. **CREATE NEW BRANCH:** Always start a fresh branch for this task:
+   ```bash
+   git checkout -b feature/ui-cleanup-content-update
+   ```
+
+3. **FIX UI ALIGNMENT (Home Page):**
+   - **Login/Logout Buttons:** They are currently too large and overlapping other icons. Resize them to be sleek and fix their positioning so they don't overlap.
+   - **Social Media Icons:** Move all social media icons (Facebook, Instagram, etc.) from the top/header area to the **bottom (Footer)** of the page.
+
+4. **HERO IMAGE FIX:**
+   - The hero image is currently cropped at the top. 
+   - **Fix:** Adjust the styling to display the **full image** without top cropping, while keeping the same layout proportions.
+
+5. **UPDATE PROJECT IMAGES:**
+   - Replace the current placeholder/old images for the following portfolio items with high-quality, relevant visuals:
+     - **IoT Healthcare Monitoring & Alert System**
+     - **AI Based Brain Cancer Detection Device**
+     - (And all other projects listed below these).
+   - **Tip:** Use the `generate_image` tool (via Gemini) to create professional images for these specific topics.
+   - Also update images for the **Blog** and **News** sections.
 
 6. **COMMIT LOCALLY:** Once done, run:
    ```bash
    git add .
-   git commit -m "feat: integrate 61 academic entries and re-apply hero animation to new UI"
+   git commit -m "feat: fix UI alignment, relocate social icons, and update portfolio visuals"
    ```
 
-7. **🛑 STOP & WAIT:** Send a message to Anagha: "Integration complete. Please ask Rahul to review the new Academic Tabs and Animation on localhost:3000 before I push."
+7. **🛑 STOP & WAIT:** Notify Rahul that the changes are ready for local review.
+   - **DO NOT PUSH** until Rahul has run the code locally and given his approval.
 
-8. **PUSH ONLY AFTER APPROVAL:** `git push origin feature/anagha-data-integration`.
-
----
-
-## 📜 Your Reference: The Data You Already Found
-(For Antigravity to use as context for re-entry):
-
-**Total New Entries:** 61
-- **Research Papers:** 12 total (10 public, 2 private).
-- **Book Chapters:** 2 entries.
-- **Conferences:** 19 entries.
-- **Patents:** 10 entries.
-- **Workshops/FDP:** 6 entries.
-- **Awards/Achievements:** 12 entries.
-
-**Animation Specs:**
-- **Float:** 12px vertical float, 4s infinite loop.
-- **Glow:** Purple-blue gradient glow animation.
-- **CSS Classes:** `.hero-image-animated`, `.hero-profile-img`.
+8. **PUSH AFTER APPROVAL:** 
+   ```bash
+   git push origin feature/ui-cleanup-content-update
+   ```

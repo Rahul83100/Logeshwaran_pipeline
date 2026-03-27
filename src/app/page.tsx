@@ -8,6 +8,7 @@ import PortfolioGrid from "@/components/portfolio/PortfolioGrid";
 import TestimonialSlider from "@/components/portfolio/TestimonialSlider";
 import ContactForm from "@/components/portfolio/ContactForm";
 import BlogCard from "@/components/portfolio/BlogCard";
+import ScrollFadeIn from "@/components/layout/ScrollFadeIn";
 import {
   getProfile,
   getSkills,
@@ -31,29 +32,45 @@ export default async function Home() {
   return (
     <>
       {/* Banner / Hero */}
-      <Banner profile={profile} />
+      <ScrollFadeIn delay={0.1}>
+        <Banner profile={profile} />
+      </ScrollFadeIn>
 
       {/* Counter Stats */}
-      <CounterStats profile={profile} />
+      <ScrollFadeIn delay={0.2} yOffset={20}>
+        <CounterStats profile={profile} />
+      </ScrollFadeIn>
 
       {/* Education Timeline + Experience */}
-      <EducationTimeline education={education} />
-      <div className="container">
-        <ExperienceSection experience={experience} />
-      </div>
+      <ScrollFadeIn delay={0.1}>
+        <EducationTimeline education={education} />
+      </ScrollFadeIn>
+      
+      <ScrollFadeIn delay={0.2}>
+        <div className="container">
+          <ExperienceSection experience={experience} />
+        </div>
+      </ScrollFadeIn>
 
-      <div style={{ marginTop: '80px' }}>
-        <AcademicProfileTabs profile={profile} />
-      </div>
+      <ScrollFadeIn delay={0.1}>
+        <div style={{ marginTop: '80px' }}>
+          <AcademicProfileTabs profile={profile} />
+        </div>
+      </ScrollFadeIn>
 
       {/* Portfolio Grid */}
-      <PortfolioGrid projects={projects} />
+      <ScrollFadeIn delay={0.1}>
+        <PortfolioGrid projects={projects} />
+      </ScrollFadeIn>
 
       {/* Contact Form */}
-      <ContactForm />
+      <ScrollFadeIn delay={0.2}>
+        <ContactForm />
+      </ScrollFadeIn>
 
       {/* Blog Section */}
-      <section className="blog-and-news-are tmp-section-gap">
+      <ScrollFadeIn delay={0.1}>
+        <section className="blog-and-news-are tmp-section-gap">
         <div className="container">
           <div className="section-head mb--60">
             <div className="section-sub-title center-title tmp-scroll-trigger tmp-fade-in animation-order-1">
@@ -64,12 +81,13 @@ export default async function Home() {
             </h2>
           </div>
           <div className="row">
-            {blogPosts.slice(0, 3).map((post) => (
-              <BlogCard key={post.id} post={post} />
+            {blogPosts.slice(0, 3).map((post, i) => (
+              <BlogCard key={post.id} post={post} delay={i * 0.1} />
             ))}
           </div>
         </div>
       </section>
+      </ScrollFadeIn>
     </>
   );
 }

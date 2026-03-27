@@ -1,32 +1,40 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { onAuthStateChanged, signOut, User } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import Link from 'next/link';
+import { useAuth } from '@/components/auth/AuthProvider';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    const { user, userData, loading } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
 
+    const adminEnvEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL?.toLowerCase() || 'rahul636071@gmail.com';
+    const isAdmin = user?.email?.toLowerCase() === adminEnvEmail || userData?.role === 'admin';
+
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-            setLoading(false);
+        if (!loading) {
             if (!user && pathname !== '/admin/login') {
                 router.push('/admin/login');
+            } else if (user && pathname !== '/admin/login' && !isAdmin) {
+                // If logged in but NOT an admin, redirect to portfolio
+                router.push('/');
             }
-        });
-        return () => unsubscribe();
-    }, [router, pathname]);
+        }
+    }, [user, userData, loading, pathname, router, isAdmin]);
 
     const handleLogout = async () => {
         await signOut(auth);
         router.push('/admin/login');
     };
+
+    // If we're on the login page, don't show the admin shell
+    if (pathname === '/admin/login') {
+        return <>{children}</>;
+    }
 
     if (loading) {
         return (
@@ -38,15 +46,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         );
     }
 
-    // Login page doesn't need the admin shell
-    if (pathname === '/admin/login') {
-        return <>{children}</>;
-    }
-
     if (!user) return null;
+
+    // Show specialized unauthorized UI while redirecting non-admins
+    if (!isAdmin) {
+        return (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', flexDirection: 'column' }}>
+                <h3 style={{ marginBottom: '10px' }}>Unauthorized</h3>
+                <p style={{ color: '#666' }}>You do not have permission to view the admin portal. Redirecting...</p>
+                <div className="spinner-border text-primary mt-3" role="status" style={{ width: '1.5rem', height: '1.5rem' }}></div>
+            </div>
+        );
+    }
 
     const navItems = [
         { href: '/admin/dashboard', label: 'Dashboard', icon: 'fa-chart-line' },
+        { href: '/admin/messages', label: 'Inbox', icon: 'fa-inbox' },
         { href: '/admin/content', label: 'Content', icon: 'fa-file-pen' },
         { href: '/admin/content/research', label: 'Research Papers', icon: 'fa-flask' },
         { href: '/admin/content/blog', label: 'Blog Posts', icon: 'fa-blog' },

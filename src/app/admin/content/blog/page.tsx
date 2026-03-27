@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import ImageUploader from '@/components/admin/ImageUploader';
 
 interface BlogPost {
     id: string;
@@ -108,8 +109,12 @@ export default function BlogManagement() {
                                 </div>
                             </div>
                             <div>
-                                <label style={labelStyle}>Thumbnail URL</label>
-                                <input style={inputStyle} value={form.thumbnail} onChange={(e) => setForm({ ...form, thumbnail: e.target.value })} placeholder="https://..." />
+                                <ImageUploader
+                                    currentUrl={form.thumbnail}
+                                    onUrlChange={(url) => setForm({ ...form, thumbnail: url })}
+                                    storagePath="images/blog"
+                                    label="Thumbnail Image"
+                                />
                             </div>
                             <div>
                                 <label style={labelStyle}>Content *</label>

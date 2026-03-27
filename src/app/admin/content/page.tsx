@@ -39,6 +39,13 @@ const contentSections = [
         href: '/admin/content/skills',
     },
     {
+        title: 'Portfolio Projects',
+        description: 'Manage portfolio projects with images, descriptions, and links',
+        icon: 'fa-images',
+        color: '#9f7aea',
+        href: '/admin/content/projects',
+    },
+    {
         title: 'Profile',
         description: 'Edit personal information, bio, contact details, and social links',
         icon: 'fa-user',

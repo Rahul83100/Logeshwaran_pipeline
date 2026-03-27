@@ -163,44 +163,62 @@ export interface Testimonial {
 // DATA FETCHING FUNCTIONS (REAL FIRESTORE INTEGRATION)
 // ============================================================
 
+// Helper to serialize Firestore Timestamps for Next.js Client Components
+function sanitizeData(data: any) {
+  if (!data) return data;
+  const serialized = { ...data };
+  for (const key in serialized) {
+    if (serialized[key] && typeof serialized[key] === 'object' && 'toDate' in serialized[key]) {
+      serialized[key] = serialized[key].toDate().toISOString();
+    }
+  }
+  return serialized;
+}
+
 export async function getProfile(): Promise<Profile> {
   const snap = await getDoc(doc(db, 'profile', 'main'));
   if (!snap.exists()) {
     throw new Error("Profile not found in database. Please seed the database.");
   }
-  return snap.data() as Profile;
+  return sanitizeData(snap.data()) as Profile;
 }
 
 export async function getSkills() {
   const q = query(collection(db, 'skills'), orderBy('order', 'asc'));
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as Skill));
+  return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as Skill));
 }
 
 export async function getEducation() {
   const q = query(collection(db, 'education'), orderBy('order', 'asc'));
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({
-    id: d.id,
-    title: d.data().degree || d.data().title,
-    institution: d.data().institution,
-    period: d.data().year_range || d.data().period,
-    description: d.data().description,
-    ...d.data()
-  } as Education));
+  return snap.docs.map(d => {
+    const data = sanitizeData(d.data());
+    return {
+      id: d.id,
+      title: data.degree || data.title,
+      institution: data.institution,
+      period: data.year_range || data.period,
+      description: data.description,
+      ...data
+    } as Education;
+  });
 }
 
 export async function getExperience() {
   const q = query(collection(db, 'experience'), orderBy('order', 'asc'));
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({
-    id: d.id,
-    company: d.data().organization || d.data().company,
-    duration: d.data().year_range || d.data().duration,
-    role: d.data().role,
-    description: d.data().description,
-    ...d.data()
-  } as Experience));
+  return snap.docs.map(d => {
+    const data = sanitizeData(d.data());
+    return {
+      id: d.id,
+      company: data.organization || data.company,
+      duration: data.year_range || data.duration,
+      role: data.role,
+      description: data.description,
+      ...data
+    } as Experience;
+  });
 }
 
 export async function getResearchPapers(options?: { isPrivate?: boolean }) {
@@ -211,30 +229,30 @@ export async function getResearchPapers(options?: { isPrivate?: boolean }) {
   }
 
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as ResearchPaper));
+  return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as ResearchPaper));
 }
 
 export async function getBlogPosts() {
   const q = query(collection(db, 'blog_posts'), where('published', '==', true), orderBy('created_at', 'desc'));
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as BlogPost));
+  return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as BlogPost));
 }
 
 export async function getBlogPost(slug: string) {
   const q = query(collection(db, 'blog_posts'), where('slug', '==', slug));
   const snap = await getDocs(q);
   if (snap.empty) return null;
-  return { id: snap.docs[0].id, ...snap.docs[0].data() } as BlogPost;
+  return { id: snap.docs[0].id, ...sanitizeData(snap.docs[0].data()) } as BlogPost;
 }
 
 export async function getProjects() {
   const snap = await getDocs(collection(db, 'projects'));
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as PortfolioProject));
+  return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as PortfolioProject));
 }
 
 export async function getTestimonials() {
   const snap = await getDocs(collection(db, 'testimonials'));
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as Testimonial));
+  return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as Testimonial));
 }
 
 export async function submitContactForm(data: ContactFormData) {

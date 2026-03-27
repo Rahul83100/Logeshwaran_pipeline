@@ -1,9 +1,15 @@
-/* 
+/*
  * Logishoren Portfolio — Globals CSS
  * Template vendor CSS is loaded via <link> tags in layout.tsx
  * Template style.css is loaded via <link> tag in layout.tsx
  * This file contains overrides and custom styles for Next.js integration
  */
+
+html {
+  scroll-behavior: smooth;
+}
+
+@tailwind base;
 
 /* Reset some Next.js defaults that conflict with template */
 * {

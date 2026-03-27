@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
+import ImageUploader from '@/components/admin/ImageUploader';
+
 interface ProfileData {
     name: string;
     title: string;
@@ -11,6 +13,7 @@ interface ProfileData {
     department: string;
     bio: string;
     photo: string;
+    bannerImage: string;
     phone: string;
     email: string;
     address: string;
@@ -21,7 +24,7 @@ interface ProfileData {
 }
 
 const emptyProfile: ProfileData = {
-    name: '', title: '', university: '', department: '', bio: '', photo: '',
+    name: '', title: '', university: '', department: '', bio: '', photo: '', bannerImage: '',
     phone: '', email: '', address: '', linkedin: '', google_scholar: '', researchgate: '', orcid: '',
 };
 
@@ -41,6 +44,7 @@ export default function ProfileManagement() {
             setForm({
                 name: data.name || '', title: data.title || '', university: data.university || '',
                 department: data.department || '', bio: data.bio || '', photo: data.photo || '',
+                bannerImage: data.bannerImage || '',
                 phone: data.phone || '', email: data.email || '', address: data.address || '',
                 linkedin: data.linkedin || '', google_scholar: data.google_scholar || '',
                 researchgate: data.researchgate || '', orcid: data.orcid || '',
@@ -86,7 +90,22 @@ export default function ProfileManagement() {
                         <div><label style={labelStyle}>Title / Designation</label><input style={inputStyle} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="e.g. Associate Professor" /></div>
                         <div><label style={labelStyle}>University</label><input style={inputStyle} value={form.university} onChange={(e) => setForm({ ...form, university: e.target.value })} placeholder="e.g. Christ University" /></div>
                         <div><label style={labelStyle}>Department</label><input style={inputStyle} value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} placeholder="e.g. Computer Science" /></div>
-                        <div><label style={labelStyle}>Photo URL</label><input style={inputStyle} value={form.photo} onChange={(e) => setForm({ ...form, photo: e.target.value })} placeholder="Link to profile photo" /></div>
+                        <div>
+                            <ImageUploader
+                                currentUrl={form.photo}
+                                onUrlChange={(url) => setForm({ ...form, photo: url })}
+                                storagePath="images/profile"
+                                label="Profile Photo"
+                            />
+                        </div>
+                        <div>
+                            <ImageUploader
+                                currentUrl={form.bannerImage}
+                                onUrlChange={(url) => setForm({ ...form, bannerImage: url })}
+                                storagePath="images/banner"
+                                label="Banner / Hero Image"
+                            />
+                        </div>
                         <div style={{ gridColumn: '1 / -1' }}><label style={labelStyle}>Bio</label><textarea style={{ ...inputStyle, height: '120px', resize: 'vertical' }} value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="A brief professional bio..." /></div>
                     </div>
                 </div>

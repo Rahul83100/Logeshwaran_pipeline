@@ -51,6 +51,12 @@ export default function LoginPage() {
           
           <div className="rbac-form-footer" style={{ marginTop: '20px', textAlign: 'center' }}>
             <p>Don't have an account? <Link href="/signup" className="rbac-link">Sign Up</Link></p>
+            <div style={{ marginTop: '25px', paddingTop: '20px', borderTop: '1px solid #2a2a3a' }}>
+              <Link href="/admin/login" style={{ fontSize: '13px', color: '#9393a5', textDecoration: 'none' }}>
+                <i className="fa-solid fa-lock" style={{ marginRight: '6px' }}></i>
+                Are you an Admin? Click here
+              </Link>
+            </div>
           </div>
         </form>
       </div>

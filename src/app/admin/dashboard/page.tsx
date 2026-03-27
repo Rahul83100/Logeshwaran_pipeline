@@ -32,13 +32,15 @@ export default function AdminDashboard() {
 
     async function loadDashboard() {
         try {
-            const [papers, blogs, education, experience, skills, pendingReqs] = await Promise.all([
+            const [papers, blogs, education, experience, skills, projects, pendingReqs, unreadMsgs] = await Promise.all([
                 getCountFromServer(collection(db, 'research_papers')),
                 getCountFromServer(collection(db, 'blog_posts')),
                 getCountFromServer(collection(db, 'education')),
                 getCountFromServer(collection(db, 'experience')),
                 getCountFromServer(collection(db, 'skills')),
+                getCountFromServer(collection(db, 'projects')),
                 getCountFromServer(query(collection(db, 'access_requests'), where('status', '==', 'pending'))),
+                getCountFromServer(query(collection(db, 'contact_submissions'), where('status', '==', 'new'))),
             ]);
 
             setStats([
@@ -47,6 +49,8 @@ export default function AdminDashboard() {
                 { label: 'Education', count: education.data().count, icon: 'fa-graduation-cap', color: '#4fd1c5', href: '/admin/content/education' },
                 { label: 'Experience', count: experience.data().count, icon: 'fa-briefcase', color: '#f6ad55', href: '/admin/content/experience' },
                 { label: 'Skills', count: skills.data().count, icon: 'fa-chart-bar', color: '#fc8181', href: '/admin/content/skills' },
+                { label: 'Projects', count: projects.data().count, icon: 'fa-images', color: '#9f7aea', href: '/admin/content/projects' },
+                { label: 'Unread Messages', count: unreadMsgs.data().count, icon: 'fa-envelope', color: '#ed64a6', href: '/admin/messages' },
                 { label: 'Pending Requests', count: pendingReqs.data().count, icon: 'fa-key', color: '#e53e3e', href: '/admin/access-requests' },
             ]);
 
@@ -113,6 +117,7 @@ export default function AdminDashboard() {
                     {[
                         { label: 'Add Research Paper', href: '/admin/content/research', icon: 'fa-plus' },
                         { label: 'Write Blog Post', href: '/admin/content/blog', icon: 'fa-pen' },
+                        { label: 'View Inbox', href: '/admin/messages', icon: 'fa-inbox' },
                         { label: 'Edit Profile', href: '/admin/content/profile', icon: 'fa-user-pen' },
                         { label: 'View Access Requests', href: '/admin/access-requests', icon: 'fa-key' },
                     ].map((action) => (

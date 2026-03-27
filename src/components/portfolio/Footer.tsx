@@ -14,15 +14,12 @@ export default function Footer() {
                 <div className="single-footer-wrapper border-right mr--20">
                   <div className="logo">
                     <Link href="/">
-                      <Image
-                        src="/assets/images/logo/logo-white.png"
-                        alt="Dr. Logishoren — Portfolio"
-                        width={150}
-                        height={40}
-                      />
+                      <h3 style={{ margin: 0, fontWeight: 700, color: '#000', letterSpacing: '1px', fontSize: '26px' }}>
+                        Dr. Logeshwaran <span style={{ color: '#e60000' }}>J</span>
+                      </h3>
                     </Link>
                   </div>
-                  <p className="description">
+                  <p className="description" style={{ marginTop: '20px' }}>
                     <span>Get Ready</span> To Explore Research & Innovation
                   </p>
                   <form action="#" className="newsletter-form-1 mt--40">
