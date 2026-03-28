@@ -90,20 +90,12 @@ export default function ProfileManagement() {
                         <div><label style={labelStyle}>Title / Designation</label><input style={inputStyle} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="e.g. Associate Professor" /></div>
                         <div><label style={labelStyle}>University</label><input style={inputStyle} value={form.university} onChange={(e) => setForm({ ...form, university: e.target.value })} placeholder="e.g. Christ University" /></div>
                         <div><label style={labelStyle}>Department</label><input style={inputStyle} value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} placeholder="e.g. Computer Science" /></div>
-                        <div>
+                        <div style={{ gridColumn: '1 / -1' }}>
                             <ImageUploader
                                 currentUrl={form.photo}
                                 onUrlChange={(url) => setForm({ ...form, photo: url })}
                                 storagePath="images/profile"
                                 label="Profile Photo"
-                            />
-                        </div>
-                        <div>
-                            <ImageUploader
-                                currentUrl={form.bannerImage}
-                                onUrlChange={(url) => setForm({ ...form, bannerImage: url })}
-                                storagePath="images/banner"
-                                label="Banner / Hero Image"
                             />
                         </div>
                         <div style={{ gridColumn: '1 / -1' }}><label style={labelStyle}>Bio</label><textarea style={{ ...inputStyle, height: '120px', resize: 'vertical' }} value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="A brief professional bio..." /></div>

@@ -75,7 +75,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
         <div className="admin-layout">
             {/* Sidebar */}
-            <aside className="admin-sidebar">
+            <aside className="admin-sidebar" style={{ display: 'flex', flexDirection: 'column' }}>
                 <div style={{ marginBottom: '30px' }}>
                     <h4 style={{ color: '#fff', margin: 0, fontSize: '18px' }}>🎓 Admin Panel</h4>
                     <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', margin: '4px 0 0' }}>
@@ -83,7 +83,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     </p>
                 </div>
 
-                <nav>
+                <nav style={{ flex: 1, overflowY: 'auto', marginBottom: '10px' }}>
                     {navItems.map((item) => (
                         <Link
                             key={item.href}
@@ -108,7 +108,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     ))}
                 </nav>
 
-                <div style={{ position: 'absolute', bottom: '20px', left: '20px', right: '20px' }}>
+                <div style={{ marginTop: 'auto', paddingBottom: '20px' }}>
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px' }}>
                         <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', margin: '0 0 8px' }}>
                             {user.email}
