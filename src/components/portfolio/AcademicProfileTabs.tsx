@@ -3,7 +3,21 @@
 import { useState, Suspense, useEffect } from "react";
 import Image from "next/image";
 
-const academicTabs = [
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+
+interface DynSection {
+    label: string;
+    sectionId: string;
+    showInNavbar: boolean;
+    isNew: boolean;
+    order: number;
+    isCustom: boolean;
+    firestoreCollection: string;
+    fields: { name: string; label: string; type: string }[];
+}
+
+const FALLBACK_TABS = [
     { name: "Profile", id: "profile" },
     { name: "Articles in Journals", id: "articles" },
     { name: "Book Chapters / Articles", id: "books" },
@@ -13,81 +27,6 @@ const academicTabs = [
     { name: "Workshops / FDP / Training Programmes", id: "workshops" },
     { name: "Awards / Achievements / Others", id: "awards" },
 ];
-
-import { mockResearchPapers, mockBookChapters, mockConferences, mockPatents, mockWorkshops, mockAwards, mockProjects } from "@/lib/mockData";
-
-const mappedArticles = mockResearchPapers.map((p: any) => ({
-    year: p.year,
-    title: p.title,
-    details: [
-        { label: "Journal", value: p.journal },
-        { label: "Authors", value: p.authors.join(', ') },
-        { label: "Abstract", value: p.abstract }
-    ]
-}));
-
-const mappedBooks = mockBookChapters.map((p: any) => ({
-    year: p.year,
-    title: p.title,
-    details: [
-        { label: "Book Title", value: p.bookTitle },
-        { label: "ISBN", value: p.isbn },
-        { label: "Month/Year", value: p.month }
-    ]
-}));
-
-const mappedConferences = mockConferences.map((p: any) => ({
-    year: p.year,
-    title: p.conference,
-    details: [
-        { label: "Presentation Title", value: p.presentationTitle || 'None' },
-        { label: "Role", value: p.role },
-        { label: "Organiser", value: p.organiser },
-        { label: "Level", value: p.level },
-        { label: "Date", value: p.date }
-    ]
-}));
-
-const mappedPatents = mockPatents.map((p: any) => ({
-    year: p.year,
-    title: p.title,
-    details: [
-        { label: "Inventors", value: p.inventors },
-        { label: "Granted Date", value: p.grantedDate },
-        { label: "Patent Number", value: p.patentNumber },
-        { label: "Field", value: p.fieldOfInvention }
-    ]
-}));
-
-const mappedProjects = mockProjects.map((p: any) => ({
-    year: "",
-    title: p.title,
-    details: [
-        { label: "Category", value: p.category },
-        { label: "Description", value: p.description }
-    ]
-}));
-
-const mappedWorkshops = mockWorkshops.map((p: any) => ({
-    year: p.year,
-    title: p.title,
-    details: [
-        { label: "Organiser", value: p.organiser },
-        { label: "Level", value: p.level },
-        { label: "Role", value: p.role },
-        { label: "Date", value: p.date }
-    ]
-}));
-
-const mappedAwards = mockAwards.map((p: any) => ({
-    year: p.year,
-    title: p.title,
-    details: [
-        { label: "Description", value: p.description },
-        { label: "Organisation", value: p.organisation },
-        { label: "Date", value: p.date }
-    ]
-}));
 
 function AccordionItem({ item, index, expandedKey, setExpandedKey }: { item: any, index: number, expandedKey: string | null, setExpandedKey: any }) {
     const isExpanded = expandedKey === (item.title + "-" + index);
@@ -112,9 +51,18 @@ function AccordionItem({ item, index, expandedKey, setExpandedKey }: { item: any
                 <div style={{ padding: '0 20px 20px 20px', color: '#333', fontSize: '14px', background: '#fefefe' }}>
                     <div style={{ borderTop: '1px solid #e0e0e0', paddingTop: '15px' }}>
                         {item.details.map((detail: any, idx: number) => (
-                            <p key={idx} style={{ marginBottom: '8px' }}>
-                                <strong style={{ color: '#000' }}>{detail.label}:</strong> {detail.value}
-                            </p>
+                            <div key={idx} style={{ marginBottom: '12px' }}>
+                                <strong style={{ color: '#000', display: 'block', marginBottom: '4px' }}>{detail.label}:</strong>
+                                {detail.type === 'image' && detail.value ? (
+                                    <div style={{ marginTop: '8px', position: 'relative', width: '100%', maxWidth: '300px', height: '200px' }}>
+                                        <Image src={detail.value} alt={detail.label} fill style={{ borderRadius: '8px', objectFit: 'cover' }} unoptimized />
+                                    </div>
+                                ) : detail.type === 'url' && detail.value ? (
+                                    <a href={detail.value} target="_blank" rel="noopener noreferrer" style={{ color: '#667eea', textDecoration: 'underline', wordBreak: 'break-all' }}>{detail.value}</a>
+                                ) : (
+                                    <span style={{ whiteSpace: 'pre-wrap', display: 'block' }}>{detail.value}</span>
+                                )}
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -126,6 +74,171 @@ function AccordionItem({ item, index, expandedKey, setExpandedKey }: { item: any
 function AcademicProfileTabsInner({ profile }: { profile: any }) {
     const [expandedKey, setExpandedKey] = useState<string | null>(null);
     const [activeSection, setActiveSection] = useState<string>("profile");
+    
+    const [mappedArticles, setMappedArticles] = useState<any[]>([]);
+    const [mappedBooks, setMappedBooks] = useState<any[]>([]);
+    const [mappedConferences, setMappedConferences] = useState<any[]>([]);
+    const [mappedPatents, setMappedPatents] = useState<any[]>([]);
+    const [mappedProjects, setMappedProjects] = useState<any[]>([]);
+    const [mappedWorkshops, setMappedWorkshops] = useState<any[]>([]);
+    const [mappedAwards, setMappedAwards] = useState<any[]>([]);
+
+    // Dynamic sections from Firestore
+    const [dynamicSections, setDynamicSections] = useState<DynSection[]>([]);
+    const [customSectionData, setCustomSectionData] = useState<Record<string, any[]>>({});
+    const [academicTabs, setAcademicTabs] = useState(FALLBACK_TABS);
+
+    useEffect(() => {
+        const fetchContent = async () => {
+            try {
+                const articlesSnap = await getDocs(query(collection(db, 'research_papers'), orderBy('year', 'desc')));
+                setMappedArticles(articlesSnap.docs.map((d: any) => {
+                    const p = d.data();
+                    return {
+                        year: p.year?.toString() || "",
+                        title: p.title || "",
+                        details: [
+                            { label: "Journal", value: p.journal || "" },
+                            { label: "Authors", value: p.authors || "" },
+                            { label: "Abstract", value: p.abstract || "" }
+                        ].filter(x => x.value)
+                    };
+                }));
+
+                const booksSnap = await getDocs(collection(db, 'books'));
+                setMappedBooks(booksSnap.docs.map((d: any) => {
+                    const p = d.data();
+                    return {
+                        year: p.year?.toString() || "",
+                        title: p.title || "",
+                        details: [
+                            { label: "Book Title", value: p.bookTitle || "" },
+                            { label: "ISBN", value: p.isbn || "" },
+                            { label: "Month/Year", value: p.month ? `${p.month} ${p.year}` : (p.year || "") }
+                        ].filter(x => x.value)
+                    };
+                }));
+
+                const conferencesSnap = await getDocs(collection(db, 'conferences'));
+                setMappedConferences(conferencesSnap.docs.map((d: any) => {
+                    const p = d.data();
+                    return {
+                        year: p.year?.toString() || "",
+                        title: p.conference || "",
+                        details: [
+                            { label: "Presentation Title", value: p.presentationTitle || 'None' },
+                            { label: "Role", value: p.role || "" },
+                            { label: "Organiser", value: p.organiser || "" },
+                            { label: "Level", value: p.level || "" },
+                            { label: "Date", value: p.date || "" }
+                        ].filter(x => x.value)
+                    };
+                }));
+
+                const patentsSnap = await getDocs(collection(db, 'patents'));
+                setMappedPatents(patentsSnap.docs.map((d: any) => {
+                    const p = d.data();
+                    return {
+                        year: p.year?.toString() || "",
+                        title: p.title || "",
+                        details: [
+                            { label: "Inventors", value: p.inventors || "" },
+                            { label: "Granted Date", value: p.grantedDate || "" },
+                            { label: "Patent Number", value: p.patentNumber || "" },
+                            { label: "Field", value: p.fieldOfInvention || "" }
+                        ].filter(x => x.value)
+                    };
+                }));
+
+                const projectsSnap = await getDocs(collection(db, 'projects'));
+                setMappedProjects(projectsSnap.docs.map((d: any) => {
+                    const p = d.data();
+                    return {
+                        year: p.year?.toString() || "",
+                        title: p.title || "",
+                        details: [
+                            { label: "Category", value: p.category || "" },
+                            { label: "Description", value: p.description || "" },
+                            { label: "Link", value: p.link || "" }
+                        ].filter(x => x.value)
+                    };
+                }));
+
+                const workshopsSnap = await getDocs(collection(db, 'workshops'));
+                setMappedWorkshops(workshopsSnap.docs.map((d: any) => {
+                    const p = d.data();
+                    return {
+                        year: p.year?.toString() || "",
+                        title: p.title || "",
+                        details: [
+                            { label: "Organiser", value: p.organiser || "" },
+                            { label: "Level", value: p.level || "" },
+                            { label: "Role", value: p.role || "" },
+                            { label: "Date", value: p.date || "" }
+                        ].filter(x => x.value)
+                    };
+                }));
+
+                const awardsSnap = await getDocs(collection(db, 'awards'));
+                setMappedAwards(awardsSnap.docs.map((d: any) => {
+                    const p = d.data();
+                    return {
+                        year: p.year?.toString() || "",
+                        title: p.title || "",
+                        details: [
+                            { label: "Description", value: p.description || "" },
+                            { label: "Organisation", value: p.organisation || "" },
+                            { label: "Date", value: p.date || "" }
+                        ].filter(x => x.value)
+                    };
+                }));
+
+            } catch (err) {
+                console.error("Error fetching academic data:", err);
+            }
+        };
+
+        fetchContent();
+    }, []);
+
+    // Fetch dynamic sections from Firestore
+    useEffect(() => {
+        const fetchSections = async () => {
+            try {
+                const snap = await getDocs(query(collection(db, 'navbar_sections'), orderBy('order', 'asc')));
+                if (!snap.empty) {
+                    const secs = snap.docs.map(d => d.data() as DynSection);
+                    setDynamicSections(secs);
+                    setAcademicTabs(secs.map(s => ({ name: s.label, id: s.sectionId })));
+
+                    // Fetch custom section data
+                    const customSecs = secs.filter(s => s.isCustom && s.firestoreCollection);
+                    const customData: Record<string, any[]> = {};
+                    for (const cs of customSecs) {
+                        try {
+                            const cSnap = await getDocs(collection(db, cs.firestoreCollection));
+                            customData[cs.sectionId] = cSnap.docs.map(d => {
+                                const data = d.data();
+                                return {
+                                    title: data.title || data.name || 'Untitled',
+                                    year: data.year?.toString() || '',
+                                    details: cs.fields
+                                        .filter(f => f.name !== 'title' && data[f.name])
+                                        .map(f => ({ label: f.label, value: data[f.name], type: f.type }))
+                                };
+                            });
+                        } catch {
+                            customData[cs.sectionId] = [];
+                        }
+                    }
+                    setCustomSectionData(customData);
+                }
+            } catch (err) {
+                console.error('Failed to fetch navbar sections:', err);
+            }
+        };
+        fetchSections();
+    }, []);
     
     // Simple scroll spy logic
     useEffect(() => {
@@ -293,6 +406,23 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                             <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Awards / Achievements / Others</h3>
                             {renderYearGroup(mappedAwards, "awards")}
                         </div>
+
+                        {/* Dynamic Custom Sections */}
+                        {dynamicSections.filter(s => s.isCustom).map((cs) => (
+                            <div key={cs.sectionId} id={cs.sectionId} style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
+                                <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>
+                                    {cs.label}
+                                    {cs.isNew && (
+                                        <span style={{ marginLeft: '10px', background: '#e60000', color: '#fff', padding: '3px 10px', borderRadius: '10px', fontSize: '12px', fontWeight: 700, verticalAlign: 'middle' }}>NEW</span>
+                                    )}
+                                </h3>
+                                {customSectionData[cs.sectionId] && customSectionData[cs.sectionId].length > 0 ? (
+                                    renderYearGroup(customSectionData[cs.sectionId], cs.sectionId)
+                                ) : (
+                                    <p style={{ color: '#888', textAlign: 'center', padding: '30px 0' }}>No content added yet. Add items from the Admin Dashboard.</p>
+                                )}
+                            </div>
+                        ))}
 
                     </div>
                 </div>
