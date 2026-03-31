@@ -17,6 +17,13 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
   return {
     title: `${post.title} — Dr. Logishoren`,
     description: post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      images: [post.thumbnail],
+      url: `https://logishoren.com/blog/${post.slug}`,
+      type: 'article',
+    },
   };
 }
 

@@ -39,12 +39,27 @@ export default function SkillsManagement() {
         setEditingId(item.id); setShowForm(true);
     }
 
+    const [alsoShare, setAlsoShare] = useState(false);
+
     async function handleSave(e: React.FormEvent) {
         e.preventDefault(); setSaving(true);
         try {
+            let savedId = editingId;
             if (editingId) { await updateDoc(doc(db, 'skills', editingId), { ...form, updated_at: serverTimestamp() }); }
-            else { await addDoc(collection(db, 'skills'), { ...form, created_at: serverTimestamp() }); }
-            setShowForm(false); await loadItems();
+            else { 
+                const docRef = await addDoc(collection(db, 'skills'), { ...form, created_at: serverTimestamp() }); 
+                savedId = docRef.id;
+            }
+
+            if (alsoShare && savedId) {
+                const shareUrl = `https://logishoren.com/skills/${savedId}`;
+                const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+                window.open(linkedinUrl, '_blank', 'width=600,height=600');
+            }
+
+            setShowForm(false); 
+            setAlsoShare(false);
+            await loadItems();
         } catch (err) { console.error(err); alert('Failed to save.'); }
         finally { setSaving(false); }
     }
@@ -91,7 +106,22 @@ export default function SkillsManagement() {
                             </div>
                             <div><label style={labelStyle}>Display Order</label><input style={inputStyle} type="number" value={form.order} onChange={(e) => setForm({ ...form, order: parseInt(e.target.value) })} /></div>
                         </div>
-                        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+
+                        <div style={{ margin: '20px 0', padding: '15px', background: '#f8f9fa', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid #e9ecef' }}>
+                            <input 
+                                type="checkbox" 
+                                id="alsoShare" 
+                                checked={alsoShare} 
+                                onChange={(e) => setAlsoShare(e.target.checked)}
+                                style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                            />
+                            <label htmlFor="alsoShare" style={{ fontSize: '14px', fontWeight: 500, color: '#0A66C2', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                                <i className="fa-brands fa-linkedin" style={{ marginRight: '8px', fontSize: '18px' }}></i>
+                                Also share on LinkedIn
+                            </label>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '10px' }}>
                             <button type="submit" disabled={saving} style={{ padding: '10px 24px', background: '#667eea', border: 'none', borderRadius: '8px', color: '#fff', cursor: 'pointer', fontWeight: 500 }}>{saving ? 'Saving...' : editingId ? 'Update' : 'Add'}</button>
                             <button type="button" onClick={() => setShowForm(false)} style={{ padding: '10px 24px', background: '#f0f0f0', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 500 }}>Cancel</button>
                         </div>

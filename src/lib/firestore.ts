@@ -255,6 +255,47 @@ export async function getTestimonials() {
   return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as Testimonial));
 }
 
+export async function getResearchPaper(slug: string) {
+  const q = query(collection(db, 'research_papers'), where('slug', '==', slug));
+  const snap = await getDocs(q);
+  if (snap.empty) return null;
+  return { id: snap.docs[0].id, ...sanitizeData(snap.docs[0].data()) } as ResearchPaper;
+}
+
+export async function getEducationItem(id: string) {
+  const snap = await getDoc(doc(db, 'education', id));
+  if (!snap.exists()) return null;
+  const data = sanitizeData(snap.data());
+  return {
+    id: snap.id,
+    title: data.degree || data.title,
+    institution: data.institution,
+    period: data.year_range || data.period,
+    description: data.description,
+    ...data
+  } as Education;
+}
+
+export async function getExperienceItem(id: string) {
+  const snap = await getDoc(doc(db, 'experience', id));
+  if (!snap.exists()) return null;
+  const data = sanitizeData(snap.data());
+  return {
+    id: snap.id,
+    company: data.organization || data.company,
+    duration: data.year_range || data.duration,
+    role: data.role,
+    description: data.description,
+    ...data
+  } as Experience;
+}
+
+export async function getSkillItem(id: string) {
+  const snap = await getDoc(doc(db, 'skills', id));
+  if (!snap.exists()) return null;
+  return { id: snap.id, ...sanitizeData(snap.data()) } as Skill;
+}
+
 export async function submitContactForm(data: ContactFormData) {
   await addDoc(collection(db, 'contact_submissions'), {
     ...data,
