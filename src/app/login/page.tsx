@@ -5,7 +5,9 @@ import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
-export default function LoginPage() {
+import { Suspense } from 'react';
+
+function LoginContent() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -62,4 +64,12 @@ export default function LoginPage() {
       </div>
     </div>
   )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div style={{ textAlign: 'center', marginTop: '100px', color: '#fff' }}>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
+  );
 }

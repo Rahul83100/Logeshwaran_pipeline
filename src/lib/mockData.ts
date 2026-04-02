@@ -23,14 +23,14 @@ const mockProfile: Profile = {
 };
 
 const mockSkills: Skill[] = [
-  { name: "5G/6G Communication Networks", category: "development", percentage: 95, icon: "fa-light fa-tower-broadcast", projectCount: 40 },
-  { name: "IoT Systems", category: "development", percentage: 90, icon: "fa-light fa-microchip", projectCount: 35 },
-  { name: "Deep Learning", category: "development", percentage: 90, icon: "fa-light fa-brain", projectCount: 30 },
-  { name: "Research & Publications", category: "design", percentage: 100, icon: "fa-light fa-book", projectCount: 100 },
-  { name: "Wireless Networks", category: "design", percentage: 95, icon: "fa-light fa-wifi", projectCount: 50 },
-  { name: "Edge & Fog Computing", category: "development", percentage: 85, icon: "fa-light fa-cloud", projectCount: 20 },
-  { name: "Patent Development", category: "design", percentage: 100, icon: "fa-light fa-lightbulb", projectCount: 300 },
-  { name: "Academic Mentoring", category: "design", percentage: 90, icon: "fa-light fa-chalkboard-teacher", projectCount: 25 },
+  { name: "5G/6G Communication Networks", category: "development", percentage: 58, icon: "fa-light fa-tower-broadcast", projectCount: 40 },
+  { name: "IoT Systems", category: "development", percentage: 46, icon: "fa-light fa-microchip", projectCount: 35 },
+  { name: "Deep Learning", category: "development", percentage: 75, icon: "fa-light fa-brain", projectCount: 30 },
+  { name: "Edge & Fog Computing", category: "development", percentage: 65, icon: "fa-light fa-cloud", projectCount: 20 },
+  { name: "Research & Publications", category: "design", percentage: 90, icon: "fa-light fa-book", projectCount: 100 },
+  { name: "Wireless Networks", category: "design", percentage: 85, icon: "fa-light fa-wifi", projectCount: 50 },
+  { name: "Patent Development", category: "design", percentage: 95, icon: "fa-light fa-lightbulb", projectCount: 300 },
+  { name: "Academic Mentoring", category: "design", percentage: 92, icon: "fa-light fa-chalkboard-teacher", projectCount: 25 },
 ];
 
 const mockEducation: Education[] = [
@@ -829,3 +829,25 @@ const mockAwards: Award[] = [
 ];
 
 export { mockBookChapters, mockConferences, mockPatents, mockWorkshops, mockAwards, mockProfile, mockSkills, mockEducation, mockExperience, mockResearchPapers, mockBlogPosts, mockProjects, mockTestimonials };
+
+export const mockLatestServices = [
+  { id: '1', title: '5G Architecture Design', description: 'Expert consultation and design for next-generation 5G networks.', order: 1 },
+  { id: '2', title: 'IoT Systems Integration', description: 'End-to-end integration of smart IoT devices and cloud platforms.', order: 2 },
+  { id: '3', title: 'Data Analytics & AI', description: 'Advanced computational models for deep learning and predictive analytics.', order: 3 }
+];
+
+export const mockCompanyLogos = [
+  { id: '1', name: 'Christ University', imageUrl: '/assets/images/our-supported-company/company-logo-1.svg', order: 1 },
+  { id: '2', name: 'IEEE', imageUrl: '/assets/images/our-supported-company/company-logo-2.svg', order: 2 },
+  { id: '3', name: 'Springer', imageUrl: '/assets/images/our-supported-company/company-logo-3.svg', order: 3 },
+  { id: '4', name: 'Elsevier', imageUrl: '/assets/images/our-supported-company/company-logo-4.svg', order: 4 },
+  { id: '5', name: 'Stanford', imageUrl: '/assets/images/our-supported-company/company-logo-5.svg', order: 5 },
+  { id: '6', name: 'TechPartner', imageUrl: '/assets/images/our-supported-company/company-logo-6.svg', order: 6 },
+];
+
+export const mockSkillWidgets = [
+  { id: '1', title: 'Research Publications', count: '100+', description: 'Extensive research published in top-tier journals including Nature, IEEE, and Springer.', icon: 'fa-light fa-book', order: 1 },
+  { id: '2', title: 'Patents Granted', count: '300+', description: 'Innovating cutting-edge technologies in IoT, 5G networks, and intelligent computation.', icon: 'fa-light fa-lightbulb', order: 2 },
+  { id: '3', title: 'Academic Mentoring', count: '50+', description: 'Guiding PhD scholars and postgraduate students toward academic and research excellence.', icon: 'fa-light fa-chalkboard-teacher', order: 3 }
+];
+

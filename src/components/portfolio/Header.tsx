@@ -9,22 +9,20 @@ import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 interface NavSection {
+  id?: string;
   label: string;
-  sectionId: string;
+  path: string;
   showInNavbar: boolean;
-  isNew: boolean;
+  isNew?: boolean;
   order: number;
 }
 
 const FALLBACK_SECTIONS: NavSection[] = [
-  { label: 'Profile', sectionId: 'profile', showInNavbar: true, isNew: false, order: 0 },
-  { label: 'Journals', sectionId: 'articles', showInNavbar: true, isNew: false, order: 1 },
-  { label: 'Books', sectionId: 'books', showInNavbar: true, isNew: false, order: 2 },
-  { label: 'Conferences', sectionId: 'conferences', showInNavbar: true, isNew: false, order: 3 },
-  { label: 'Patents', sectionId: 'patents', showInNavbar: true, isNew: false, order: 4 },
-  { label: 'Projects', sectionId: 'projects', showInNavbar: true, isNew: false, order: 5 },
-  { label: 'Workshops', sectionId: 'workshops', showInNavbar: true, isNew: false, order: 6 },
-  { label: 'Awards', sectionId: 'awards', showInNavbar: true, isNew: false, order: 7 },
+  { label: 'Home', path: '/', showInNavbar: true, isNew: false, order: 0 },
+  { label: 'About', path: '/#about', showInNavbar: true, isNew: false, order: 1 },
+  { label: 'Projects', path: '/projects', showInNavbar: true, isNew: false, order: 2 },
+  { label: 'Blog', path: '/#blog', showInNavbar: true, isNew: false, order: 3 },
+  { label: 'Contact', path: '/#contact', showInNavbar: true, isNew: false, order: 4 },
 ];
 
 export default function Header() {
@@ -32,22 +30,20 @@ export default function Header() {
   const [sections, setSections] = useState<NavSection[]>(FALLBACK_SECTIONS);
   const { user, userData } = useAuth();
 
-  // Fetch navbar sections from Firestore
   useEffect(() => {
     const fetchSections = async () => {
       try {
-        const snap = await getDocs(query(collection(db, 'navbar_sections'), orderBy('order', 'asc')));
+        const snap = await getDocs(query(collection(db, 'main_navbar'), orderBy('order', 'asc')));
         if (!snap.empty) {
           setSections(snap.docs.map(d => d.data() as NavSection));
         }
       } catch (err) {
-        console.error('Failed to fetch navbar sections:', err);
+        console.warn('Failed to fetch main_navbar. Using fallback data.', err);
       }
     };
     fetchSections();
   }, []);
 
-  // Sync body class for template transitions and overlays
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.classList.add("sidemenu-active");
@@ -66,9 +62,9 @@ export default function Header() {
     }
   };
 
-  const scrollToSection = (e: any, targetId: string) => {
-    if (window.location.pathname === "/") {
-      const id = targetId.replace("/#", "").replace("#", "");
+  const scrollToSection = (e: any, targetPath: string) => {
+    if (targetPath.startsWith('/#') && window.location.pathname === "/") {
+      const id = targetPath.replace("/#", "");
       const element = document.getElementById(id);
       if (element) {
         e.preventDefault();
@@ -80,6 +76,8 @@ export default function Header() {
         const offsetPosition = elementPosition - offset;
         window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
       }
+    } else {
+      setMobileMenuOpen(false);
     }
   };
 
@@ -88,7 +86,6 @@ export default function Header() {
 
   return (
     <>
-      {/* Header */}
       <header className="tmp-header-area-start header-one header--sticky header--transparent">
         <div className="container">
           <div className="row">
@@ -102,8 +99,8 @@ export default function Header() {
                 <nav className="tmp-mainmenu-nav d-none d-xl-block">
                   <ul className="tmp-mainmenu">
                     {navbarSections.map((sec) => (
-                      <li key={sec.sectionId}>
-                        <Link href={`/#${sec.sectionId}`} onClick={(e) => scrollToSection(e, sec.sectionId)}>
+                      <li key={sec.label}>
+                        <Link href={sec.path} onClick={(e) => scrollToSection(e, sec.path)}>
                           {sec.label}
                           {sec.isNew && (
                             <span style={{ marginLeft: '4px', background: '#e60000', color: '#fff', padding: '1px 6px', borderRadius: '8px', fontSize: '9px', fontWeight: 700, verticalAlign: 'super' }}>NEW</span>
@@ -198,10 +195,10 @@ export default function Header() {
                 </div>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '15px' }}>
                   {allSections.map((sec) => (
-                    <li key={sec.sectionId}>
+                    <li key={sec.label}>
                       <Link
-                        href={`/#${sec.sectionId}`}
-                        onClick={(e) => scrollToSection(e, sec.sectionId)}
+                        href={sec.path}
+                        onClick={(e) => scrollToSection(e, sec.path)}
                         style={{ color: '#333', fontSize: '16px', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}
                       >
                         {sec.label}

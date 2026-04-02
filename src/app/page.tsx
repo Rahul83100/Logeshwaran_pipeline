@@ -2,9 +2,12 @@ import Banner from "@/components/portfolio/Banner";
 import ServiceCards from "@/components/portfolio/ServiceCards";
 import CounterStats from "@/components/portfolio/CounterStats";
 import SkillBars from "@/components/portfolio/SkillBars";
+import LatestServiceSection from "@/components/portfolio/LatestServiceSection";
 import EducationTimeline from "@/components/portfolio/EducationTimeline";
 import ExperienceSection from "@/components/portfolio/ExperienceSection";
+import CompanyLogos from "@/components/portfolio/CompanyLogos";
 import PortfolioGrid from "@/components/portfolio/PortfolioGrid";
+import MySkillWidget from "@/components/portfolio/MySkillWidget";
 import TestimonialSlider from "@/components/portfolio/TestimonialSlider";
 import ContactForm from "@/components/portfolio/ContactForm";
 import BlogCard from "@/components/portfolio/BlogCard";
@@ -17,8 +20,10 @@ import {
   getProjects,
   getTestimonials,
   getBlogPosts,
+  getLatestServices,
+  getCompanyLogos,
+  getSkillWidgets
 } from "@/lib/firestore";
-import AcademicProfileTabs from "@/components/portfolio/AcademicProfileTabs";
 
 export default async function Home() {
   const profile = await getProfile();
@@ -28,20 +33,33 @@ export default async function Home() {
   const projects = await getProjects();
   const testimonials = await getTestimonials();
   const blogPosts = await getBlogPosts();
+  
+  const latestServices = await getLatestServices();
+  const companyLogos = await getCompanyLogos();
+  const skillWidgets = await getSkillWidgets();
 
   return (
     <>
-      {/* Banner / Hero */}
       <ScrollFadeIn delay={0.1}>
         <Banner profile={profile} />
       </ScrollFadeIn>
 
-      {/* Counter Stats */}
+      <ScrollFadeIn delay={0.1}>
+        <ServiceCards skills={skills} />
+      </ScrollFadeIn>
+
       <ScrollFadeIn delay={0.2} yOffset={20}>
         <CounterStats profile={profile} />
       </ScrollFadeIn>
 
-      {/* Education Timeline + Experience */}
+      <ScrollFadeIn delay={0.1}>
+        <SkillBars skills={skills} />
+      </ScrollFadeIn>
+
+      <ScrollFadeIn delay={0.1}>
+        <LatestServiceSection services={latestServices} />
+      </ScrollFadeIn>
+
       <ScrollFadeIn delay={0.1}>
         <EducationTimeline education={education} />
       </ScrollFadeIn>
@@ -52,23 +70,25 @@ export default async function Home() {
         </div>
       </ScrollFadeIn>
 
-      <ScrollFadeIn delay={0.1}>
-        <div style={{ marginTop: '80px' }}>
-          <AcademicProfileTabs profile={profile} />
-        </div>
-      </ScrollFadeIn>
 
-      {/* Portfolio Grid */}
+
+
       <ScrollFadeIn delay={0.1}>
         <PortfolioGrid projects={projects} />
       </ScrollFadeIn>
 
-      {/* Contact Form */}
+      <ScrollFadeIn delay={0.1}>
+        <MySkillWidget widgets={skillWidgets} />
+      </ScrollFadeIn>
+
+      <ScrollFadeIn delay={0.1}>
+        <TestimonialSlider testimonials={testimonials} />
+      </ScrollFadeIn>
+
       <ScrollFadeIn delay={0.2}>
         <ContactForm />
       </ScrollFadeIn>
 
-      {/* Blog Section */}
       <ScrollFadeIn delay={0.1}>
         <section className="blog-and-news-are tmp-section-gap">
         <div className="container">
