@@ -48,16 +48,31 @@ export default function ResearchManagement() {
         setShowForm(true);
     }
 
+    const [alsoShare, setAlsoShare] = useState(false);
+
     async function handleSave(e: React.FormEvent) {
         e.preventDefault();
         setSaving(true);
         try {
+            let savedId = editingId;
+            const slug = form.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+            const docData = { ...form, slug, updated_at: serverTimestamp() };
+
             if (editingId) {
-                await updateDoc(doc(db, 'research_papers', editingId), { ...form, updated_at: serverTimestamp() });
+                await updateDoc(doc(db, 'research_papers', editingId), docData);
             } else {
-                await addDoc(collection(db, 'research_papers'), { ...form, created_at: serverTimestamp() });
+                const docRef = await addDoc(collection(db, 'research_papers'), { ...docData, created_at: serverTimestamp() });
+                savedId = docRef.id;
             }
+
+            if (alsoShare && !form.is_private) {
+                const shareUrl = `https://logishoren.com/research/${slug}`;
+                const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+                window.open(linkedinUrl, '_blank', 'width=600,height=600');
+            }
+
             setShowForm(false);
+            setAlsoShare(false);
             await loadPapers();
         } catch (err) {
             console.error('Save error:', err);
@@ -131,7 +146,23 @@ export default function ResearchManagement() {
                                 <textarea style={{ ...inputStyle, height: '100px', resize: 'vertical' }} value={form.abstract} onChange={(e) => setForm({ ...form, abstract: e.target.value })} placeholder="Brief description of the paper" />
                             </div>
                         </div>
-                        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+
+                        <div style={{ margin: '20px 0', padding: '15px', background: '#f8f9fa', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid #e9ecef' }}>
+                            <input 
+                                type="checkbox" 
+                                id="alsoShare" 
+                                checked={alsoShare} 
+                                onChange={(e) => setAlsoShare(e.target.checked)}
+                                disabled={form.is_private}
+                                style={{ width: '18px', height: '18px', cursor: form.is_private ? 'not-allowed' : 'pointer' }}
+                            />
+                            <label htmlFor="alsoShare" style={{ fontSize: '14px', fontWeight: 500, color: form.is_private ? '#ccc' : '#0A66C2', cursor: form.is_private ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center' }}>
+                                <i className="fa-brands fa-linkedin" style={{ marginRight: '8px', fontSize: '18px' }}></i>
+                                Also share on LinkedIn
+                            </label>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '10px' }}>
                             <button type="submit" disabled={saving} style={{ padding: '10px 24px', background: '#667eea', border: 'none', borderRadius: '8px', color: '#fff', cursor: 'pointer', fontWeight: 500 }}>
                                 {saving ? 'Saving...' : editingId ? 'Update Paper' : 'Add Paper'}
                             </button>
