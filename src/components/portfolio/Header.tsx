@@ -92,8 +92,8 @@ export default function Header() {
             <div className="col-lg-12">
               <div className="header-content">
                 <div className="logo">
-                  <Link href="/">
-                    <h3 style={{ margin: 0, fontWeight: 700, color: '#000', letterSpacing: '1px', fontSize: '22px' }}>Dr. Logeshwaran <span style={{ color: '#e60000' }}>J</span></h3>
+                  <Link href="/" style={{ textDecoration: 'none', border: 'none', outline: 'none', display: 'inline-block' }}>
+                    <img src="/assets/images/logo/main-logo.png" alt="Logo" style={{ maxHeight: '100px', objectFit: 'contain', padding: '0', margin: '-10px 0', border: 'none', mixBlendMode: 'multiply' }} />
                   </Link>
                 </div>
                 <nav className="tmp-mainmenu-nav d-none d-xl-block">
@@ -177,10 +177,8 @@ export default function Header() {
               <div className="inner" style={{ padding: '30px' }}>
                 <div className="header-top" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
                   <div className="logo">
-                    <Link href="/" className="logo-area" onClick={() => setMobileMenuOpen(false)}>
-                      <h3 style={{ margin: 0, fontWeight: 700, letterSpacing: '1px', fontSize: '20px', color: '#1a1a2e' }}>
-                        Dr. Logeshwaran <span style={{ color: '#e60000' }}>J</span>
-                      </h3>
+                    <Link href="/" className="logo-area" onClick={() => setMobileMenuOpen(false)} style={{ textDecoration: 'none', border: 'none', outline: 'none' }}>
+                      <img src="/assets/images/logo/main-logo.png" alt="Logo" style={{ maxHeight: '80px', objectFit: 'contain', border: 'none', margin: '-5px 0', mixBlendMode: 'multiply' }} />
                     </Link>
                   </div>
                   <div className="close-menu">

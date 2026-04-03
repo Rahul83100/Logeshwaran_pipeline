@@ -23,6 +23,7 @@ export default function WorkshopsManagement() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState(emptyWorkshop);
     const [saving, setSaving] = useState(false);
+    const [alsoShare, setAlsoShare] = useState(false);
 
     useEffect(() => { loadWorkshops(); }, []);
 
@@ -57,7 +58,13 @@ export default function WorkshopsManagement() {
             } else {
                 await addDoc(collection(db, 'workshops'), { ...form, created_at: serverTimestamp() });
             }
+            if (alsoShare) {
+                const shareUrl = `https://logishoren.com/#academic`;
+                const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+                window.open(linkedinUrl, '_blank', 'width=600,height=600');
+            }
             setShowForm(false);
+            setAlsoShare(false);
             await loadWorkshops();
         } catch (err) { console.error(err); alert('Failed to save.'); }
         finally { setSaving(false); }
@@ -118,6 +125,21 @@ export default function WorkshopsManagement() {
                                 </div>
                             </div>
                         </div>
+
+                        <div style={{ margin: '20px 0', padding: '15px', background: '#f8f9fa', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid #e9ecef' }}>
+                            <input 
+                                type="checkbox" 
+                                id="alsoSharews" 
+                                checked={alsoShare} 
+                                onChange={(e) => setAlsoShare(e.target.checked)}
+                                style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                            />
+                            <label htmlFor="alsoSharews" style={{ fontSize: '14px', fontWeight: 500, color: '#0A66C2', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                                <i className="fa-brands fa-linkedin" style={{ marginRight: '8px', fontSize: '18px' }}></i>
+                                Also share on LinkedIn
+                            </label>
+                        </div>
+
                         <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
                             <button type="submit" disabled={saving} style={{ padding: '10px 24px', background: '#38b2ac', border: 'none', borderRadius: '8px', color: '#fff', cursor: 'pointer', fontWeight: 500 }}>
                                 {saving ? 'Saving...' : editingId ? 'Update Workshop' : 'Add Workshop'}

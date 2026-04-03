@@ -38,10 +38,10 @@ export default function LatestServiceSection({
             {description}
           </p>
         </div>
-        <div className="row">
-          <div className="col-lg-6">
+        <div className="row" style={{ display: 'flex', alignItems: 'stretch' }}>
+          <div className="col-lg-6" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             {services.map((service, index) => (
-              <div key={service.id || index} className={`service-card-v2 tmponhover tmp-scroll-trigger tmp-fade-in animation-order-${index + 1}`}>
+              <div key={service.id || index} className={`service-card-v2 tmponhover tmp-scroll-trigger tmp-fade-in animation-order-${index + 1}`} style={{ flex: 1, marginBottom: index === services.length - 1 ? 0 : '20px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <h2 className="service-card-num">
                   <span>{String(index + 1).padStart(2, '0')}.</span>{service.title}
                 </h2>
@@ -51,12 +51,13 @@ export default function LatestServiceSection({
               </div>
             ))}
           </div>
-          <div className="col-lg-6">
-            <div className="service-card-user-image">
+          <div className="col-lg-6" style={{ display: 'flex' }}>
+            <div className="service-card-user-image" style={{ height: '100%', width: '100%' }}>
               <img 
                 className="tmp-scroll-trigger tmp-zoom-in animation-order-1" 
                 src={imageUrl} 
                 alt="latest-user-image" 
+                style={{ height: '100%', width: '100%', objectFit: 'cover', borderRadius: '10px' }}
               />
             </div>
           </div>
