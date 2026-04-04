@@ -6,6 +6,16 @@ import Image from "next/image";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+import { 
+    mockResearchPapers, 
+    mockBookChapters, 
+    mockConferences, 
+    mockPatents, 
+    mockProjects, 
+    mockWorkshops, 
+    mockAwards 
+} from "@/lib/mockData";
+
 interface DynSection {
     label: string;
     sectionId: string;
@@ -90,6 +100,7 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
 
     useEffect(() => {
         const fetchContent = async () => {
+            // Research Papers
             try {
                 const articlesSnap = await getDocs(query(collection(db, 'research_papers'), orderBy('year', 'desc')));
                 setMappedArticles(articlesSnap.docs.map((d: any) => {
@@ -104,7 +115,17 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
+            } catch (err) {
+                console.warn("Using fallbacks for articles");
+                setMappedArticles(mockResearchPapers.map(p => ({
+                    year: p.year?.toString() || "",
+                    title: p.title || "",
+                    details: [{ label: "Journal", value: p.journal || "" }, { label: "Authors", value: Array.isArray(p.authors) ? p.authors.join(", ") : p.authors }]
+                })));
+            }
 
+            // Books
+            try {
                 const booksSnap = await getDocs(collection(db, 'books'));
                 setMappedBooks(booksSnap.docs.map((d: any) => {
                     const p = d.data();
@@ -118,7 +139,16 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
+            } catch {
+                setMappedBooks(mockBookChapters.map(p => ({
+                    year: p.year?.toString() || "",
+                    title: p.title || "",
+                    details: [{ label: "Book Title", value: p.bookTitle || "" }]
+                })));
+            }
 
+            // Conferences
+            try {
                 const conferencesSnap = await getDocs(collection(db, 'conferences'));
                 setMappedConferences(conferencesSnap.docs.map((d: any) => {
                     const p = d.data();
@@ -134,7 +164,16 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
+            } catch {
+                setMappedConferences(mockConferences.map(p => ({
+                    year: p.year?.toString() || "",
+                    title: p.conference || "",
+                    details: [{ label: "Role", value: p.role || "" }]
+                })));
+            }
 
+            // Patents
+            try {
                 const patentsSnap = await getDocs(collection(db, 'patents'));
                 setMappedPatents(patentsSnap.docs.map((d: any) => {
                     const p = d.data();
@@ -149,7 +188,16 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
+            } catch {
+                setMappedPatents(mockPatents.map(p => ({
+                    year: p.year?.toString() || "",
+                    title: p.title || "",
+                    details: [{ label: "Number", value: p.patentNumber || "" }]
+                })));
+            }
 
+            // Projects
+            try {
                 const projectsSnap = await getDocs(collection(db, 'projects'));
                 setMappedProjects(projectsSnap.docs.map((d: any) => {
                     const p = d.data();
@@ -163,7 +211,16 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
+            } catch {
+                setMappedProjects(mockProjects.map(p => ({
+                    year: "Project",
+                    title: p.title || "",
+                    details: [{ label: "Description", value: p.description || "" }]
+                })));
+            }
 
+            // Workshops
+            try {
                 const workshopsSnap = await getDocs(collection(db, 'workshops'));
                 setMappedWorkshops(workshopsSnap.docs.map((d: any) => {
                     const p = d.data();
@@ -178,7 +235,16 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
+            } catch {
+                setMappedWorkshops(mockWorkshops.map(p => ({
+                    year: p.year?.toString() || "",
+                    title: p.title || "",
+                    details: [{ label: "Organiser", value: p.organiser || "" }]
+                })));
+            }
 
+            // Awards
+            try {
                 const awardsSnap = await getDocs(collection(db, 'awards'));
                 setMappedAwards(awardsSnap.docs.map((d: any) => {
                     const p = d.data();
@@ -192,9 +258,12 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
-
-            } catch (err) {
-                console.error("Error fetching academic data:", err);
+            } catch {
+                setMappedAwards(mockAwards.map(p => ({
+                    year: p.year?.toString() || "",
+                    title: p.title || "",
+                    details: [{ label: "Org", value: p.organisation || "" }]
+                })));
             }
         };
 

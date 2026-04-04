@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -180,12 +181,19 @@ export default function AdminLogin() {
                     </button>
                 </form>
 
+                <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                    <Link href="/" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '13px', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#fff'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.6)'}>
+                        <i className="fa-solid fa-arrow-left" style={{ marginRight: '8px' }}></i>
+                        Back to Portfolio
+                    </Link>
+                </div>
+
                 <p
                     style={{
                         textAlign: 'center',
                         color: 'rgba(255,255,255,0.3)',
                         fontSize: '12px',
-                        marginTop: '24px',
+                        marginTop: '20px',
                     }}
                 >
                     Authorized personnel only

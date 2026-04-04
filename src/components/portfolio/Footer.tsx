@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 
@@ -74,25 +76,30 @@ export default function Footer() {
                       <a href="tel:+919876543210">+91 98765 43210</a>
                     </li>
                   </ul>
-                  <div className="social-link footer">
-                    <a href="#">
-                      <i className="fa-brands fa-instagram"></i>
-                    </a>
-                    <a href="#">
-                      <i className="fa-brands fa-linkedin-in"></i>
-                    </a>
-                    <a href="#">
-                      <i className="fa-brands fa-twitter"></i>
-                    </a>
-                    <a href="#">
-                      <i className="fa-brands fa-facebook-f"></i>
-                    </a>
+                  <div className="social-link footer" style={{ display: 'none' }}>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+          <div className="footer-social-row" style={{ marginTop: '40px', paddingTop: '40px', borderTop: '1px solid rgba(0,0,0,0.05)', textAlign: 'center' }}>
+            <h5 style={{ marginBottom: '25px', fontSize: '15px', color: '#888', fontWeight: 500, letterSpacing: '1px' }}>CONNECT WITH ME</h5>
+            <div className="social-link" style={{ display: 'flex', gap: '25px', justifyContent: 'center' }}>
+               <a href="#" style={{ width: '45px', height: '45px', borderRadius: '50%', background: '#fff', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#333', fontSize: '20px', transition: 'all 0.3s ease' }} onMouseEnter={e => { e.currentTarget.style.background = '#e60000'; e.currentTarget.style.color = '#fff'; }} onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = '#333'; }}>
+                 <i className="fa-brands fa-instagram"></i>
+               </a>
+               <a href="#" style={{ width: '45px', height: '45px', borderRadius: '50%', background: '#fff', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#333', fontSize: '20px', transition: 'all 0.3s ease' }} onMouseEnter={e => { e.currentTarget.style.background = '#0077b5'; e.currentTarget.style.color = '#fff'; }} onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = '#333'; }}>
+                 <i className="fa-brands fa-linkedin-in"></i>
+               </a>
+               <a href="#" style={{ width: '45px', height: '45px', borderRadius: '50%', background: '#fff', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#333', fontSize: '20px', transition: 'all 0.3s ease' }} onMouseEnter={e => { e.currentTarget.style.background = '#1da1f2'; e.currentTarget.style.color = '#fff'; }} onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = '#333'; }}>
+                 <i className="fa-brands fa-twitter"></i>
+               </a>
+               <a href="#" style={{ width: '45px', height: '45px', borderRadius: '50%', background: '#fff', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#333', fontSize: '20px', transition: 'all 0.3s ease' }} onMouseEnter={e => { e.currentTarget.style.background = '#1877f2'; e.currentTarget.style.color = '#fff'; }} onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = '#333'; }}>
+                 <i className="fa-brands fa-facebook-f"></i>
+               </a>
+            </div>
+          </div>
+          </div>
       </footer>
       <div className="copyright-area-one">
         <div className="container">

@@ -19,10 +19,10 @@ interface NavSection {
 
 const FALLBACK_SECTIONS: NavSection[] = [
   { label: 'Home', path: '/', showInNavbar: true, isNew: false, order: 0 },
-  { label: 'About', path: '/#about', showInNavbar: true, isNew: false, order: 1 },
+  { label: 'About', path: '/about', showInNavbar: true, isNew: false, order: 1 },
   { label: 'Projects', path: '/projects', showInNavbar: true, isNew: false, order: 2 },
-  { label: 'Blog', path: '/#blog', showInNavbar: true, isNew: false, order: 3 },
-  { label: 'Contact', path: '/#contact', showInNavbar: true, isNew: false, order: 4 },
+  { label: 'Blog', path: '/blog', showInNavbar: true, isNew: false, order: 3 },
+  { label: 'Contact', path: '/contact', showInNavbar: true, isNew: false, order: 4 },
 ];
 
 export default function Header() {
@@ -81,8 +81,18 @@ export default function Header() {
     }
   };
 
-  const navbarSections = sections.filter(s => s.showInNavbar);
-  const allSections = sections;
+  const navbarSections = sections.filter(s => s.showInNavbar).map(s => {
+    if (s.label === 'About' && s.path === '/#about') return { ...s, path: '/about' };
+    if (s.label === 'Blog' && s.path === '/#blog') return { ...s, path: '/blog' };
+    if (s.label === 'Contact' && s.path === '/#contact') return { ...s, path: '/contact' };
+    return s;
+  });
+  const allSections = sections.map(s => {
+    if (s.label === 'About' && s.path === '/#about') return { ...s, path: '/about' };
+    if (s.label === 'Blog' && s.path === '/#blog') return { ...s, path: '/blog' };
+    if (s.label === 'Contact' && s.path === '/#contact') return { ...s, path: '/contact' };
+    return s;
+  });
 
   return (
     <>
@@ -117,22 +127,22 @@ export default function Header() {
                       <button
                         onClick={handleLogout}
                         style={{
-                          padding: '5px 14px', fontSize: '12px', fontWeight: 500,
-                          background: 'transparent', border: '1px solid #e60000', color: '#e60000',
-                          borderRadius: '20px', cursor: 'pointer', transition: 'all 0.25s ease', whiteSpace: 'nowrap',
+                          padding: '7px 18px', fontSize: '14px', fontWeight: 600,
+                          background: 'transparent', border: '1.5px solid #e60000', color: '#e60000',
+                          borderRadius: '25px', cursor: 'pointer', transition: 'all 0.25s ease', whiteSpace: 'nowrap',
                         }}
                         onMouseEnter={(e) => { e.currentTarget.style.background = '#e60000'; e.currentTarget.style.color = '#fff'; }}
                         onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e60000'; }}
                       >
                         Logout
                       </button>
-                    ) : (
+                    ) : ( 
                       <Link
                         href="/login"
                         style={{
-                          padding: '5px 14px', fontSize: '12px', fontWeight: 500,
-                          background: 'transparent', border: '1px solid #e60000', color: '#e60000',
-                          borderRadius: '20px', textDecoration: 'none', display: 'inline-block',
+                          padding: '7px 18px', fontSize: '14px', fontWeight: 600,
+                          background: 'transparent', border: '1.5px solid #e60000', color: '#e60000',
+                          borderRadius: '25px', textDecoration: 'none', display: 'inline-block',
                           transition: 'all 0.25s ease', whiteSpace: 'nowrap',
                         }}
                         onMouseEnter={(e) => { e.currentTarget.style.background = '#e60000'; e.currentTarget.style.color = '#fff'; }}
@@ -217,15 +227,6 @@ export default function Header() {
                     <Link href="/admin/login" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '13px', color: '#9393a5', textAlign: 'center', display: 'block', textDecoration: 'none' }}>Admin? Click here</Link>
                   </li>
                 </ul>
-                <div className="social-wrapper mt--40" style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid #eee' }}>
-                  <span className="subtitle" style={{ fontSize: '14px', color: '#888', display: 'block', marginBottom: '15px' }}>Find with me</span>
-                  <div className="social-link" style={{ display: 'flex', gap: '15px' }}>
-                    <a href="#" style={{ color: '#333', fontSize: '18px' }}><i className="fa-brands fa-instagram"></i></a>
-                    <a href="#" style={{ color: '#333', fontSize: '18px' }}><i className="fa-brands fa-linkedin-in"></i></a>
-                    <a href="#" style={{ color: '#333', fontSize: '18px' }}><i className="fa-brands fa-twitter"></i></a>
-                    <a href="#" style={{ color: '#333', fontSize: '18px' }}><i className="fa-brands fa-facebook-f"></i></a>
-                  </div>
-                </div>
               </div>
             </motion.div>
             

@@ -43,7 +43,16 @@ export default function ResearchManagement() {
     }
 
     function openEdit(paper: Paper) {
-        setForm({ title: paper.title, abstract: paper.abstract, authors: paper.authors, journal: paper.journal, year: paper.year, doi: paper.doi, pdf_url: paper.pdf_url, is_private: paper.is_private });
+        setForm({ 
+            title: paper.title || '', 
+            abstract: paper.abstract || '', 
+            authors: paper.authors || '', 
+            journal: paper.journal || '', 
+            year: paper.year || new Date().getFullYear(), 
+            doi: paper.doi || '', 
+            pdf_url: paper.pdf_url || '', 
+            is_private: paper.is_private || false 
+        });
         setEditingId(paper.id);
         setShowForm(true);
     }
@@ -74,9 +83,13 @@ export default function ResearchManagement() {
             setShowForm(false);
             setAlsoShare(false);
             await loadPapers();
-        } catch (err) {
+        } catch (err: any) {
             console.error('Save error:', err);
-            alert('Failed to save. Check console for details.');
+            if (err.code === 'permission-denied') {
+                alert('CRITICAL: Missing or insufficient permissions. Please ensure your user ID is registered as an "admin" in the Firestore "users" collection, or update your Firestore Security Rules.');
+            } else {
+                alert(`Failed to save: ${err.message || 'Unknown error'}`);
+            }
         } finally {
             setSaving(false);
         }
