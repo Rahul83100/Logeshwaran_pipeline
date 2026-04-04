@@ -9,7 +9,6 @@ html {
   scroll-behavior: smooth;
 }
 
-@tailwind base;
 
 /* Reset some Next.js defaults that conflict with template */
 * {

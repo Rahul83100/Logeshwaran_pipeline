@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
+import { getFirestore, initializeFirestore } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { getStorage } from 'firebase/storage'
 
@@ -15,8 +15,18 @@ const firebaseConfig = {
 // Initialize Firebase (prevent duplicate initialization in dev mode)
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp()
 
-// Firestore database instance
-export const db = getFirestore(app)
+// Firestore: initializeFirestore can only be called once per app.
+// On HMR reloads it throws, so fall back to getFirestore.
+let db: ReturnType<typeof getFirestore>
+try {
+  db = initializeFirestore(app, {
+    experimentalForceLongPolling: true,
+  })
+} catch {
+  db = getFirestore(app)
+}
+
+export { db }
 export const auth = getAuth(app)
 export const storage = getStorage(app)
 export default app
