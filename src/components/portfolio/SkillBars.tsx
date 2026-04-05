@@ -30,8 +30,8 @@ export default function SkillBars({ skills }: SkillBarsProps) {
     return () => observer.disconnect();
   }, []);
 
-  const designSkills = skills.filter((s) => s.category === "design");
-  const devSkills = skills.filter((s) => s.category === "development");
+  const designSkills = skills.filter((s) => s.category === "design" || s.category === "research" || s.category === "Research");
+  const devSkills = skills.filter((s) => s.category === "development" || s.category === "technical" || s.category === "Technical");
 
   return (
     <div className="tmp-skill-area tmp-section-gapTop" ref={sectionRef}>

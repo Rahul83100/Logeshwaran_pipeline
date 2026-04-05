@@ -112,18 +112,24 @@ export default function TestimonialSlider({ testimonials }: TestimonialSliderPro
 
                       {/* Right: Image */}
                       <div style={{ flex: '0 0 320px', maxWidth: '320px' }}>
-                        <Image
-                          src={testimonial.image}
-                          alt={testimonial.name}
-                          width={400}
-                          height={450}
-                          style={{
-                            objectFit: 'cover',
-                            borderRadius: '16px',
-                            width: '100%',
-                            height: 'auto',
-                          }}
-                        />
+                        {testimonial.image ? (
+                          <Image
+                            src={testimonial.image}
+                            alt={testimonial.name}
+                            width={400}
+                            height={450}
+                            style={{
+                              objectFit: 'cover',
+                              borderRadius: '16px',
+                              width: '100%',
+                              height: 'auto',
+                            }}
+                          />
+                        ) : (
+                          <div style={{ width: '100%', height: '350px', backgroundColor: '#f0f0f0', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
+                            No image
+                          </div>
+                        )}
                       </div>
                     </div>
                   </SwiperSlide>

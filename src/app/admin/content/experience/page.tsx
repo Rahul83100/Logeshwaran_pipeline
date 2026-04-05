@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, serverTimestamp, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import ImageUploader from '@/components/admin/ImageUploader';
 
 interface Experience {
     id: string;
@@ -22,15 +23,42 @@ export default function ExperienceManagement() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState(emptyExp);
     const [saving, setSaving] = useState(false);
+    
+    // Global Config State
+    const [globalConfig, setGlobalConfig] = useState({ experienceImage: '' });
+    const [savingGlobal, setSavingGlobal] = useState(false);
 
     useEffect(() => { loadItems(); }, []);
 
     async function loadItems() {
         setLoading(true);
-        const q = query(collection(db, 'experience'), orderBy('order', 'asc'));
-        const snap = await getDocs(q);
-        setItems(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Experience)));
+        try {
+            const profileSnap = await getDoc(doc(db, 'profile', 'main'));
+            if (profileSnap.exists()) {
+                setGlobalConfig({ experienceImage: profileSnap.data().experienceImage || '' });
+            }
+            
+            const q = query(collection(db, 'experience'), orderBy('order', 'asc'));
+            const snap = await getDocs(q);
+            setItems(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Experience)));
+        } catch (err) {
+            console.error(err);
+        }
         setLoading(false);
+    }
+
+    async function handleSaveGlobal(e: React.FormEvent) {
+        e.preventDefault();
+        setSavingGlobal(true);
+        try {
+            await updateDoc(doc(db, 'profile', 'main'), { experienceImage: globalConfig.experienceImage });
+            alert('Global configuration saved successfully.');
+        } catch (err) {
+            console.error('Failed to save global config', err);
+            alert('Failed to save global config.');
+        } finally {
+            setSavingGlobal(false);
+        }
     }
 
     function openNew() { setForm({ ...emptyExp, order: items.length }); setEditingId(null); setShowForm(true); }
@@ -80,6 +108,32 @@ export default function ExperienceManagement() {
                     <i className="fa-solid fa-plus" style={{ marginRight: '6px' }}></i> Add Experience
                 </button>
             </div>
+
+            {!loading && (
+                <div className="admin-card" style={{ marginBottom: '32px', border: '1px solid #eee' }}>
+                    <h3 style={{ marginBottom: '16px', fontSize: '18px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
+                        <i className="fa-solid fa-gear" style={{ marginRight: '8px', color: '#667eea' }}></i>
+                        Global Section Layout Config
+                    </h3>
+                    <form onSubmit={handleSaveGlobal}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }}>
+                            <div>
+                                <ImageUploader
+                                    currentUrl={globalConfig.experienceImage}
+                                    onUrlChange={(url) => setGlobalConfig({ ...globalConfig, experienceImage: url })}
+                                    storagePath="images/layout"
+                                    label="Right-Side Feature Image (Leave empty for default)"
+                                />
+                            </div>
+                        </div>
+                        <div style={{ marginTop: '20px', textAlign: 'right' }}>
+                            <button type="submit" disabled={savingGlobal} style={{ padding: '10px 24px', background: '#667eea', border: 'none', borderRadius: '8px', color: '#fff', cursor: 'pointer', fontWeight: 500 }}>
+                                {savingGlobal ? 'Saving Layout...' : 'Save Configuration'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
 
             {showForm && (
                 <div className="admin-card" style={{ marginBottom: '24px', border: '2px solid #667eea' }}>

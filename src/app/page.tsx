@@ -24,6 +24,7 @@ import {
   getCompanyLogos,
   getSkillWidgets
 } from "@/lib/firestore";
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const profile = await getProfile();
@@ -57,7 +58,12 @@ export default async function Home() {
       </ScrollFadeIn>
 
       <ScrollFadeIn delay={0.1}>
-        <LatestServiceSection services={latestServices} />
+        <LatestServiceSection 
+           services={latestServices} 
+           imageUrl={profile.latestServiceImage} 
+           heading={profile.latestServiceTitle} 
+           description={profile.latestServiceDescription} 
+        />
       </ScrollFadeIn>
 
       <ScrollFadeIn delay={0.1}>
@@ -66,7 +72,7 @@ export default async function Home() {
       
       <ScrollFadeIn delay={0.2}>
         <div className="container">
-          <ExperienceSection experience={experience} />
+          <ExperienceSection experience={experience} imageUrl={profile.experienceImage} />
         </div>
       </ScrollFadeIn>
 

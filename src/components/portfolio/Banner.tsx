@@ -17,21 +17,45 @@ export default function Banner({ profile }: BannerProps) {
             <div className="col-lg-6 order-lg-2">
               <div className="banner-right-content">
                 <div className="image-wrapper hero-image-animated" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-                  <Image
-                    className="tmp-scroll-trigger tmp-zoom-in animation-order-1 hero-profile-img"
-                    src={profile.bannerImage}
-                    alt={profile.name}
-                    width={450}
-                    height={550}
-                    priority
-                    style={{
-                      width: '100%',
-                      maxWidth: '450px',
-                      height: 'auto',
-                      borderRadius: '20px',
-                      boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
-                    }}
-                  />
+                  {profile.profileImage ? (
+                    <Image
+                      className="tmp-scroll-trigger tmp-zoom-in animation-order-1 hero-profile-img"
+                      src={profile.profileImage}
+                      alt={profile.name}
+                      width={450}
+                      height={550}
+                      priority
+                      style={{
+                        width: '100%',
+                        maxWidth: '450px',
+                        height: 'auto',
+                        borderRadius: '20px',
+                        boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                        objectFit: 'cover'
+                      }}
+                    />
+                  ) : (
+                    <div
+                      className="tmp-scroll-trigger tmp-zoom-in animation-order-1 hero-profile-img no-image-placeholder"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: '#f0f0ff',
+                        color: '#667eea',
+                        fontWeight: 500,
+                        fontSize: '20px',
+                        width: '100%',
+                        maxWidth: '450px',
+                        height: '550px',
+                        borderRadius: '20px',
+                        boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                        border: '2px dashed #667eea'
+                      }}
+                    >
+                      No Image right now
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

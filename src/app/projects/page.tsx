@@ -1,6 +1,7 @@
 import AcademicProfileTabs from "@/components/portfolio/AcademicProfileTabs";
 import { getProfile } from "@/lib/firestore";
 import ScrollFadeIn from "@/components/layout/ScrollFadeIn";
+export const dynamic = 'force-dynamic';
 
 export default async function ProjectsPage() {
   const profile = await getProfile();

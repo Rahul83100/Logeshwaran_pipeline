@@ -8,12 +8,14 @@ interface Skill {
     id: string;
     name: string;
     category: string;
-    proficiency: number;
+    percentage: number;
     order: number;
+    icon?: string;
+    projectCount?: number;
 }
 
-const emptySkill = { name: '', category: 'Research', proficiency: 80, order: 0 };
-const categories = ['Research', 'Teaching', 'Technical', 'Languages', 'Tools', 'Other'];
+const emptySkill = { name: '', category: 'development', percentage: 80, order: 0, icon: 'fa-light fa-gear', projectCount: 0 };
+const categories = ['development', 'design', 'research', 'other'];
 
 export default function SkillsManagement() {
     const [items, setItems] = useState<Skill[]>([]);
@@ -35,7 +37,14 @@ export default function SkillsManagement() {
 
     function openNew() { setForm({ ...emptySkill, order: items.length }); setEditingId(null); setShowForm(true); }
     function openEdit(item: Skill) {
-        setForm({ name: item.name, category: item.category, proficiency: item.proficiency, order: item.order });
+        setForm({ 
+            name: item.name, 
+            category: item.category, 
+            percentage: item.percentage ?? (item as any).proficiency ?? 0, 
+            order: item.order,
+            icon: item.icon || 'fa-light fa-gear',
+            projectCount: item.projectCount || 0
+        });
         setEditingId(item.id); setShowForm(true);
     }
 
@@ -101,10 +110,12 @@ export default function SkillsManagement() {
                                 </select>
                             </div>
                             <div>
-                                <label style={labelStyle}>Proficiency ({form.proficiency}%)</label>
-                                <input type="range" min="0" max="100" value={form.proficiency} onChange={(e) => setForm({ ...form, proficiency: parseInt(e.target.value) })} style={{ width: '100%' }} />
+                                <label style={labelStyle}>Proficiency ({form.percentage}%)</label>
+                                <input type="range" min="0" max="100" value={form.percentage} onChange={(e) => setForm({ ...form, percentage: parseInt(e.target.value) })} style={{ width: '100%' }} />
                             </div>
                             <div><label style={labelStyle}>Display Order</label><input style={inputStyle} type="number" value={form.order} onChange={(e) => setForm({ ...form, order: parseInt(e.target.value) })} /></div>
+                            <div><label style={labelStyle}>Icon Class (FontAwesome)</label><input style={inputStyle} value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} placeholder="e.g. fa-light fa-microchip" /></div>
+                            <div><label style={labelStyle}>Project Count</label><input style={inputStyle} type="number" value={form.projectCount} onChange={(e) => setForm({ ...form, projectCount: parseInt(e.target.value) })} /></div>
                         </div>
 
                         <div style={{ margin: '20px 0', padding: '15px', background: '#f8f9fa', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid #e9ecef' }}>
@@ -142,9 +153,9 @@ export default function SkillsManagement() {
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                             <span style={{ fontSize: '15px', fontWeight: 500 }}>{item.name}</span>
                                             <div style={{ flex: 1, maxWidth: '200px', height: '6px', background: '#eee', borderRadius: '3px', overflow: 'hidden' }}>
-                                                <div style={{ width: `${item.proficiency}%`, height: '100%', background: 'linear-gradient(90deg, #667eea, #764ba2)', borderRadius: '3px' }}></div>
+                                                <div style={{ width: `${item.percentage}%`, height: '100%', background: 'linear-gradient(90deg, #667eea, #764ba2)', borderRadius: '3px' }}></div>
                                             </div>
-                                            <span style={{ fontSize: '13px', color: '#888' }}>{item.proficiency}%</span>
+                                            <span style={{ fontSize: '13px', color: '#888' }}>{item.percentage}%</span>
                                         </div>
                                     </div>
                                     <div style={{ display: 'flex', gap: '8px' }}>

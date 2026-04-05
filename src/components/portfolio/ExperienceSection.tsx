@@ -6,9 +6,10 @@ import type { Experience } from "@/lib/firestore";
 
 interface ExperienceSectionProps {
   experience: Experience[];
+  imageUrl?: string;
 }
 
-export default function ExperienceSection({ experience }: ExperienceSectionProps) {
+export default function ExperienceSection({ experience, imageUrl }: ExperienceSectionProps) {
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
 
   const toggleExpand = (id: string) => {
@@ -113,7 +114,7 @@ export default function ExperienceSection({ experience }: ExperienceSectionProps
         <div style={{ flex: '0 0 40%' }}>
           <Image
             className="tmp-scroll-trigger tmp-zoom-in animation-order-1"
-            src="/assets/images/experiences/expert-img.jpg"
+            src={imageUrl || "/assets/images/experiences/expert-img.jpg"}
             alt="Professional experience"
             width={600}
             height={900}

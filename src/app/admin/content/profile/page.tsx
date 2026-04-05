@@ -12,7 +12,7 @@ interface ProfileData {
     university: string;
     department: string;
     bio: string;
-    photo: string;
+    profileImage: string;
     bannerImage: string;
     phone: string;
     email: string;
@@ -24,7 +24,7 @@ interface ProfileData {
 }
 
 const emptyProfile: ProfileData = {
-    name: '', title: '', university: '', department: '', bio: '', photo: '', bannerImage: '',
+    name: '', title: '', university: '', department: '', bio: '', profileImage: '', bannerImage: '',
     phone: '', email: '', address: '', linkedin: '', google_scholar: '', researchgate: '', orcid: '',
 };
 
@@ -43,7 +43,7 @@ export default function ProfileManagement() {
             const data = docSnap.data();
             setForm({
                 name: data.name || '', title: data.title || '', university: data.university || '',
-                department: data.department || '', bio: data.bio || '', photo: data.photo || '',
+                department: data.department || '', bio: data.bio || '', profileImage: data.profileImage || data.photo || '',
                 bannerImage: data.bannerImage || '',
                 phone: data.phone || '', email: data.email || '', address: data.address || '',
                 linkedin: data.linkedin || '', google_scholar: data.google_scholar || '',
@@ -92,8 +92,8 @@ export default function ProfileManagement() {
                         <div><label style={labelStyle}>Department</label><input style={inputStyle} value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} placeholder="e.g. Computer Science" /></div>
                         <div style={{ gridColumn: '1 / -1' }}>
                             <ImageUploader
-                                currentUrl={form.photo}
-                                onUrlChange={(url) => setForm({ ...form, photo: url })}
+                                currentUrl={form.profileImage}
+                                onUrlChange={(url) => setForm({ ...form, profileImage: url })}
                                 storagePath="images/profile"
                                 label="Profile Photo"
                             />

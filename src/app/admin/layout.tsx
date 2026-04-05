@@ -74,6 +74,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { href: '/admin/messages', label: 'Inbox', icon: 'fa-inbox' },
         { href: '/admin/content', label: 'Content', icon: 'fa-file-pen' },
         { href: '/admin/content/research', label: 'Research Papers', icon: 'fa-flask' },
+        { href: '/admin/content/latest-services', label: 'Latest Services', icon: 'fa-lightbulb' },
         { href: '/admin/content/blog', label: 'Blog Posts', icon: 'fa-blog' },
         { href: '/admin/content/education', label: 'Education', icon: 'fa-graduation-cap' },
         { href: '/admin/content/experience', label: 'Experience', icon: 'fa-briefcase' },

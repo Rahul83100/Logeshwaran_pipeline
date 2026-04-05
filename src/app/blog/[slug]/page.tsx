@@ -63,14 +63,20 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
               <div className="blog-details-wrapper">
                 {/* Blog Thumbnail */}
                 <div className="blog-details-thumb mb--40">
-                  <Image
-                    src={post.thumbnail}
-                    alt={post.title}
-                    width={800}
-                    height={450}
-                    className="w-100"
-                    style={{ borderRadius: "10px" }}
-                  />
+                  {post.thumbnail ? (
+                    <Image
+                      src={post.thumbnail}
+                      alt={post.title}
+                      width={800}
+                      height={450}
+                      className="w-100"
+                      style={{ borderRadius: "10px" }}
+                    />
+                  ) : (
+                    <div style={{ width: '100%', height: '450px', backgroundColor: '#f0f0f0', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
+                      No image
+                    </div>
+                  )}
                 </div>
 
                 {/* Blog Meta */}

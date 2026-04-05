@@ -35,13 +35,19 @@ export default function PortfolioGrid({ projects }: PortfolioGridProps) {
                       className="tmp-scroll-trigger tmp-zoom-in animation-order-1"
                       href={project.link}
                     >
-                      <Image
-                        className="w-100"
-                        src={project.image}
-                        alt={project.title}
-                        width={600}
-                        height={400}
-                      />
+                      {project.image ? (
+                        <Image
+                          className="w-100"
+                          src={project.image}
+                          alt={project.title}
+                          width={600}
+                          height={400}
+                        />
+                      ) : (
+                        <div style={{ width: '100%', height: '400px', backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
+                          No image
+                        </div>
+                      )}
                     </Link>
                   </div>
                 </div>

@@ -15,14 +15,20 @@ export default function BlogCard({ post, delay = 0 }: BlogCardProps) {
         <div className="blog-card tmp-hover-link image-box-hover tmp-scroll-trigger tmp-fade-in animation-order-1">
           <div className="img-box">
             <Link href={`/blog/${post.slug}`} style={{ display: 'block', height: '280px', overflow: 'hidden' }}>
-              <Image
-                className="w-100"
-                src={post.thumbnail}
-                alt={post.title}
-                width={400}
-                height={280}
-                style={{ objectFit: 'cover', height: '100%', width: '100%' }}
-              />
+              {post.thumbnail ? (
+                <Image
+                  className="w-100"
+                  src={post.thumbnail}
+                  alt={post.title}
+                  width={400}
+                  height={280}
+                  style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+                />
+              ) : (
+                <div style={{ width: '100%', height: '100%', backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
+                  No image
+                </div>
+              )}
             </Link>
             <ul className="blog-tags">
               <li>

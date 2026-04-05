@@ -36,14 +36,20 @@ export default async function AboutPage() {
           <div className="row g-5 align-items-center">
             <div className="col-lg-5">
               <div className="about-image-area">
-                <Image
-                  className="tmp-scroll-trigger tmp-zoom-in animation-order-1"
-                  src={profile.profileImage}
-                  alt={profile.name}
-                  width={400}
-                  height={400}
-                  style={{ borderRadius: "10px" }}
-                />
+                {profile.profileImage ? (
+                  <Image
+                    className="tmp-scroll-trigger tmp-zoom-in animation-order-1"
+                    src={profile.profileImage}
+                    alt={profile.name}
+                    width={400}
+                    height={400}
+                    style={{ borderRadius: "10px" }}
+                  />
+                ) : (
+                  <div style={{ width: '100%', height: '400px', backgroundColor: '#f0f0f0', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
+                    No image
+                  </div>
+                )}
               </div>
             </div>
             <div className="col-lg-7">

@@ -24,6 +24,10 @@ export interface Profile {
   projectsCompleted: number;
   happyClients: number;
   clientReviews: number;
+  experienceImage?: string;
+  latestServiceImage?: string;
+  latestServiceTitle?: string;
+  latestServiceDescription?: string;
 }
 
 export interface Skill {
@@ -254,10 +258,8 @@ export async function getResearchPapers(options?: { isPrivate?: boolean }) {
     const snap = await getDocs(q);
     return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as ResearchPaper));
   } catch (err) {
-    console.warn("Failed to fetch research papers. Using mock fallback.", err);
-    return options?.isPrivate === undefined 
-      ? mockResearchPapers 
-      : mockResearchPapers.filter(p => p.is_private === options.isPrivate);
+    console.warn("Failed to fetch research papers.", err);
+    return [];
   }
 }
 
@@ -267,8 +269,8 @@ export async function getBlogPosts() {
     const snap = await getDocs(q);
     return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as BlogPost));
   } catch (err) {
-    console.warn("Failed to fetch blog posts. Using mock fallback.", err);
-    return mockBlogPosts;
+    console.warn("Failed to fetch blog posts.", err);
+    return [];
   }
 }
 
@@ -284,8 +286,8 @@ export async function getProjects() {
     const snap = await getDocs(collection(db, 'projects'));
     return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as PortfolioProject));
   } catch (err) {
-    console.warn("Failed to fetch projects. Using mock fallback.", err);
-    return mockProjects;
+    console.warn("Failed to fetch projects.", err);
+    return [];
   }
 }
 
@@ -294,8 +296,8 @@ export async function getTestimonials() {
     const snap = await getDocs(collection(db, 'testimonials'));
     return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as Testimonial));
   } catch (err) {
-    console.warn("Failed to fetch testimonials. Using mock fallback.", err);
-    return mockTestimonials;
+    console.warn("Failed to fetch testimonials.", err);
+    return [];
   }
 }
 
