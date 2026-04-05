@@ -1,5 +1,6 @@
 import { db } from './firebase';
 import { collection, doc, getDoc, getDocs, addDoc, query, where, orderBy, serverTimestamp } from 'firebase/firestore';
+import { mockProfile, mockSkills, mockEducation, mockExperience, mockResearchPapers, mockBlogPosts, mockProjects, mockTestimonials } from './mockData';
 
 export interface Profile {
   name: string;
@@ -176,66 +177,99 @@ function sanitizeData(data: any) {
 }
 
 export async function getProfile(): Promise<Profile> {
-  const snap = await getDoc(doc(db, 'profile', 'main'));
-  if (!snap.exists()) {
-    throw new Error("Profile not found in database. Please seed the database.");
+  try {
+    const snap = await getDoc(doc(db, 'profile', 'main'));
+    if (!snap.exists()) {
+      console.warn("Profile not found in database. Using mock fallback.");
+      return mockProfile;
+    }
+    return sanitizeData(snap.data()) as Profile;
+  } catch (err) {
+    console.warn("Failed to fetch profile. Using mock fallback.", err);
+    return mockProfile;
   }
-  return sanitizeData(snap.data()) as Profile;
 }
 
 export async function getSkills() {
-  const q = query(collection(db, 'skills'), orderBy('order', 'asc'));
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as Skill));
+  try {
+    const q = query(collection(db, 'skills'), orderBy('order', 'asc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as Skill));
+  } catch (err) {
+    console.warn("Failed to fetch skills. Using mock fallback.", err);
+    return mockSkills;
+  }
 }
 
 export async function getEducation() {
-  const q = query(collection(db, 'education'), orderBy('order', 'asc'));
-  const snap = await getDocs(q);
-  return snap.docs.map(d => {
-    const data = sanitizeData(d.data());
-    return {
-      id: d.id,
-      title: data.degree || data.title,
-      institution: data.institution,
-      period: data.year_range || data.period,
-      description: data.description,
-      ...data
-    } as Education;
-  });
+  try {
+    const q = query(collection(db, 'education'), orderBy('order', 'asc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => {
+      const data = sanitizeData(d.data());
+      return {
+        id: d.id,
+        title: data.degree || data.title,
+        institution: data.institution,
+        period: data.year_range || data.period,
+        description: data.description,
+        ...data
+      } as Education;
+    });
+  } catch (err) {
+    console.warn("Failed to fetch education. Using mock fallback.", err);
+    return mockEducation;
+  }
 }
 
 export async function getExperience() {
-  const q = query(collection(db, 'experience'), orderBy('order', 'asc'));
-  const snap = await getDocs(q);
-  return snap.docs.map(d => {
-    const data = sanitizeData(d.data());
-    return {
-      id: d.id,
-      company: data.organization || data.company,
-      duration: data.year_range || data.duration,
-      role: data.role,
-      description: data.description,
-      ...data
-    } as Experience;
-  });
+  try {
+    const q = query(collection(db, 'experience'), orderBy('order', 'asc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => {
+      const data = sanitizeData(d.data());
+      return {
+        id: d.id,
+        company: data.organization || data.company,
+        duration: data.year_range || data.duration,
+        role: data.role,
+        description: data.description,
+        ...data
+      } as Experience;
+    });
+  } catch (err) {
+    console.warn("Failed to fetch experience. Using mock fallback.", err);
+    return mockExperience;
+  }
 }
 
 export async function getResearchPapers(options?: { isPrivate?: boolean }) {
-  let q = query(collection(db, 'research_papers'), orderBy('year', 'desc'));
+  try {
+    let q = query(collection(db, 'research_papers'), orderBy('year', 'desc'));
 
-  if (options?.isPrivate !== undefined) {
-    q = query(collection(db, 'research_papers'), where('is_private', '==', options.isPrivate), orderBy('year', 'desc'));
+    if (options?.isPrivate !== undefined) {
+      q = query(collection(db, 'research_papers'), where('is_private', '==', options.isPrivate), orderBy('year', 'desc'));
+    }
+
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as ResearchPaper));
+  } catch (err) {
+    console.warn("Failed to fetch research papers. Using mock fallback.", err);
+    return options?.isPrivate === undefined 
+      ? mockResearchPapers 
+      : mockResearchPapers.filter(p => p.is_private === options.isPrivate);
   }
-
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as ResearchPaper));
 }
 
 export async function getBlogPosts() {
-  const q = query(collection(db, 'blog_posts'), where('published', '==', true), orderBy('created_at', 'desc'));
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as BlogPost));
+  try {
+    const q = query(collection(db, 'blog_posts'), where('published', '==', true), orderBy('created_at', 'desc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as BlogPost));
+  } catch (err) {
+    console.warn("Failed to fetch blog posts. Using mock fallback.", err);
+    return mockBlogPosts;
+  }
 }
 
 export async function getBlogPost(slug: string) {
@@ -246,13 +280,23 @@ export async function getBlogPost(slug: string) {
 }
 
 export async function getProjects() {
-  const snap = await getDocs(collection(db, 'projects'));
-  return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as PortfolioProject));
+  try {
+    const snap = await getDocs(collection(db, 'projects'));
+    return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as PortfolioProject));
+  } catch (err) {
+    console.warn("Failed to fetch projects. Using mock fallback.", err);
+    return mockProjects;
+  }
 }
 
 export async function getTestimonials() {
-  const snap = await getDocs(collection(db, 'testimonials'));
-  return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as Testimonial));
+  try {
+    const snap = await getDocs(collection(db, 'testimonials'));
+    return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) } as Testimonial));
+  } catch (err) {
+    console.warn("Failed to fetch testimonials. Using mock fallback.", err);
+    return mockTestimonials;
+  }
 }
 
 export async function getResearchPaper(slug: string) {
@@ -304,3 +348,53 @@ export async function submitContactForm(data: ContactFormData) {
   });
   return { success: true };
 }
+
+export async function getLatestServices() {
+  try {
+    const q = query(collection(db, 'latest_services'), orderBy('order', 'asc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) }));
+  } catch (err) {
+    console.warn('Failed to fetch latest services. Using fallback.');
+    return require('./mockData').mockLatestServices;
+  }
+}
+
+export async function getCompanyLogos() {
+  try {
+    const q = query(collection(db, 'company_logos'), orderBy('order', 'asc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) }));
+  } catch (err) {
+    console.warn('Failed to fetch company logos. Using fallback.');
+    return require('./mockData').mockCompanyLogos;
+  }
+}
+
+export async function getSkillWidgets() {
+  try {
+    const q = query(collection(db, 'skill_widgets'), orderBy('order', 'asc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) }));
+  } catch (err) {
+    console.warn('Failed to fetch skill widgets. Using fallback.');
+    return require('./mockData').mockSkillWidgets;
+  }
+}
+
+
+export async function seedMainNavbar() {
+  const defaults = [
+    { label: 'Home', path: '/', showInNavbar: true, isNew: false, order: 0 },
+    { label: 'About', path: '/#about', showInNavbar: true, isNew: false, order: 1 },
+    { label: 'Projects', path: '/projects', showInNavbar: true, isNew: false, order: 2 },
+    { label: 'Blog', path: '/#blog', showInNavbar: true, isNew: false, order: 3 },
+    { label: 'Contact', path: '/#contact', showInNavbar: true, isNew: false, order: 4 },
+  ];
+  try {
+    for (const item of defaults) {
+      await addDoc(collection(db, 'main_navbar'), item);
+    }
+  } catch(e) {}
+}
+

@@ -112,7 +112,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
                     className="tmp-btn hover-icon-reverse radius-round"
                   >
                     <span className="icon-reverse-wrapper">
-                      <span className="btn-text">← Back to Blog</span>
+                      <span className="btn-text">Back to Blog</span>
                       <span className="btn-icon">
                         <i className="fa-sharp fa-regular fa-arrow-left"></i>
                       </span>

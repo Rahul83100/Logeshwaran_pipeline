@@ -22,6 +22,7 @@ export default function AwardsManagement() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState(emptyAward);
     const [saving, setSaving] = useState(false);
+    const [alsoShare, setAlsoShare] = useState(false);
 
     useEffect(() => { loadAwards(); }, []);
 
@@ -55,7 +56,13 @@ export default function AwardsManagement() {
             } else {
                 await addDoc(collection(db, 'awards'), { ...form, created_at: serverTimestamp() });
             }
+            if (alsoShare) {
+                const shareUrl = `https://logishoren.com/#academic`;
+                const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+                window.open(linkedinUrl, '_blank', 'width=600,height=600');
+            }
             setShowForm(false);
+            setAlsoShare(false);
             await loadAwards();
         } catch (err) { console.error(err); alert('Failed to save.'); }
         finally { setSaving(false); }
@@ -110,6 +117,21 @@ export default function AwardsManagement() {
                                 <textarea style={{ ...inputStyle, height: '80px', resize: 'vertical' }} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Details about this award" />
                             </div>
                         </div>
+
+                        <div style={{ margin: '20px 0', padding: '15px', background: '#f8f9fa', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid #e9ecef' }}>
+                            <input 
+                                type="checkbox" 
+                                id="alsoShareAw" 
+                                checked={alsoShare} 
+                                onChange={(e) => setAlsoShare(e.target.checked)}
+                                style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                            />
+                            <label htmlFor="alsoShareAw" style={{ fontSize: '14px', fontWeight: 500, color: '#0A66C2', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                                <i className="fa-brands fa-linkedin" style={{ marginRight: '8px', fontSize: '18px' }}></i>
+                                Also share on LinkedIn
+                            </label>
+                        </div>
+
                         <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
                             <button type="submit" disabled={saving} style={{ padding: '10px 24px', background: '#ecc94b', border: 'none', borderRadius: '8px', color: '#fff', cursor: 'pointer', fontWeight: 500, textShadow: '0 1px 2px rgba(0,0,0,0.2)' }}>
                                 {saving ? 'Saving...' : editingId ? 'Update Award' : 'Add Award'}

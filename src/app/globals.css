@@ -542,3 +542,69 @@ body {
   }
 }.logo-text-adaptive { color: var(--color-white); }
 .header--sticky.sticky .logo-text-adaptive { color: var(--color-black); }
+
+/* ============ FIX 1: Blog Cards Equal Height ============ */
+.blog-and-news-are .row {
+  display: flex !important;
+  flex-wrap: wrap;
+}
+.blog-and-news-are .row > [class*="col-"] {
+  display: flex;
+}
+.blog-and-news-are .row > [class*="col-"] > div {
+  width: 100%;
+}
+.blog-and-news-are .blog-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.blog-and-news-are .blog-card .blog-content-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* ============ FIX 2: Testimonial Swiper Arrow Cleanup ============ */
+.testimonial-btn-next-prev .swiper-button-next::after,
+.testimonial-btn-next-prev .swiper-button-prev::after {
+  display: none !important;
+}
+.testimonial-btn-next-prev .swiper-button-prev {
+  display: none !important;
+}
+.testimonial-btn-next-prev .swiper-button-next {
+  color: #000 !important;
+  width: 44px;
+  height: 44px;
+  border: 2px solid #333;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+.testimonial-btn-next-prev .swiper-button-next:hover {
+  background: #333;
+  color: #fff !important;
+}
+.testimonial-btn-next-prev .swiper-button-next i {
+  font-size: 16px;
+  color: inherit !important;
+}
+
+/* ============ FIX 4: Experience Section Image Alignment ============ */
+.experiences-wrapper .row {
+  display: flex !important;
+  align-items: stretch !important;
+}
+.experiences-wrap-right-content {
+  height: 100% !important;
+}
+.experiences-wrap-right-content img {
+  object-fit: cover;
+  border-radius: 20px;
+  height: 100% !important;
+  width: 100% !important;
+}

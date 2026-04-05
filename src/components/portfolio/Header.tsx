@@ -9,22 +9,20 @@ import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 interface NavSection {
+  id?: string;
   label: string;
-  sectionId: string;
+  path: string;
   showInNavbar: boolean;
-  isNew: boolean;
+  isNew?: boolean;
   order: number;
 }
 
 const FALLBACK_SECTIONS: NavSection[] = [
-  { label: 'Profile', sectionId: 'profile', showInNavbar: true, isNew: false, order: 0 },
-  { label: 'Journals', sectionId: 'articles', showInNavbar: true, isNew: false, order: 1 },
-  { label: 'Books', sectionId: 'books', showInNavbar: true, isNew: false, order: 2 },
-  { label: 'Conferences', sectionId: 'conferences', showInNavbar: true, isNew: false, order: 3 },
-  { label: 'Patents', sectionId: 'patents', showInNavbar: true, isNew: false, order: 4 },
-  { label: 'Projects', sectionId: 'projects', showInNavbar: true, isNew: false, order: 5 },
-  { label: 'Workshops', sectionId: 'workshops', showInNavbar: true, isNew: false, order: 6 },
-  { label: 'Awards', sectionId: 'awards', showInNavbar: true, isNew: false, order: 7 },
+  { label: 'Home', path: '/', showInNavbar: true, isNew: false, order: 0 },
+  { label: 'About', path: '/about', showInNavbar: true, isNew: false, order: 1 },
+  { label: 'Projects', path: '/projects', showInNavbar: true, isNew: false, order: 2 },
+  { label: 'Blog', path: '/blog', showInNavbar: true, isNew: false, order: 3 },
+  { label: 'Contact', path: '/contact', showInNavbar: true, isNew: false, order: 4 },
 ];
 
 export default function Header() {
@@ -32,22 +30,20 @@ export default function Header() {
   const [sections, setSections] = useState<NavSection[]>(FALLBACK_SECTIONS);
   const { user, userData } = useAuth();
 
-  // Fetch navbar sections from Firestore
   useEffect(() => {
     const fetchSections = async () => {
       try {
-        const snap = await getDocs(query(collection(db, 'navbar_sections'), orderBy('order', 'asc')));
+        const snap = await getDocs(query(collection(db, 'main_navbar'), orderBy('order', 'asc')));
         if (!snap.empty) {
           setSections(snap.docs.map(d => d.data() as NavSection));
         }
       } catch (err) {
-        console.error('Failed to fetch navbar sections:', err);
+        console.warn('Failed to fetch main_navbar. Using fallback data.', err);
       }
     };
     fetchSections();
   }, []);
 
-  // Sync body class for template transitions and overlays
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.classList.add("sidemenu-active");
@@ -66,9 +62,9 @@ export default function Header() {
     }
   };
 
-  const scrollToSection = (e: any, targetId: string) => {
-    if (window.location.pathname === "/") {
-      const id = targetId.replace("/#", "").replace("#", "");
+  const scrollToSection = (e: any, targetPath: string) => {
+    if (targetPath.startsWith('/#') && window.location.pathname === "/") {
+      const id = targetPath.replace("/#", "");
       const element = document.getElementById(id);
       if (element) {
         e.preventDefault();
@@ -80,30 +76,41 @@ export default function Header() {
         const offsetPosition = elementPosition - offset;
         window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
       }
+    } else {
+      setMobileMenuOpen(false);
     }
   };
 
-  const navbarSections = sections.filter(s => s.showInNavbar);
-  const allSections = sections;
+  const navbarSections = sections.filter(s => s.showInNavbar).map(s => {
+    if (s.label === 'About' && s.path === '/#about') return { ...s, path: '/about' };
+    if (s.label === 'Blog' && s.path === '/#blog') return { ...s, path: '/blog' };
+    if (s.label === 'Contact' && s.path === '/#contact') return { ...s, path: '/contact' };
+    return s;
+  });
+  const allSections = sections.map(s => {
+    if (s.label === 'About' && s.path === '/#about') return { ...s, path: '/about' };
+    if (s.label === 'Blog' && s.path === '/#blog') return { ...s, path: '/blog' };
+    if (s.label === 'Contact' && s.path === '/#contact') return { ...s, path: '/contact' };
+    return s;
+  });
 
   return (
     <>
-      {/* Header */}
       <header className="tmp-header-area-start header-one header--sticky header--transparent">
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
               <div className="header-content">
                 <div className="logo">
-                  <Link href="/">
-                    <h3 style={{ margin: 0, fontWeight: 700, color: '#000', letterSpacing: '1px', fontSize: '22px' }}>Dr. Logeshwaran <span style={{ color: '#e60000' }}>J</span></h3>
+                  <Link href="/" style={{ textDecoration: 'none', border: 'none', outline: 'none', display: 'inline-block' }}>
+                    <img src="/assets/images/logo/main-logo.png" alt="Logo" style={{ maxHeight: '100px', objectFit: 'contain', padding: '0', margin: '-10px 0', border: 'none', mixBlendMode: 'multiply' }} />
                   </Link>
                 </div>
                 <nav className="tmp-mainmenu-nav d-none d-xl-block">
                   <ul className="tmp-mainmenu">
                     {navbarSections.map((sec) => (
-                      <li key={sec.sectionId}>
-                        <Link href={`/#${sec.sectionId}`} onClick={(e) => scrollToSection(e, sec.sectionId)}>
+                      <li key={sec.label}>
+                        <Link href={sec.path} onClick={(e) => scrollToSection(e, sec.path)}>
                           {sec.label}
                           {sec.isNew && (
                             <span style={{ marginLeft: '4px', background: '#e60000', color: '#fff', padding: '1px 6px', borderRadius: '8px', fontSize: '9px', fontWeight: 700, verticalAlign: 'super' }}>NEW</span>
@@ -120,22 +127,22 @@ export default function Header() {
                       <button
                         onClick={handleLogout}
                         style={{
-                          padding: '5px 14px', fontSize: '12px', fontWeight: 500,
-                          background: 'transparent', border: '1px solid #e60000', color: '#e60000',
-                          borderRadius: '20px', cursor: 'pointer', transition: 'all 0.25s ease', whiteSpace: 'nowrap',
+                          padding: '7px 18px', fontSize: '14px', fontWeight: 600,
+                          background: 'transparent', border: '1.5px solid #e60000', color: '#e60000',
+                          borderRadius: '25px', cursor: 'pointer', transition: 'all 0.25s ease', whiteSpace: 'nowrap',
                         }}
                         onMouseEnter={(e) => { e.currentTarget.style.background = '#e60000'; e.currentTarget.style.color = '#fff'; }}
                         onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e60000'; }}
                       >
                         Logout
                       </button>
-                    ) : (
+                    ) : ( 
                       <Link
                         href="/login"
                         style={{
-                          padding: '5px 14px', fontSize: '12px', fontWeight: 500,
-                          background: 'transparent', border: '1px solid #e60000', color: '#e60000',
-                          borderRadius: '20px', textDecoration: 'none', display: 'inline-block',
+                          padding: '7px 18px', fontSize: '14px', fontWeight: 600,
+                          background: 'transparent', border: '1.5px solid #e60000', color: '#e60000',
+                          borderRadius: '25px', textDecoration: 'none', display: 'inline-block',
                           transition: 'all 0.25s ease', whiteSpace: 'nowrap',
                         }}
                         onMouseEnter={(e) => { e.currentTarget.style.background = '#e60000'; e.currentTarget.style.color = '#fff'; }}
@@ -180,10 +187,8 @@ export default function Header() {
               <div className="inner" style={{ padding: '30px' }}>
                 <div className="header-top" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
                   <div className="logo">
-                    <Link href="/" className="logo-area" onClick={() => setMobileMenuOpen(false)}>
-                      <h3 style={{ margin: 0, fontWeight: 700, letterSpacing: '1px', fontSize: '20px', color: '#1a1a2e' }}>
-                        Dr. Logeshwaran <span style={{ color: '#e60000' }}>J</span>
-                      </h3>
+                    <Link href="/" className="logo-area" onClick={() => setMobileMenuOpen(false)} style={{ textDecoration: 'none', border: 'none', outline: 'none' }}>
+                      <img src="/assets/images/logo/main-logo.png" alt="Logo" style={{ maxHeight: '80px', objectFit: 'contain', border: 'none', margin: '-5px 0', mixBlendMode: 'multiply' }} />
                     </Link>
                   </div>
                   <div className="close-menu">
@@ -198,10 +203,10 @@ export default function Header() {
                 </div>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '15px' }}>
                   {allSections.map((sec) => (
-                    <li key={sec.sectionId}>
+                    <li key={sec.label}>
                       <Link
-                        href={`/#${sec.sectionId}`}
-                        onClick={(e) => scrollToSection(e, sec.sectionId)}
+                        href={sec.path}
+                        onClick={(e) => scrollToSection(e, sec.path)}
                         style={{ color: '#333', fontSize: '16px', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}
                       >
                         {sec.label}
@@ -222,15 +227,6 @@ export default function Header() {
                     <Link href="/admin/login" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '13px', color: '#9393a5', textAlign: 'center', display: 'block', textDecoration: 'none' }}>Admin? Click here</Link>
                   </li>
                 </ul>
-                <div className="social-wrapper mt--40" style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid #eee' }}>
-                  <span className="subtitle" style={{ fontSize: '14px', color: '#888', display: 'block', marginBottom: '15px' }}>Find with me</span>
-                  <div className="social-link" style={{ display: 'flex', gap: '15px' }}>
-                    <a href="#" style={{ color: '#333', fontSize: '18px' }}><i className="fa-brands fa-instagram"></i></a>
-                    <a href="#" style={{ color: '#333', fontSize: '18px' }}><i className="fa-brands fa-linkedin-in"></i></a>
-                    <a href="#" style={{ color: '#333', fontSize: '18px' }}><i className="fa-brands fa-twitter"></i></a>
-                    <a href="#" style={{ color: '#333', fontSize: '18px' }}><i className="fa-brands fa-facebook-f"></i></a>
-                  </div>
-                </div>
               </div>
             </motion.div>
             

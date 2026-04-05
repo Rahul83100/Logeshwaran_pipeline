@@ -6,6 +6,16 @@ import Image from "next/image";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+import { 
+    mockResearchPapers, 
+    mockBookChapters, 
+    mockConferences, 
+    mockPatents, 
+    mockProjects, 
+    mockWorkshops, 
+    mockAwards 
+} from "@/lib/mockData";
+
 interface DynSection {
     label: string;
     sectionId: string;
@@ -90,6 +100,7 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
 
     useEffect(() => {
         const fetchContent = async () => {
+            // Research Papers
             try {
                 const articlesSnap = await getDocs(query(collection(db, 'research_papers'), orderBy('year', 'desc')));
                 setMappedArticles(articlesSnap.docs.map((d: any) => {
@@ -104,7 +115,17 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
+            } catch (err) {
+                console.warn("Using fallbacks for articles");
+                setMappedArticles(mockResearchPapers.map(p => ({
+                    year: p.year?.toString() || "",
+                    title: p.title || "",
+                    details: [{ label: "Journal", value: p.journal || "" }, { label: "Authors", value: Array.isArray(p.authors) ? p.authors.join(", ") : p.authors }]
+                })));
+            }
 
+            // Books
+            try {
                 const booksSnap = await getDocs(collection(db, 'books'));
                 setMappedBooks(booksSnap.docs.map((d: any) => {
                     const p = d.data();
@@ -118,7 +139,16 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
+            } catch {
+                setMappedBooks(mockBookChapters.map(p => ({
+                    year: p.year?.toString() || "",
+                    title: p.title || "",
+                    details: [{ label: "Book Title", value: p.bookTitle || "" }]
+                })));
+            }
 
+            // Conferences
+            try {
                 const conferencesSnap = await getDocs(collection(db, 'conferences'));
                 setMappedConferences(conferencesSnap.docs.map((d: any) => {
                     const p = d.data();
@@ -134,7 +164,16 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
+            } catch {
+                setMappedConferences(mockConferences.map(p => ({
+                    year: p.year?.toString() || "",
+                    title: p.conference || "",
+                    details: [{ label: "Role", value: p.role || "" }]
+                })));
+            }
 
+            // Patents
+            try {
                 const patentsSnap = await getDocs(collection(db, 'patents'));
                 setMappedPatents(patentsSnap.docs.map((d: any) => {
                     const p = d.data();
@@ -149,7 +188,16 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
+            } catch {
+                setMappedPatents(mockPatents.map(p => ({
+                    year: p.year?.toString() || "",
+                    title: p.title || "",
+                    details: [{ label: "Number", value: p.patentNumber || "" }]
+                })));
+            }
 
+            // Projects
+            try {
                 const projectsSnap = await getDocs(collection(db, 'projects'));
                 setMappedProjects(projectsSnap.docs.map((d: any) => {
                     const p = d.data();
@@ -163,7 +211,16 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
+            } catch {
+                setMappedProjects(mockProjects.map(p => ({
+                    year: "Project",
+                    title: p.title || "",
+                    details: [{ label: "Description", value: p.description || "" }]
+                })));
+            }
 
+            // Workshops
+            try {
                 const workshopsSnap = await getDocs(collection(db, 'workshops'));
                 setMappedWorkshops(workshopsSnap.docs.map((d: any) => {
                     const p = d.data();
@@ -178,7 +235,16 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
+            } catch {
+                setMappedWorkshops(mockWorkshops.map(p => ({
+                    year: p.year?.toString() || "",
+                    title: p.title || "",
+                    details: [{ label: "Organiser", value: p.organiser || "" }]
+                })));
+            }
 
+            // Awards
+            try {
                 const awardsSnap = await getDocs(collection(db, 'awards'));
                 setMappedAwards(awardsSnap.docs.map((d: any) => {
                     const p = d.data();
@@ -192,9 +258,12 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                         ].filter(x => x.value)
                     };
                 }));
-
-            } catch (err) {
-                console.error("Error fetching academic data:", err);
+            } catch {
+                setMappedAwards(mockAwards.map(p => ({
+                    year: p.year?.toString() || "",
+                    title: p.title || "",
+                    details: [{ label: "Org", value: p.organisation || "" }]
+                })));
             }
         };
 
@@ -304,41 +373,57 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
     };
 
     return (
-        <div id="academic" className="academic-profile-wrapper" style={{ margin: '60px 0', position: 'relative', paddingTop: '80px', marginTop: '-80px' }}>
+        <div id="academic" className="academic-profile-wrapper" style={{ padding: '80px 0', position: 'relative', margin: '0' }}>
             <div className="container" style={{ position: 'relative', zIndex: 2 }}>
                 <h2 className="custom-title mb-32 tmp-scroll-trigger tmp-fade-in animation-order-1 text-center" style={{ marginBottom: '50px', color: '#000' }}>
                     Faculty <span>Details</span>
                 </h2>
 
-                <div className="row">
-                    {/* Sticky Sidebar */}
-                    <div className="col-lg-5 col-md-5 d-none d-md-block">
-                        <div style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '20px 0', position: 'sticky', top: '100px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+                <div className="row align-items-stretch">
+                    {/* Sidebar */}
+                    <div className="d-none d-md-block" style={{ width: '40%', flex: '0 0 40%', padding: '0 15px' }}>
+                        <div style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '12px', padding: '30px 0', height: '100%', boxShadow: '0 8px 24px rgba(0,0,0,0.08)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <style>{`
+                                .sidebar-menu-btn {
+                                    width: 100%;
+                                    text-align: left;
+                                    cursor: pointer;
+                                    transition: all 0.2s ease;
+                                    display: block;
+                                    text-decoration: none;
+                                }
+                                .sidebar-menu-btn.active {
+                                    padding: 16px 24px;
+                                    background: #fff5f5;
+                                    border-left: 5px solid #e60000;
+                                    color: #e60000;
+                                    font-weight: 700;
+                                    font-size: 18px;
+                                }
+                                .sidebar-menu-btn.inactive {
+                                    padding: 12px 24px;
+                                    background: transparent;
+                                    border-left: 5px solid transparent;
+                                    color: #666666;
+                                    font-weight: 400;
+                                    font-size: 14px;
+                                }
+                                .sidebar-menu-btn.inactive:hover {
+                                    background: #fdfdfd;
+                                    color: #e60000;
+                                }
+                            `}</style>
                             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                 {academicTabs.map((tabObj) => (
                                     <li key={tabObj.name}>
                                         <a
                                             href={`#${tabObj.id}`}
                                             onClick={(e) => scrollToSection(e, tabObj.id)}
-                                            style={{
-                                                width: '100%',
-                                                textAlign: 'left',
-                                                padding: '12px 24px',
-                                                background: activeSection === tabObj.id ? '#fff5f5' : 'transparent',
-                                                border: 'none',
-                                                borderLeft: activeSection === tabObj.id ? '4px solid #e60000' : '4px solid transparent',
-                                                color: activeSection === tabObj.id ? '#e60000' : '#333',
-                                                fontWeight: activeSection === tabObj.id ? 700 : 500,
-                                                fontSize: '15px',
-                                                cursor: 'pointer',
-                                                transition: 'all 0.2s ease',
-                                                display: 'block',
-                                                textDecoration: 'none'
-                                            }}
+                                            className={`sidebar-menu-btn ${activeSection === tabObj.id ? 'active' : 'inactive'}`}
                                         >
                                             {tabObj.name}
                                         </a>
-                                        <div style={{ height: '1px', background: '#e0e0e0', margin: '0 24px' }}></div>
+                                        <div style={{ height: '1px', background: '#f0f0f0', margin: '0 24px' }}></div>
                                     </li>
                                 ))}
                             </ul>
@@ -346,16 +431,17 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                     </div>
 
                     {/* Main Content Areas */}
-                    <div className="col-lg-7 col-md-7 mt-5 mt-md-0">
+                    <div className="mt-5 mt-md-0" style={{ width: '60%', flex: '0 0 60%', padding: '0 15px' }}>
                         {/* Profile Section */}
-                        <div id="profile" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderTop: '6px solid #e60000', borderRadius: '12px', padding: '45px', marginBottom: '40px', boxShadow: '0 15px 45px rgba(0,0,0,0.1)', scrollMarginTop: '100px', minHeight: '420px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }} className="tmp-fade-in">
-                            <h3 style={{ marginBottom: '25px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '28px', fontWeight: 700 }}>Personal Profile</h3>
-                            <div style={{ display: 'flex', gap: '35px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-                                <Image src={profile?.profileImage || "/assets/images/logo/man.png"} alt={profile?.name || "Profile"} width={160} height={160} style={{ borderRadius: '12px', border: '1px solid #eeeeee', boxShadow: '0 5px 15px rgba(0,0,0,0.05)' }} />
-                                <div style={{ flex: 1, minWidth: '280px' }}>
-                                    <h4 style={{ margin: '0 0 10px 0', color: '#000', fontSize: '26px' }}>{profile?.name || "Dr LOGESHWARAN J, ME, PhD"}</h4>
-                                    <p style={{ color: '#e60000', fontWeight: 650, textTransform: 'uppercase', fontSize: '15px', letterSpacing: '1.2px' }}>{profile?.subtitle || "ASSISTANT PROFESSOR"}</p>
-                                    <p style={{ color: '#555', marginTop: '18px', fontSize: '16px', lineHeight: '1.6' }}>{profile?.bio || "A dedicated researcher and professor specializing in artificial intelligence and machine learning."}</p>
+                        {/* Profile Section */}
+                        <div id="profile" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '12px', padding: '40px', height: '100%', marginBottom: '0', boxShadow: '0 8px 24px rgba(0,0,0,0.08)', scrollMarginTop: '150px', display: 'flex', flexDirection: 'column' }} className="tmp-fade-in">
+                            <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '15px', color: '#000', fontSize: '30px', fontWeight: 800 }}>Personal Profile</h3>
+                            <div style={{ display: 'flex', gap: '40px', alignItems: 'center', flexWrap: 'wrap', flex: 1 }}>
+                                <Image src={profile?.profileImage || "/assets/images/logo/man.png"} alt={profile?.name || "Profile"} width={220} height={220} style={{ borderRadius: '16px', border: '1px solid #eeeeee', boxShadow: '0 8px 25px rgba(0,0,0,0.1)', objectFit: 'cover' }} />
+                                <div style={{ flex: 1, minWidth: '300px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                                    <h4 style={{ margin: 0, color: '#000', fontSize: '30px', fontWeight: 800 }}>{profile?.name || "Dr LOGESHWARAN J, ME, PhD"}</h4>
+                                    <p style={{ margin: 0, color: '#e60000', fontWeight: 700, textTransform: 'uppercase', fontSize: '18px', letterSpacing: '1.5px' }}>{profile?.subtitle || "ASSISTANT PROFESSOR"}</p>
+                                    <p style={{ margin: 0, color: '#333', fontSize: '18px', lineHeight: '1.8', fontWeight: 400 }}>{profile?.bio || "A dedicated researcher and professor specializing in artificial intelligence and machine learning."}</p>
                                 </div>
                             </div>
                         </div>
@@ -363,53 +449,53 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                 </div>
 
                 {/* Centered Data Cards Container */}
-                <div className="row justify-content-center mt-5">
+                <div className="row justify-content-center" style={{ marginTop: '80px' }}>
                     <div className="col-lg-10">
                         {/* Articles in Journals Section */}
-                        <div id="articles" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
+                        <div id="articles" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '80px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '150px' }} className="tmp-fade-in">
                             <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Articles in Journals</h3>
                             {renderYearGroup(mappedArticles, "articles")}
                         </div>
                         
                         {/* Book Chapters / Articles Section */}
-                        <div id="books" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
+                        <div id="books" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '80px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '150px' }} className="tmp-fade-in">
                              <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Book Chapters</h3>
                              {renderYearGroup(mappedBooks, "books")}
                         </div>
                         
                         {/* Conferences Section */}
-                        <div id="conferences" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
+                        <div id="conferences" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '80px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '150px' }} className="tmp-fade-in">
                              <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Participation in Seminars/Conferences/Symposium</h3>
                              {renderYearGroup(mappedConferences, "conferences")}
                         </div>
                         
                         {/* Patents Section */}
-                        <div id="patents" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
+                        <div id="patents" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '80px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '150px' }} className="tmp-fade-in">
                              <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Patents</h3>
                              {renderYearGroup(mappedPatents, "patents")}
                         </div>
                         
                         {/* Research Projects Section */}
-                        <div id="projects" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
+                        <div id="projects" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '80px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '150px' }} className="tmp-fade-in">
                              <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Research Project</h3>
                              {renderYearGroup(mappedProjects, "projects")}
                         </div>
 
                         {/* Workshops Section */}
-                        <div id="workshops" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
+                        <div id="workshops" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '80px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '150px' }} className="tmp-fade-in">
                             <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Workshops / FDP / Training Programmes</h3>
                             {renderYearGroup(mappedWorkshops, "workshops")}
                         </div>
 
                         {/* Awards Section */}
-                        <div id="awards" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
+                        <div id="awards" style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '80px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '150px' }} className="tmp-fade-in">
                             <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>Awards / Achievements / Others</h3>
                             {renderYearGroup(mappedAwards, "awards")}
                         </div>
 
                         {/* Dynamic Custom Sections */}
                         {dynamicSections.filter(s => s.isCustom).map((cs) => (
-                            <div key={cs.sectionId} id={cs.sectionId} style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '40px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '100px' }} className="tmp-fade-in">
+                            <div key={cs.sectionId} id={cs.sectionId} style={{ background: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '8px', padding: '40px', marginBottom: '80px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', scrollMarginTop: '150px' }} className="tmp-fade-in">
                                 <h3 style={{ marginBottom: '30px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px', color: '#000', fontSize: '24px' }}>
                                     {cs.label}
                                     {cs.isNew && (

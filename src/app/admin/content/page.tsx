@@ -98,6 +98,41 @@ const contentSections = [
         color: '#805ad5',
         href: '/admin/content/sections',
     },
+    {
+        title: 'Main Navbar Links',
+        description: 'Manage links that appear in the main navigation bar',
+        icon: 'fa-link',
+        color: '#4a5568',
+        href: '/admin/content/navbar',
+    },
+    {
+        title: 'Latest Services',
+        description: 'Manage the top 3 services shown on the homepage',
+        icon: 'fa-briefcase',
+        color: '#ecc94b',
+        href: '/admin/content/latest-services',
+    },
+    {
+        title: 'Company Logos',
+        description: 'Manage supported company/partner logos',
+        icon: 'fa-building',
+        color: '#9f7aea',
+        href: '/admin/content/company-logos',
+    },
+    {
+        title: 'Skill Widgets',
+        description: 'Manage the 3 expandable skill cards on the homepage',
+        icon: 'fa-star',
+        color: '#4fd1c5',
+        href: '/admin/content/skill-widgets',
+    },
+    {
+        title: 'Testimonials',
+        description: 'Manage client and partner testimonials',
+        icon: 'fa-quote-left',
+        color: '#ed64a6',
+        href: '/admin/content/testimonials',
+    },
 ];
 
 export default function AdminContent() {
@@ -212,6 +247,43 @@ export default function AdminContent() {
                     date: a.date || '',
                     year: a.year || ''
                 }))
+            },
+            {
+                name: 'main_navbar',
+                data: [
+                    { label: 'Home', path: '/', showInNavbar: true, isNew: false, order: 0 },
+                    { label: 'About', path: '/#about', showInNavbar: true, isNew: false, order: 1 },
+                    { label: 'Projects', path: '/projects', showInNavbar: true, isNew: false, order: 2 },
+                    { label: 'Blog', path: '/#blog', showInNavbar: true, isNew: false, order: 3 },
+                    { label: 'Contact', path: '/#contact', showInNavbar: true, isNew: false, order: 4 },
+                ]
+            },
+            {
+                name: 'latest_services',
+                data: [
+                    { title: '5G Architecture Design', description: 'Expert consultation and design for next-generation 5G networks.', order: 1 },
+                    { title: 'IoT Systems Integration', description: 'End-to-end integration of smart IoT devices and cloud platforms.', order: 2 },
+                    { title: 'Data Analytics & AI', description: 'Advanced computational models for deep learning and predictive analytics.', order: 3 }
+                ]
+            },
+            {
+                name: 'company_logos',
+                data: [
+                    { name: 'Christ University', imageUrl: '/assets/images/our-supported-company/company-logo-1.svg', order: 1 },
+                    { name: 'IEEE', imageUrl: '/assets/images/our-supported-company/company-logo-2.svg', order: 2 },
+                    { name: 'Springer', imageUrl: '/assets/images/our-supported-company/company-logo-3.svg', order: 3 },
+                    { name: 'Elsevier', imageUrl: '/assets/images/our-supported-company/company-logo-4.svg', order: 4 },
+                    { name: 'Stanford', imageUrl: '/assets/images/our-supported-company/company-logo-5.svg', order: 5 },
+                    { name: 'TechPartner', imageUrl: '/assets/images/our-supported-company/company-logo-6.svg', order: 6 },
+                ]
+            },
+            {
+                name: 'skill_widgets',
+                data: [
+                    { title: 'Research Publications', count: '100+', description: 'Extensive research published in top-tier journals including Nature, IEEE, and Springer.', icon: 'fa-light fa-book', order: 1 },
+                    { title: 'Patents Granted', count: '300+', description: 'Innovating cutting-edge technologies in IoT, 5G networks, and intelligent computation.', icon: 'fa-light fa-lightbulb', order: 2 },
+                    { title: 'Academic Mentoring', count: '50+', description: 'Guiding PhD scholars and postgraduate students toward academic and research excellence.', icon: 'fa-light fa-chalkboard-teacher', order: 3 }
+                ]
             }
         ];
 

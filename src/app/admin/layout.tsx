@@ -51,10 +51,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     // Show specialized unauthorized UI while redirecting non-admins
     if (!isAdmin) {
         return (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', flexDirection: 'column' }}>
-                <h3 style={{ marginBottom: '10px' }}>Unauthorized</h3>
-                <p style={{ color: '#666' }}>You do not have permission to view the admin portal. Redirecting...</p>
-                <div className="spinner-border text-primary mt-3" role="status" style={{ width: '1.5rem', height: '1.5rem' }}></div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', flexDirection: 'column', textAlign: 'center', padding: '20px' }}>
+                <div style={{ fontSize: '48px', marginBottom: '20px' }}>🔐</div>
+                <h3 style={{ marginBottom: '10px' }}>Access Restricted</h3>
+                <p style={{ color: '#666', maxWidth: '400px' }}>
+                    You are logged in as <strong>{user.email}</strong>, but your account is not yet registered as an administrator in our database.
+                </p>
+                <div style={{ background: '#fff4f4', border: '1px solid #ffcccc', padding: '15px', borderRadius: '8px', marginTop: '20px', fontSize: '13px', color: '#661111' }}>
+                    <strong>Next Steps:</strong><br/>
+                    1. Check your Firestore "users" collection.<br/>
+                    2. Ensure a document exists with ID: <code>{user.uid}</code><br/>
+                    3. Set <code>role: "admin"</code> in that document.
+                </div>
+                <div className="spinner-border text-primary mt-4" role="status" style={{ width: '1.5rem', height: '1.5rem' }}></div>
+                <p style={{ marginTop: '10px', fontSize: '12px', color: '#aaa' }}>Redirecting to home page...</p>
             </div>
         );
     }

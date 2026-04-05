@@ -3,7 +3,8 @@ import Image from "next/image";
 import {
   getProfile,
 } from "@/lib/firestore";
-import AcademicProfileTabs from "@/components/portfolio/AcademicProfileTabs";
+// import AcademicProfileTabs from "@/components/portfolio/AcademicProfileTabs";
+
 
 export const metadata: Metadata = {
   title: "About — Dr. Logishoren",
@@ -68,7 +69,7 @@ export default async function AboutPage() {
                   <div className="single-contact">
                     <i className="fa-solid fa-envelope"></i>
                     <div className="information tmp-link-animation">
-                      <span>Email</span>
+                      <span style={{ marginRight: '8px', fontWeight: 600 }}>Email - </span>
                       <a href={`mailto:${profile.email}`} className="number">
                         {profile.email}
                       </a>
@@ -77,7 +78,7 @@ export default async function AboutPage() {
                   <div className="single-contact">
                     <i className="fa-solid fa-phone"></i>
                     <div className="information tmp-link-animation">
-                      <span>Phone</span>
+                      <span style={{ marginRight: '8px', fontWeight: 600 }}>Phone - </span>
                       <a href={`tel:${profile.phone}`} className="number">
                         {profile.phone}
                       </a>
@@ -86,7 +87,7 @@ export default async function AboutPage() {
                   <div className="single-contact">
                     <i className="fa-solid fa-location-dot"></i>
                     <div className="information tmp-link-animation">
-                      <span>Address</span>
+                      <span style={{ marginRight: '8px', fontWeight: 600 }}>Address - </span>
                       <span className="number">{profile.address}</span>
                     </div>
                   </div>
@@ -97,7 +98,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <AcademicProfileTabs profile={profile} />
+      {/* <AcademicProfileTabs profile={profile} /> */}
     </>
   );
 }

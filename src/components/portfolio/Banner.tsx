@@ -28,8 +28,6 @@ export default function Banner({ profile }: BannerProps) {
                       width: '100%',
                       maxWidth: '450px',
                       height: 'auto',
-                      maxHeight: '550px',
-                      objectFit: 'cover',
                       borderRadius: '20px',
                       boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
                     }}

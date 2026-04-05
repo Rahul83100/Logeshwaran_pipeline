@@ -14,13 +14,14 @@ export default function BlogCard({ post, delay = 0 }: BlogCardProps) {
       <ScrollFadeIn delay={delay}>
         <div className="blog-card tmp-hover-link image-box-hover tmp-scroll-trigger tmp-fade-in animation-order-1">
           <div className="img-box">
-            <Link href={`/blog/${post.slug}`}>
+            <Link href={`/blog/${post.slug}`} style={{ display: 'block', height: '280px', overflow: 'hidden' }}>
               <Image
                 className="w-100"
                 src={post.thumbnail}
                 alt={post.title}
                 width={400}
                 height={280}
+                style={{ objectFit: 'cover', height: '100%', width: '100%' }}
               />
             </Link>
             <ul className="blog-tags">

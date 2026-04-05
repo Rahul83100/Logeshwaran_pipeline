@@ -23,14 +23,14 @@ const mockProfile: Profile = {
 };
 
 const mockSkills: Skill[] = [
-  { name: "5G/6G Communication Networks", category: "development", percentage: 95, icon: "fa-light fa-tower-broadcast", projectCount: 40 },
-  { name: "IoT Systems", category: "development", percentage: 90, icon: "fa-light fa-microchip", projectCount: 35 },
-  { name: "Deep Learning", category: "development", percentage: 90, icon: "fa-light fa-brain", projectCount: 30 },
-  { name: "Research & Publications", category: "design", percentage: 100, icon: "fa-light fa-book", projectCount: 100 },
-  { name: "Wireless Networks", category: "design", percentage: 95, icon: "fa-light fa-wifi", projectCount: 50 },
-  { name: "Edge & Fog Computing", category: "development", percentage: 85, icon: "fa-light fa-cloud", projectCount: 20 },
-  { name: "Patent Development", category: "design", percentage: 100, icon: "fa-light fa-lightbulb", projectCount: 300 },
-  { name: "Academic Mentoring", category: "design", percentage: 90, icon: "fa-light fa-chalkboard-teacher", projectCount: 25 },
+  { name: "5G/6G Communication Networks", category: "development", percentage: 58, icon: "fa-light fa-tower-broadcast", projectCount: 40 },
+  { name: "IoT Systems", category: "development", percentage: 46, icon: "fa-light fa-microchip", projectCount: 35 },
+  { name: "Deep Learning", category: "development", percentage: 75, icon: "fa-light fa-brain", projectCount: 30 },
+  { name: "Edge & Fog Computing", category: "development", percentage: 65, icon: "fa-light fa-cloud", projectCount: 20 },
+  { name: "Research & Publications", category: "design", percentage: 90, icon: "fa-light fa-book", projectCount: 100 },
+  { name: "Wireless Networks", category: "design", percentage: 85, icon: "fa-light fa-wifi", projectCount: 50 },
+  { name: "Patent Development", category: "design", percentage: 95, icon: "fa-light fa-lightbulb", projectCount: 300 },
+  { name: "Academic Mentoring", category: "design", percentage: 92, icon: "fa-light fa-chalkboard-teacher", projectCount: 25 },
 ];
 
 const mockEducation: Education[] = [
@@ -234,7 +234,7 @@ const mockBlogPosts: BlogPost[] = [
     content: "<p>The transition from 5G to 6G represents more than just an incremental upgrade — it's a fundamental paradigm shift in how we conceive wireless communication systems.</p><p>With AI-native network architectures at the core, 6G promises to deliver unprecedented capabilities including terabit-per-second speeds, sub-millisecond latency, and intelligent network orchestration.</p><p>In this article, we explore the key technologies driving this evolution, including semantic communication protocols, digital twins, and reconfigurable intelligent surfaces (RIS).</p>",
     author: "Dr. Logeshwaran J",
     date: "October 24, 2025",
-    thumbnail: "/assets/images/blog/blog-img-1.jpg",
+    thumbnail: "/assets/images/portfolio/generated/ai_5g_low_latency_1775287696406.png",
     tags: ["5G", "6G", "AI", "Communication"],
   },
   {
@@ -245,7 +245,7 @@ const mockBlogPosts: BlogPost[] = [
     content: "<p>The convergence of Internet of Things (IoT) and deep learning is creating transformative opportunities in precision agriculture.</p><p>By deploying smart sensors across farmlands and analyzing the data through advanced neural networks, farmers can now make data-driven decisions about irrigation, fertilization, and pest control.</p><p>Our research on the agro-deep learning framework demonstrates how these technologies can significantly improve crop yields while reducing resource consumption.</p>",
     author: "Dr. Logeshwaran J",
     date: "October 15, 2024",
-    thumbnail: "/assets/images/blog/blog-img-2.jpg",
+    thumbnail: "/assets/images/portfolio/generated/precision_agriculture_iot_1775287788194.png",
     tags: ["IoT", "Agriculture", "Deep Learning"],
   },
   {
@@ -256,7 +256,7 @@ const mockBlogPosts: BlogPost[] = [
     content: "<p>As IoT devices proliferate, the need for efficient edge computing architectures becomes increasingly critical.</p><p>Fog computing provides an intermediate layer between cloud data centers and IoT endpoints, enabling faster processing and reduced bandwidth consumption.</p><p>In this article, we discuss our recent work on hybrid metaheuristic algorithms for fog layer design that achieve significant improvements in resource utilization and response times.</p>",
     author: "Dr. Logeshwaran J",
     date: "June 11, 2025",
-    thumbnail: "/assets/images/blog/blog-img-3.jpg",
+    thumbnail: "/assets/images/portfolio/generated/edge_computing_fog_1775287807238.png",
     tags: ["Edge Computing", "Fog Computing", "IoT"],
   },
 ];
@@ -266,7 +266,7 @@ const mockProjects: PortfolioProject[] = [
     id: "1",
     title: "IoT Healthcare Monitoring & Alert System",
     category: "IoT & Healthcare",
-    image: "/assets/images/latest-portfolio/portfoli-img-1.jpg",
+    image: "/assets/images/portfolio/generated/iot_healthcare_monitoring_1775287674868.png",
     description: "A patented IoT-integrated healthcare monitoring and alert system for real-time patient health tracking.",
     link: "#",
   },
@@ -274,7 +274,7 @@ const mockProjects: PortfolioProject[] = [
     id: "2",
     title: "AI-Based 5G Low Latency Transmission",
     category: "5G Communication",
-    image: "/assets/images/latest-portfolio/portfoli-img-2.jpg",
+    image: "/assets/images/portfolio/generated/ai_5g_low_latency_1775287696406.png",
     description: "An improved AI-based low latency data transmission system for 5G communication networks.",
     link: "#",
   },
@@ -282,7 +282,7 @@ const mockProjects: PortfolioProject[] = [
     id: "3",
     title: "Solar Powered Air Pollution Monitoring",
     category: "IoT & Environment",
-    image: "/assets/images/latest-portfolio/portfoli-img-3.jpg",
+    image: "/assets/images/portfolio/generated/solar_air_pollution_1775287717228.png",
     description: "A patented solar-powered air pollution monitoring system using IoT sensors for real-time environmental data.",
     link: "#",
   },
@@ -290,7 +290,7 @@ const mockProjects: PortfolioProject[] = [
     id: "4",
     title: "Quantum Cryptography for IoT Security",
     category: "Quantum Computing",
-    image: "/assets/images/latest-portfolio/portfoli-img-4.jpg",
+    image: "/assets/images/portfolio/generated/quantum_cryptography_iot_1775287767064.png",
     description: "Research project on quantum cryptography techniques for secure communication in IoT networks.",
     link: "#",
   },
@@ -306,7 +306,7 @@ const mockProjects: PortfolioProject[] = [
     id: "6",
     title: "Smart Logistics Tracking and Monitoring Device",
     category: "IoT & Supply Chain",
-    image: "/assets/images/latest-portfolio/portfoli-img-2.jpg",
+    image: "/assets/images/portfolio/generated/smart_logistics_tracking_1775287822821.png",
     description: "A patented smart logistics tracking and remote monitoring device utilizing GPS and cellular IoT connectivity.",
     link: "#",
   },
@@ -338,7 +338,7 @@ const mockProjects: PortfolioProject[] = [
     id: "10",
     title: "AI Based Brain Cancer Detection Device",
     category: "AI & Healthcare",
-    image: "/assets/images/latest-portfolio/portfoli-img-2.jpg",
+    image: "/assets/images/portfolio/generated/brain_cancer_detection_1775287736207.png",
     description: "A patented diagnostic tool leveraging neural networks for early-stage brain cancer detection.",
     link: "#",
   },
@@ -829,3 +829,25 @@ const mockAwards: Award[] = [
 ];
 
 export { mockBookChapters, mockConferences, mockPatents, mockWorkshops, mockAwards, mockProfile, mockSkills, mockEducation, mockExperience, mockResearchPapers, mockBlogPosts, mockProjects, mockTestimonials };
+
+export const mockLatestServices = [
+  { id: '1', title: '5G Architecture Design', description: 'Expert consultation and design for next-generation 5G networks.', order: 1 },
+  { id: '2', title: 'IoT Systems Integration', description: 'End-to-end integration of smart IoT devices and cloud platforms.', order: 2 },
+  { id: '3', title: 'Data Analytics & AI', description: 'Advanced computational models for deep learning and predictive analytics.', order: 3 }
+];
+
+export const mockCompanyLogos = [
+  { id: '1', name: 'Christ University', imageUrl: '/assets/images/our-supported-company/company-logo-1.svg', order: 1 },
+  { id: '2', name: 'IEEE', imageUrl: '/assets/images/our-supported-company/company-logo-2.svg', order: 2 },
+  { id: '3', name: 'Springer', imageUrl: '/assets/images/our-supported-company/company-logo-3.svg', order: 3 },
+  { id: '4', name: 'Elsevier', imageUrl: '/assets/images/our-supported-company/company-logo-4.svg', order: 4 },
+  { id: '5', name: 'Stanford', imageUrl: '/assets/images/our-supported-company/company-logo-5.svg', order: 5 },
+  { id: '6', name: 'TechPartner', imageUrl: '/assets/images/our-supported-company/company-logo-6.svg', order: 6 },
+];
+
+export const mockSkillWidgets = [
+  { id: '1', title: 'Research Publications', count: '100+', description: 'Extensive research published in top-tier journals including Nature, IEEE, and Springer.', icon: 'fa-light fa-book', order: 1 },
+  { id: '2', title: 'Patents Granted', count: '300+', description: 'Innovating cutting-edge technologies in IoT, 5G networks, and intelligent computation.', icon: 'fa-light fa-lightbulb', order: 2 },
+  { id: '3', title: 'Academic Mentoring', count: '50+', description: 'Guiding PhD scholars and postgraduate students toward academic and research excellence.', icon: 'fa-light fa-chalkboard-teacher', order: 3 }
+];
+
