@@ -2,9 +2,8 @@
 
 import Link from 'next/link';
 import { db } from '@/lib/firebase';
-import { collection, getDocs, addDoc, query, where, orderBy } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
-import { mockResearchPapers, mockBookChapters, mockConferences, mockPatents, mockWorkshops, mockAwards, mockProjects } from '@/lib/mockData';
 
 const contentSections = [
     {
@@ -136,7 +135,6 @@ const contentSections = [
 ];
 
 export default function AdminContent() {
-    const [seeding, setSeeding] = useState(false);
     const [customSections, setCustomSections] = useState<any[]>([]);
 
     useEffect(() => {
@@ -166,150 +164,7 @@ export default function AdminContent() {
         fetchCustomSections();
     }, []);
 
-    const seedDatabase = async () => {
-        if (!confirm("Are you sure you want to seed the database with mock data? This will add dozens of entries if the collections are empty.")) return;
-        setSeeding(true);
 
-        const collectionsToSeed = [
-            { 
-                name: 'research_papers', 
-                data: mockResearchPapers.map((p) => ({
-                    title: p.title || '',
-                    abstract: p.abstract || '',
-                    authors: Array.isArray(p.authors) ? p.authors.join(', ') : (p.authors || ''),
-                    journal: p.journal || '',
-                    year: p.year || new Date().getFullYear(),
-                    doi: (p as any).doi || '',
-                    pdf_url: (p as any).pdf_url || '',
-                    is_private: p.is_private || false,
-                }))
-            },
-            { 
-                name: 'books', 
-                data: mockBookChapters.map((b) => ({
-                    title: b.title || '',
-                    bookTitle: b.bookTitle || '',
-                    isbn: b.isbn || '',
-                    year: b.year || new Date().getFullYear(),
-                    month: b.month || ''
-                }))
-            },
-            { 
-                name: 'conferences', 
-                data: mockConferences.map((c) => ({
-                    conference: c.conference || '',
-                    role: c.role || '',
-                    presentationTitle: c.presentationTitle || '',
-                    date: c.date || '',
-                    organiser: c.organiser || '',
-                    level: c.level || '',
-                    year: c.year || ''
-                }))
-            },
-            { 
-                name: 'patents', 
-                data: mockPatents.map((p) => ({
-                    title: p.title || '',
-                    inventors: p.inventors || '',
-                    grantedDate: p.grantedDate || '',
-                    patentNumber: p.patentNumber || '',
-                    fieldOfInvention: (p as any).fieldOfInvention || '',
-                    year: p.year || ''
-                }))
-            },
-            { 
-                name: 'projects', 
-                data: mockProjects.map((p: any) => ({
-                    title: p.title || '',
-                    category: p.category || '',
-                    description: p.description || '',
-                    image: p.image || '',
-                    link: p.link || ''
-                }))
-            },
-            { 
-                name: 'workshops', 
-                data: mockWorkshops.map((w) => ({
-                    title: w.title || '',
-                    organiser: w.organiser || '',
-                    level: w.level || '',
-                    role: w.role || '',
-                    date: w.date || '',
-                    year: w.year || ''
-                }))
-            },
-            { 
-                name: 'awards', 
-                data: mockAwards.map((a) => ({
-                    title: a.title || '',
-                    description: a.description || '',
-                    organisation: a.organisation || '',
-                    date: a.date || '',
-                    year: a.year || ''
-                }))
-            },
-            {
-                name: 'main_navbar',
-                data: [
-                    { label: 'Home', path: '/', showInNavbar: true, isNew: false, order: 0 },
-                    { label: 'About', path: '/#about', showInNavbar: true, isNew: false, order: 1 },
-                    { label: 'Projects', path: '/projects', showInNavbar: true, isNew: false, order: 2 },
-                    { label: 'Blog', path: '/#blog', showInNavbar: true, isNew: false, order: 3 },
-                    { label: 'Contact', path: '/#contact', showInNavbar: true, isNew: false, order: 4 },
-                ]
-            },
-            {
-                name: 'latest_services',
-                data: [
-                    { title: '5G Architecture Design', description: 'Expert consultation and design for next-generation 5G networks.', order: 1 },
-                    { title: 'IoT Systems Integration', description: 'End-to-end integration of smart IoT devices and cloud platforms.', order: 2 },
-                    { title: 'Data Analytics & AI', description: 'Advanced computational models for deep learning and predictive analytics.', order: 3 }
-                ]
-            },
-            {
-                name: 'company_logos',
-                data: [
-                    { name: 'Christ University', imageUrl: '/assets/images/our-supported-company/company-logo-1.svg', order: 1 },
-                    { name: 'IEEE', imageUrl: '/assets/images/our-supported-company/company-logo-2.svg', order: 2 },
-                    { name: 'Springer', imageUrl: '/assets/images/our-supported-company/company-logo-3.svg', order: 3 },
-                    { name: 'Elsevier', imageUrl: '/assets/images/our-supported-company/company-logo-4.svg', order: 4 },
-                    { name: 'Stanford', imageUrl: '/assets/images/our-supported-company/company-logo-5.svg', order: 5 },
-                    { name: 'TechPartner', imageUrl: '/assets/images/our-supported-company/company-logo-6.svg', order: 6 },
-                ]
-            },
-            {
-                name: 'skill_widgets',
-                data: [
-                    { title: 'Research Publications', count: '100+', description: 'Extensive research published in top-tier journals including Nature, IEEE, and Springer.', icon: 'fa-light fa-book', order: 1 },
-                    { title: 'Patents Granted', count: '300+', description: 'Innovating cutting-edge technologies in IoT, 5G networks, and intelligent computation.', icon: 'fa-light fa-lightbulb', order: 2 },
-                    { title: 'Academic Mentoring', count: '50+', description: 'Guiding PhD scholars and postgraduate students toward academic and research excellence.', icon: 'fa-light fa-chalkboard-teacher', order: 3 }
-                ]
-            }
-        ];
-
-        try {
-            for (const { name, data } of collectionsToSeed) {
-                const colRef = collection(db, name);
-                const snapshot = await getDocs(colRef);
-                
-                if (snapshot.empty) {
-                    for (const item of data) {
-                        await addDoc(colRef, {
-                            ...item,
-                            created_at: new Date()
-                        });
-                    }
-                    console.log(`Seeded ${name}`);
-                }
-            }
-            alert("Database seeded successfully!");
-        } catch (error) {
-            console.error(error);
-            alert("Error seeding database. See console for details.");
-        } finally {
-            setSeeding(false);
-        }
-    };
 
     return (
         <div>
@@ -320,13 +175,6 @@ export default function AdminContent() {
                 <p style={{ color: '#4a5568', fontSize: '16px', margin: 0 }}>
                     Select a section below to add, edit, or remove content from your portfolio.
                 </p>
-                <button 
-                    onClick={seedDatabase} 
-                    disabled={seeding}
-                    style={{ marginTop: '16px', padding: '8px 16px', background: '#e2e8f0', color: '#4a5568', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 500 }}
-                >
-                    {seeding ? "Seeding Data..." : "Seed Database with Mock Data"}
-                </button>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>

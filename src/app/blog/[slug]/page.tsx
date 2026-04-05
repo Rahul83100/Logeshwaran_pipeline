@@ -42,25 +42,15 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
 
   return (
     <>
-      {/* Breadcrumb */}
-      <div className="tmp-breadcrumb-area breadcrumb-style-one bg_images">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="breadcrumb-inner text-center">
-                <h1 className="title">{post.title}</h1>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Blog Details */}
-      <section className="blog-details-area tmp-section-gap">
+      <section className="blog-details-area tmp-section-gap" style={{ paddingTop: "240px" }}>
         <div className="container">
           <div className="row justify-content-center">
-            <div className="col-lg-8">
+            <div className="col-lg-10">
               <div className="blog-details-wrapper">
+                <div className="breadcrumb-inner text-center mb--50">
+                  <h1 className="title" style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 800, lineHeight: 1.2 }}>{post.title}</h1>
+                </div>
                 {/* Blog Thumbnail */}
                 <div className="blog-details-thumb mb--40">
                   {post.thumbnail ? (

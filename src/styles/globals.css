@@ -31,7 +31,7 @@ img {
 
 /* Push breadcrumb area below sticky header */
 .tmp-breadcrumb-area {
-  padding-top: 150px !important;
+  padding-top: 200px !important;
 }
 
 /* Ensure template animations work with React hydration */

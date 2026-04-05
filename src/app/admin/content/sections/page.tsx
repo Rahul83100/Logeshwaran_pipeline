@@ -20,14 +20,14 @@ interface NavSection {
 }
 
 const DEFAULT_SECTIONS: Omit<NavSection, 'id'>[] = [
-    { label: 'Profile', sectionId: 'profile', showInNavbar: true, isNew: false, order: 0, isCustom: false, firestoreCollection: '', fields: [] },
-    { label: 'Journals', sectionId: 'articles', showInNavbar: true, isNew: false, order: 1, isCustom: false, firestoreCollection: 'research_papers', fields: [] },
-    { label: 'Books', sectionId: 'books', showInNavbar: true, isNew: false, order: 2, isCustom: false, firestoreCollection: 'books', fields: [] },
-    { label: 'Conferences', sectionId: 'conferences', showInNavbar: true, isNew: false, order: 3, isCustom: false, firestoreCollection: 'conferences', fields: [] },
-    { label: 'Patents', sectionId: 'patents', showInNavbar: true, isNew: false, order: 4, isCustom: false, firestoreCollection: 'patents', fields: [] },
-    { label: 'Projects', sectionId: 'projects', showInNavbar: true, isNew: false, order: 5, isCustom: false, firestoreCollection: 'projects', fields: [] },
-    { label: 'Workshops', sectionId: 'workshops', showInNavbar: true, isNew: false, order: 6, isCustom: false, firestoreCollection: 'workshops', fields: [] },
-    { label: 'Awards', sectionId: 'awards', showInNavbar: true, isNew: false, order: 7, isCustom: false, firestoreCollection: 'awards', fields: [] },
+    { label: 'Profile', sectionId: 'profile', showInNavbar: false, isNew: false, order: 0, isCustom: false, firestoreCollection: '', fields: [] },
+    { label: 'Journals', sectionId: 'articles', showInNavbar: false, isNew: false, order: 1, isCustom: false, firestoreCollection: 'research_papers', fields: [] },
+    { label: 'Books', sectionId: 'books', showInNavbar: false, isNew: false, order: 2, isCustom: false, firestoreCollection: 'books', fields: [] },
+    { label: 'Conferences', sectionId: 'conferences', showInNavbar: false, isNew: false, order: 3, isCustom: false, firestoreCollection: 'conferences', fields: [] },
+    { label: 'Patents', sectionId: 'patents', showInNavbar: false, isNew: false, order: 4, isCustom: false, firestoreCollection: 'patents', fields: [] },
+    { label: 'Projects', sectionId: 'projects', showInNavbar: false, isNew: false, order: 5, isCustom: false, firestoreCollection: 'projects', fields: [] },
+    { label: 'Workshops', sectionId: 'workshops', showInNavbar: false, isNew: false, order: 6, isCustom: false, firestoreCollection: 'workshops', fields: [] },
+    { label: 'Awards', sectionId: 'awards', showInNavbar: false, isNew: false, order: 7, isCustom: false, firestoreCollection: 'awards', fields: [] },
 ];
 
 export default function SectionsManagement() {
