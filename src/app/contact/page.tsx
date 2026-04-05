@@ -30,7 +30,7 @@ export default async function ContactPage() {
       <section className="tmp-section-gap">
         <div className="container">
           <div className="row g-5 mb--50">
-            <div className="col-lg-4 col-md-6">
+            <div className="col-lg-6 col-md-6">
               <div className="counter-card tmponhover">
                 <div style={{ fontSize: "30px", marginBottom: "15px", color: "var(--theme-color, #6e57e0)" }}>
                   <i className="fa-solid fa-envelope"></i>
@@ -41,18 +41,7 @@ export default async function ContactPage() {
                 </p>
               </div>
             </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="counter-card tmponhover">
-                <div style={{ fontSize: "30px", marginBottom: "15px", color: "var(--theme-color, #6e57e0)" }}>
-                  <i className="fa-solid fa-phone"></i>
-                </div>
-                <h3 className="counter-title" style={{ fontSize: "18px" }}>Phone</h3>
-                <p className="counter-para">
-                  <a href={`tel:${profile.phone}`}>{profile.phone}</a>
-                </p>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
+            <div className="col-lg-6 col-md-6">
               <div className="counter-card tmponhover">
                 <div style={{ fontSize: "30px", marginBottom: "15px", color: "var(--theme-color, #6e57e0)" }}>
                   <i className="fa-solid fa-location-dot"></i>

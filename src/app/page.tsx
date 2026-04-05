@@ -12,6 +12,7 @@ import TestimonialSlider from "@/components/portfolio/TestimonialSlider";
 import ContactForm from "@/components/portfolio/ContactForm";
 import BlogCard from "@/components/portfolio/BlogCard";
 import ScrollFadeIn from "@/components/layout/ScrollFadeIn";
+import { unstable_noStore as noStore } from 'next/cache';
 import {
   getProfile,
   getSkills,
@@ -26,9 +27,14 @@ import {
 } from "@/lib/firestore";
 export const dynamic = 'force-dynamic';
 
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
 export default async function Home() {
+  noStore();
   const profile = await getProfile();
   const skills = await getSkills();
+  console.log('--- FIRESTORE SKILLS FETCHED ---', skills.map(s => `${s.name}: ${s.percentage}% (${s.category})`));
   const education = await getEducation();
   const experience = await getExperience();
   const projects = await getProjects();
@@ -87,9 +93,7 @@ export default async function Home() {
         <MySkillWidget widgets={skillWidgets} />
       </ScrollFadeIn>
 
-      <ScrollFadeIn delay={0.1}>
-        <TestimonialSlider testimonials={testimonials} />
-      </ScrollFadeIn>
+
 
       <ScrollFadeIn delay={0.2}>
         <ContactForm />

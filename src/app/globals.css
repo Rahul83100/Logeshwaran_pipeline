@@ -608,3 +608,22 @@ body {
   height: 100% !important;
   width: 100% !important;
 }
+
+/* ============ FIX 5: Navbar text size increase ============ */
+.tmp-mainmenu > li > a {
+  font-size: 19px !important;
+  font-weight: 600 !important;
+  padding: 10px 22px !important;
+}
+
+.tmp-menu-bars {
+  width: 50px !important;
+  height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.tmp-menu-bars i {
+  font-size: 24px !important;
+}

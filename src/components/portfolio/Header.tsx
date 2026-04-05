@@ -100,10 +100,10 @@ export default function Header() {
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <div className="header-content">
+              <div className="header-content" style={{ marginTop: '-25px' }}>
                 <div className="logo">
                   <Link href="/" style={{ textDecoration: 'none', border: 'none', outline: 'none', display: 'inline-block' }}>
-                    <img src="/assets/images/logo/main-logo.png" alt="Logo" style={{ maxHeight: '100px', objectFit: 'contain', padding: '0', margin: '-10px 0', border: 'none', mixBlendMode: 'multiply' }} />
+                    <img src="/assets/images/logo/main-logo.png" alt="Logo" style={{ maxHeight: 'clamp(120px, 15vw + 60px, 200px)', objectFit: 'contain', padding: '10px 0', margin: '0', border: 'none', mixBlendMode: 'multiply' }} />
                   </Link>
                 </div>
                 <nav className="tmp-mainmenu-nav d-none d-xl-block">
@@ -127,9 +127,9 @@ export default function Header() {
                       <button
                         onClick={handleLogout}
                         style={{
-                          padding: '7px 18px', fontSize: '14px', fontWeight: 600,
+                          padding: '10px 24px', fontSize: '16px', fontWeight: 600,
                           background: 'transparent', border: '1.5px solid #e60000', color: '#e60000',
-                          borderRadius: '25px', cursor: 'pointer', transition: 'all 0.25s ease', whiteSpace: 'nowrap',
+                          borderRadius: '30px', cursor: 'pointer', transition: 'all 0.25s ease', whiteSpace: 'nowrap',
                         }}
                         onMouseEnter={(e) => { e.currentTarget.style.background = '#e60000'; e.currentTarget.style.color = '#fff'; }}
                         onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e60000'; }}
@@ -140,9 +140,9 @@ export default function Header() {
                       <Link
                         href="/login"
                         style={{
-                          padding: '7px 18px', fontSize: '14px', fontWeight: 600,
+                          padding: '10px 24px', fontSize: '16px', fontWeight: 600,
                           background: 'transparent', border: '1.5px solid #e60000', color: '#e60000',
-                          borderRadius: '25px', textDecoration: 'none', display: 'inline-block',
+                          borderRadius: '30px', textDecoration: 'none', display: 'inline-block',
                           transition: 'all 0.25s ease', whiteSpace: 'nowrap',
                         }}
                         onMouseEnter={(e) => { e.currentTarget.style.background = '#e60000'; e.currentTarget.style.color = '#fff'; }}

@@ -48,7 +48,7 @@ export default function ResearchCard({ paper }: ResearchCardProps) {
           )}
         </h2>
         <p className="edu-para" style={{ fontSize: "14px", marginBottom: "8px", opacity: 0.7 }}>
-          <strong>Authors:</strong> {paper.authors.join(", ")}
+          <strong>Authors:</strong> {Array.isArray(paper.authors) ? paper.authors.join(", ") : paper.authors}
         </p>
         <p className="edu-para">
           {isLocked

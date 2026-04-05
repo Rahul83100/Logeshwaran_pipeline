@@ -64,7 +64,7 @@ export default async function ResearchDetailPage({ params }: ResearchDetailPageP
                 
                 <div className="mb--30">
                   <h4 style={{ fontSize: '18px', marginBottom: '10px' }}>Authors</h4>
-                  <p>{paper.authors.join(", ")}</p>
+                  <p>{Array.isArray(paper.authors) ? paper.authors.join(", ") : paper.authors || 'Unknown Authors'}</p>
                 </div>
 
                 <div className="mb--30">

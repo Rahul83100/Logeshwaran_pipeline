@@ -12,7 +12,7 @@ export default function Banner({ profile }: BannerProps) {
   return (
     <div className="tmp-banner-one-area">
       <div className="container">
-        <div className="banner-one-main-wrapper">
+        <div className="banner-one-main-wrapper" style={{ paddingTop: '90px', paddingBottom: '60px' }}>
           <div className="row align-items-center">
             <div className="col-lg-6 order-lg-2">
               <div className="banner-right-content">
