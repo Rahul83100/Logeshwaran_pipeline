@@ -69,12 +69,7 @@ export default function Footer() {
                       </span>
                       Department of CS, University Campus
                     </li>
-                    <li>
-                      <span className="ft-icon">
-                        <i className="fa-solid fa-phone"></i>
-                      </span>
-                      <a href="tel:+919876543210">+91 98765 43210</a>
-                    </li>
+
                   </ul>
                   <div className="social-link footer" style={{ display: 'none' }}>
                   </div>
