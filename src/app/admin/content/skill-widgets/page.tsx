@@ -72,6 +72,25 @@ export default function AdminPage() {
         await loadItems();
     }
 
+    async function handleRestoreDefaults() {
+        if (!confirm('This will populate exactly the 3 default Skill Widgets. Continue?')) return;
+        setSaving(true);
+        try {
+            const defaults = [
+                { icon: 'fa-light fa-book-open-reader', title: 'Research Publications', count: '100+', description: 'Extensive research published in top-tier journals including Nature, IEEE, and Springer.', order: 0 },
+                { icon: 'fa-light fa-lightbulb', title: 'Patents Granted', count: '300+', description: 'Innovating cutting-edge technologies in IoT, 5G networks, and intelligent computation.', order: 1 },
+                { icon: 'fa-light fa-user-graduate', title: 'Academic Mentoring', count: '50+', description: 'Guiding PhD scholars and postgraduate students toward academic and research excellence.', order: 2 },
+            ];
+            for (const item of defaults) {
+                await addDoc(collection(db, 'skill_widgets'), { ...item, created_at: serverTimestamp() });
+            }
+            await loadItems();
+        } catch (err) {
+            console.error('Failed to restore defaults', err);
+        }
+        setSaving(false);
+    }
+
     const inputStyle = { width: '100%', padding: '10px 14px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' as const, outline: 'none' };
     const labelStyle = { display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 500 as const, color: '#555' };
 
@@ -134,7 +153,10 @@ export default function AdminPage() {
             ) : items.length === 0 ? (
                 <div className="admin-card" style={{ textAlign: 'center', padding: '48px' }}>
                     <i className="fa-solid fa-star" style={{ fontSize: '40px', color: '#ddd', marginBottom: '12px' }}></i>
-                    <p style={{ color: '#999' }}>No items yet. Click "Add New" to get started.</p>
+                    <p style={{ color: '#999', marginBottom: '16px' }}>No items yet. Click "Add New" to get started.</p>
+                    <button disabled={saving} onClick={handleRestoreDefaults} style={{ padding: '10px 20px', background: '#48bb78', border: 'none', borderRadius: '8px', color: '#fff', fontSize: '14px', cursor: 'pointer', fontWeight: 500 }}>
+                        <i className="fa-solid fa-rotate-left" style={{ marginRight: '6px' }}></i> {saving ? 'Restoring...' : 'Restore Original Defaults'}
+                    </button>
                 </div>
             ) : (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>

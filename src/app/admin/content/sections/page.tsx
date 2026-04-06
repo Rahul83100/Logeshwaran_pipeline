@@ -423,14 +423,12 @@ export default function SectionsManagement() {
                             >
                                 <i className="fa-solid fa-arrow-down" style={{ marginRight: '4px' }}></i> To Menu
                             </button>
-                            {section.isCustom && (
-                                <button
-                                    onClick={() => handleDeleteSection(section.id, section.label)}
-                                    style={{ padding: '4px 10px', background: '#fee', color: '#e53e3e', border: '1px solid #e53e3e', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }}
-                                >
-                                    <i className="fa-solid fa-trash"></i>
-                                </button>
-                            )}
+                            <button
+                                onClick={() => handleDeleteSection(section.id, section.label)}
+                                style={{ padding: '4px 10px', background: '#fee', color: '#e53e3e', border: '1px solid #e53e3e', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }}
+                            >
+                                <i className="fa-solid fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                 ))}
@@ -488,14 +486,12 @@ export default function SectionsManagement() {
                             >
                                 <i className="fa-solid fa-arrow-up" style={{ marginRight: '4px' }}></i> To Navbar
                             </button>
-                            {section.isCustom && (
-                                <button
-                                    onClick={() => handleDeleteSection(section.id, section.label)}
-                                    style={{ padding: '4px 10px', background: '#fee', color: '#e53e3e', border: '1px solid #e53e3e', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }}
-                                >
-                                    <i className="fa-solid fa-trash"></i>
-                                </button>
-                            )}
+                            <button
+                                onClick={() => handleDeleteSection(section.id, section.label)}
+                                style={{ padding: '4px 10px', background: '#fee', color: '#e53e3e', border: '1px solid #e53e3e', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }}
+                            >
+                                <i className="fa-solid fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                 ))}

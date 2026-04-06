@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { collection, getDocs, getDoc, updateDoc, setDoc, doc, orderBy, query, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, getDoc, updateDoc, setDoc, doc, orderBy, query, serverTimestamp, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 interface AccessRequest {
@@ -125,6 +125,19 @@ export default function AccessRequestsManagement() {
         setProcessingId(null);
     }
 
+    async function handleDelete(id: string) {
+        if (!confirm('Are you sure you want to permanently delete this access request record?')) return;
+        setProcessingId(id);
+        try {
+            await deleteDoc(doc(db, 'access_requests', id));
+            await loadRequests();
+        } catch (err: any) {
+            alert('Error deleting request: ' + err.message);
+        } finally {
+            setProcessingId(null);
+        }
+    }
+
     const filtered = filter === 'all' ? requests : requests.filter((r) => r.status === filter);
 
     const statusColors: Record<string, { bg: string; fg: string }> = {
@@ -237,6 +250,13 @@ export default function AccessRequestsManagement() {
                                             🔒 Revoke
                                         </button>
                                     )}
+                                    <button
+                                        onClick={() => handleDelete(req.id)}
+                                        disabled={processingId === req.id}
+                                        style={{ padding: '8px 16px', background: '#fee', border: '1px solid #e53e3e', borderRadius: '6px', color: '#e53e3e', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}
+                                    >
+                                        <i className="fa-solid fa-trash" style={{ marginRight: '4px' }}></i> Delete
+                                    </button>
                                 </div>
                             </div>
                         </div>

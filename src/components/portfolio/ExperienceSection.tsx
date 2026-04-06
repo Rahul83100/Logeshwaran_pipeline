@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { collection, getDocs, getDoc, doc } from "firebase/firestore";
+import { collection, getDocs, getDoc, doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { Experience } from "@/lib/firestore";
 
@@ -17,11 +17,13 @@ export default function ExperienceSection({ experience: initialExperience, image
   const [imageUrl, setImageUrl] = useState(initialImageUrl || "");
 
   useEffect(() => {
-    async function fetchFreshData() {
-      try {
-        // Use simple getDocs without orderBy to avoid excluding docs missing the 'order' field
-        const snap = await getDocs(collection(db, 'experience'));
-        const mapped = snap.docs.map(d => {
+    let unsubscribeExp: (() => void) | undefined;
+    let unsubscribeProfile: (() => void) | undefined;
+
+    try {
+      const expQuery = collection(db, 'experience');
+      unsubscribeExp = onSnapshot(expQuery, (snap: any) => {
+        const mapped = snap.docs.map((d: any) => {
           const data = d.data();
           return {
             id: d.id,
@@ -32,20 +34,25 @@ export default function ExperienceSection({ experience: initialExperience, image
             order: data.order ?? 999,
             ...data
           } as Experience;
-        }).sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+        }).sort((a: any, b: any) => (a.order ?? 999) - (b.order ?? 999));
         
-        // Always update — if array is empty, show nothing; if it has data, show it
         setExperience(mapped);
+      });
 
-        const profileSnap = await getDoc(doc(db, 'profile', 'main'));
-        if (profileSnap.exists() && profileSnap.data().experienceImage) {
-          setImageUrl(profileSnap.data().experienceImage);
+      const profileDoc = doc(db, 'profile', 'main');
+      unsubscribeProfile = onSnapshot(profileDoc, (docSnap: any) => {
+        if (docSnap.exists() && docSnap.data().experienceImage) {
+          setImageUrl(docSnap.data().experienceImage);
         }
-      } catch (err) {
-        console.warn("ExperienceSection: client fetch failed, using SSR props", err);
-      }
+      });
+    } catch (err) {
+      console.warn("ExperienceSection: client fetch failed, using SSR props", err);
     }
-    fetchFreshData();
+
+    return () => {
+      if (unsubscribeExp) unsubscribeExp();
+      if (unsubscribeProfile) unsubscribeProfile();
+    };
   }, []);
 
   const toggleExpand = (id: string) => {
@@ -71,8 +78,8 @@ export default function ExperienceSection({ experience: initialExperience, image
         {/* Left: 2x2 card grid */}
         <div style={{ flex: '1 1 55%', minWidth: 0 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', height: '100%' }}>
-            {experience.slice(0, 4).map((exp, index) => {
-              const expKey = exp.company + "-" + exp.role + "-" + index;
+            {experience.map((exp, index) => {
+              const expKey = exp.id || (exp.company + "-" + exp.role + "-" + index);
               const isExpanded = expandedIds.includes(expKey);
               return (
                 <div
