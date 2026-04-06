@@ -627,3 +627,24 @@ body {
 .tmp-menu-bars i {
   font-size: 24px !important;
 }
+
+/* ============ FIX 6: Disable interaction on Skill Widgets/Service Cards ============ */
+.service-card-v1, .service-card-v1 *, .service-title, .service-title * {
+  cursor: default !important;
+  user-select: none;
+}
+.service-card-v1 {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease !important;
+}
+.service-card-v1:hover {
+  transform: translateY(-10px) !important;
+  box-shadow: 0 20px 40px rgba(255, 1, 79, 0.18) !important;
+}
+.service-card-v1:hover .service-card-icon i {
+  color: var(--color-primary, #ff014f) !important;
+  transform: scale(1.15);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+.service-card-v1:hover .service-title {
+  color: var(--color-primary, #ff014f) !important;
+}

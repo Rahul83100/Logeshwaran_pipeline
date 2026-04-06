@@ -39,8 +39,17 @@ export default function SignupPage() {
   return (
     <div className="rbac-page" style={{ paddingTop: '100px' }}>
       <div className="rbac-container" style={{ maxWidth: '450px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <Link href="/" style={{ color: '#9393a5', fontSize: '14px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', transition: 'color 0.2s' }}
+            onMouseEnter={e => (e.currentTarget.style.color = '#667eea')}
+            onMouseLeave={e => (e.currentTarget.style.color = '#9393a5')}>
+            <i className="fa-solid fa-arrow-left" style={{ fontSize: '12px' }}></i>
+            Back to Portfolio
+          </Link>
+        </div>
         <h2 className="rbac-page-title" style={{ textAlign: 'center' }}>Create an Account</h2>
         <p style={{ textAlign: 'center', color: '#9393a5', marginBottom: '30px' }}>Join the portfolio to request private research access.</p>
+
         
         <form onSubmit={handleSignup} className="rbac-form">
           <div className="rbac-form-group">

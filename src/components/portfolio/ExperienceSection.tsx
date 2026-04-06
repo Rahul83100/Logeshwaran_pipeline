@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { collection, getDocs, getDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import type { Experience } from "@/lib/firestore";
 
 interface ExperienceSectionProps {
@@ -9,8 +11,42 @@ interface ExperienceSectionProps {
   imageUrl?: string;
 }
 
-export default function ExperienceSection({ experience, imageUrl }: ExperienceSectionProps) {
+export default function ExperienceSection({ experience: initialExperience, imageUrl: initialImageUrl }: ExperienceSectionProps) {
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
+  const [experience, setExperience] = useState<Experience[]>(initialExperience || []);
+  const [imageUrl, setImageUrl] = useState(initialImageUrl || "");
+
+  useEffect(() => {
+    async function fetchFreshData() {
+      try {
+        // Use simple getDocs without orderBy to avoid excluding docs missing the 'order' field
+        const snap = await getDocs(collection(db, 'experience'));
+        const mapped = snap.docs.map(d => {
+          const data = d.data();
+          return {
+            id: d.id,
+            company: data.organization || data.company,
+            duration: data.year_range || data.duration,
+            role: data.role,
+            description: data.description,
+            order: data.order ?? 999,
+            ...data
+          } as Experience;
+        }).sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+        
+        // Always update — if array is empty, show nothing; if it has data, show it
+        setExperience(mapped);
+
+        const profileSnap = await getDoc(doc(db, 'profile', 'main'));
+        if (profileSnap.exists() && profileSnap.data().experienceImage) {
+          setImageUrl(profileSnap.data().experienceImage);
+        }
+      } catch (err) {
+        console.warn("ExperienceSection: client fetch failed, using SSR props", err);
+      }
+    }
+    fetchFreshData();
+  }, []);
 
   const toggleExpand = (id: string) => {
     setExpandedIds(prev =>

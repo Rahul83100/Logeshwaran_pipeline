@@ -373,14 +373,22 @@ export async function getCompanyLogos() {
   }
 }
 
+const DEFAULT_SKILL_WIDGETS = [
+  { id: 'default-1', order: 0, icon: 'fa-light fa-book-open-reader', title: 'Research Publications', count: '100+', description: 'Extensive research published in top-tier journals including Nature, IEEE, and Springer.' },
+  { id: 'default-2', order: 1, icon: 'fa-light fa-lightbulb', title: 'Patents Granted', count: '300+', description: 'Innovating cutting-edge technologies in IoT, 5G networks, and intelligent computation.' },
+  { id: 'default-3', order: 2, icon: 'fa-light fa-user-graduate', title: 'Academic Mentoring', count: '50+', description: 'Guiding PhD scholars and postgraduate students toward academic and research excellence.' },
+];
+
 export async function getSkillWidgets() {
   try {
-    const q = query(collection(db, 'skill_widgets'), orderBy('order', 'asc'));
-    const snap = await getDocs(q);
-    return snap.docs.map(d => ({ id: d.id, ...sanitizeData(d.data()) }));
+    const snap = await getDocs(collection(db, 'skill_widgets'));
+    if (snap.empty) return DEFAULT_SKILL_WIDGETS;
+    return snap.docs
+      .map(d => ({ id: d.id, ...sanitizeData(d.data()) }))
+      .sort((a: any, b: any) => (a.order ?? 999) - (b.order ?? 999));
   } catch (err) {
     console.warn('Failed to fetch skill widgets. Using fallback.');
-    return require('./mockData').mockSkillWidgets;
+    return DEFAULT_SKILL_WIDGETS;
   }
 }
 

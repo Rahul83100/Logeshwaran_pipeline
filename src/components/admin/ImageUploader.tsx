@@ -68,18 +68,25 @@ export default function ImageUploader({ currentUrl, onUrlChange, storagePath, la
         const ext = file.name.split('.').pop();
         const filename = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
         const storageRef = ref(storage, `${storagePath}/${filename}`);
+        console.log(`Starting upload to: ${storagePath}/${filename}`);
+        
         const uploadTask = uploadBytesResumable(storageRef, file, { contentType: file.type });
 
         uploadTask.on(
             'state_changed',
-            (snapshot) => setProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)),
+            (snapshot) => {
+                const p = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                console.log(`Upload progress: ${p}%`);
+                setProgress(p);
+            },
             (err) => {
-                console.error('Upload error:', err);
-                setError('Upload failed. Please check Firebase Storage rules and try again.');
+                console.error('FIREBASE UPLOAD ERROR:', err);
+                setError(`Upload failed (${err.code}). Please check Firebase Storage rules and try again.`);
                 setUploading(false);
             },
             async () => {
                 const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                console.log('Upload successful! URL:', downloadUrl);
                 onUrlChange(downloadUrl);
                 setUploading(false);
                 setProgress(100);

@@ -1,5 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+
 interface SkillWidget {
   id?: string;
   order?: number;
@@ -10,6 +14,12 @@ interface SkillWidget {
   link?: string;
 }
 
+const DEFAULT_SKILL_WIDGETS: SkillWidget[] = [
+  { id: 'default-1', order: 0, icon: 'fa-light fa-book-open-reader', title: 'Research Publications', count: '100+', description: 'Extensive research published in top-tier journals including Nature, IEEE, and Springer.' },
+  { id: 'default-2', order: 1, icon: 'fa-light fa-lightbulb', title: 'Patents Granted', count: '300+', description: 'Innovating cutting-edge technologies in IoT, 5G networks, and intelligent computation.' },
+  { id: 'default-3', order: 2, icon: 'fa-light fa-user-graduate', title: 'Academic Mentoring', count: '50+', description: 'Guiding PhD scholars and postgraduate students toward academic and research excellence.' },
+];
+
 interface MySkillWidgetProps {
   widgets: SkillWidget[];
   heading?: string;
@@ -17,10 +27,34 @@ interface MySkillWidgetProps {
 }
 
 export default function MySkillWidget({ 
-  widgets,
+  widgets: initialWidgets,
   heading = "Elevated Designs\nPersonalized the best Experiences",
   subheading = "My Skill"
 }: MySkillWidgetProps) {
+
+  const [widgets, setWidgets] = useState<SkillWidget[]>(
+    initialWidgets && initialWidgets.length > 0 ? initialWidgets : DEFAULT_SKILL_WIDGETS
+  );
+
+  useEffect(() => {
+    async function fetchFresh() {
+      try {
+        const snap = await getDocs(collection(db, 'skill_widgets'));
+        const fresh = snap.docs
+          .map(d => ({ id: d.id, ...d.data() } as SkillWidget))
+          .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+        
+        if (fresh.length > 0) {
+          setWidgets(fresh);
+        } else {
+          setWidgets(DEFAULT_SKILL_WIDGETS);
+        }
+      } catch (err) {
+        console.warn("MySkillWidget: client fetch failed", err);
+      }
+    }
+    fetchFresh();
+  }, []);
 
   if (!widgets || widgets.length === 0) return null;
 
@@ -33,7 +67,7 @@ export default function MySkillWidget({
           padding: 30px 40px;
           border-bottom: 1px solid rgba(0,0,0,0.08);
           transition: all 0.4s ease;
-          cursor: pointer;
+          cursor: default;
           position: relative;
           overflow: hidden;
           background: transparent;

@@ -23,7 +23,7 @@ function LoginContent() {
     setError('')
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      router.push(redirectParams || '/')
+      router.push(redirectParams || '/request-access')
     } catch (err: any) {
       setError('Invalid email or password.')
     } finally {

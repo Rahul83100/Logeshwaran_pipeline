@@ -1,6 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { collection, getDocs, query, orderBy, getDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 interface LatestService {
   id?: string;
@@ -18,12 +21,41 @@ interface LatestServiceSectionProps {
 }
 
 export default function LatestServiceSection({ 
-  services,
-  imageUrl,
-  heading,
-  subheading,
-  description
+  services: initialServices,
+  imageUrl: initialImageUrl,
+  heading: initialHeading,
+  description: initialDescription,
+  subheading
 }: LatestServiceSectionProps) {
+
+  const [services, setServices] = useState<LatestService[]>(initialServices || []);
+  const [imageUrl, setImageUrl] = useState(initialImageUrl || "");
+  const [heading, setHeading] = useState(initialHeading || "");
+  const [description, setDescription] = useState(initialDescription || "");
+
+  useEffect(() => {
+    async function fetchFreshData() {
+      try {
+        // Fetch service items
+        const q = query(collection(db, 'latest_services'), orderBy('order', 'asc'));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          setServices(snap.docs.map(d => ({ id: d.id, ...d.data() } as LatestService)));
+        }
+        // Fetch global config from profile
+        const profileSnap = await getDoc(doc(db, 'profile', 'main'));
+        if (profileSnap.exists()) {
+          const pData = profileSnap.data();
+          if (pData.latestServiceTitle) setHeading(pData.latestServiceTitle);
+          if (pData.latestServiceDescription) setDescription(pData.latestServiceDescription);
+          if (pData.latestServiceImage) setImageUrl(pData.latestServiceImage);
+        }
+      } catch (err) {
+        console.warn("LatestServiceSection: client fetch failed, using SSR props", err);
+      }
+    }
+    fetchFreshData();
+  }, []);
 
   const finalHeading = heading || "Inspiring The World One\nProject";
   const finalSubheading = subheading || "Latest Service";

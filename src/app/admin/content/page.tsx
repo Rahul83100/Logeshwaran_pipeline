@@ -98,13 +98,6 @@ const contentSections = [
         href: '/admin/content/sections',
     },
     {
-        title: 'Main Navbar Links',
-        description: 'Manage links that appear in the main navigation bar',
-        icon: 'fa-link',
-        color: '#4a5568',
-        href: '/admin/content/navbar',
-    },
-    {
         title: 'Latest Services',
         description: 'Manage the top 3 services shown on the homepage',
         icon: 'fa-briefcase',
@@ -124,13 +117,6 @@ const contentSections = [
         icon: 'fa-star',
         color: '#4fd1c5',
         href: '/admin/content/skill-widgets',
-    },
-    {
-        title: 'Testimonials',
-        description: 'Manage client and partner testimonials',
-        icon: 'fa-quote-left',
-        color: '#ed64a6',
-        href: '/admin/content/testimonials',
     },
 ];
 

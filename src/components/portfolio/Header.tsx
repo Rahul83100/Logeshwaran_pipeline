@@ -33,12 +33,29 @@ export default function Header() {
   useEffect(() => {
     const fetchSections = async () => {
       try {
-        const snap = await getDocs(query(collection(db, 'main_navbar'), orderBy('order', 'asc')));
+        const snap = await getDocs(query(collection(db, 'navbar_sections'), orderBy('order', 'asc')));
         if (!snap.empty) {
-          setSections(snap.docs.map(d => d.data() as NavSection));
+          const mapped = snap.docs.map(d => {
+            const data = d.data();
+            let path = `/#${data.sectionId}`;
+            if (data.sectionId === 'profile') path = '/';
+            if (data.sectionId === 'about') path = '/about';
+            if (data.sectionId === 'projects') path = '/projects';
+            if (data.sectionId === 'articles') path = '/blog';
+            if (data.sectionId === 'contact') path = '/contact';
+            
+            return {
+              label: data.label,
+              path: path,
+              showInNavbar: data.showInNavbar,
+              isNew: data.isNew,
+              order: data.order
+            } as NavSection;
+          });
+          setSections(mapped);
         }
       } catch (err) {
-        console.warn('Failed to fetch main_navbar. Using fallback data.', err);
+        console.warn('Failed to fetch navbar_sections. Using fallback data.', err);
       }
     };
     fetchSections();
@@ -202,7 +219,7 @@ export default function Header() {
                   </div>
                 </div>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                  {allSections.map((sec) => (
+                  {navbarSections.map((sec) => (
                     <li key={sec.label}>
                       <Link
                         href={sec.path}

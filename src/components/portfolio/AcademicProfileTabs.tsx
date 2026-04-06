@@ -278,7 +278,11 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                 if (!snap.empty) {
                     const secs = snap.docs.map(d => d.data() as DynSection);
                     setDynamicSections(secs);
-                    setAcademicTabs(secs.map(s => ({ name: s.label, id: s.sectionId })));
+                    // Only show Menu Only sections (showInNavbar === false) in the sidebar
+                    const menuOnlySecs = secs.filter(s => !s.showInNavbar);
+                    if (menuOnlySecs.length > 0) {
+                        setAcademicTabs(menuOnlySecs.map(s => ({ name: s.label, id: s.sectionId })));
+                    }
 
                     // Fetch custom section data
                     const customSecs = secs.filter(s => s.isCustom && s.firestoreCollection);
@@ -415,7 +419,7 @@ function AcademicProfileTabsInner({ profile }: { profile: any }) {
                             `}</style>
                             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                                 {academicTabs.map((tabObj) => (
-                                    <li key={tabObj.name}>
+                                    <li key={tabObj.id}>
                                         <a
                                             href={`#${tabObj.id}`}
                                             onClick={(e) => scrollToSection(e, tabObj.id)}

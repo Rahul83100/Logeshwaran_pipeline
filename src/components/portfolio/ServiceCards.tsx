@@ -29,7 +29,7 @@ export default function ServiceCards({ skills }: ServiceCardsProps) {
                   <i className={skill.icon || "fa-light fa-pen-ruler"}></i>
                 </div>
                 <h4 className="service-title">
-                  <a href="#">{skill.name}</a>
+                  {skill.name}
                 </h4>
                 <p className="service-para">
                   {skill.projectCount ? `${skill.projectCount} Projects` : ""}

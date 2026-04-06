@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy } from 'firebase/firestore';
+import ImageUploader from '@/components/admin/ImageUploader';
 
 const MAX_NAVBAR_SECTIONS = 8;
 
@@ -16,26 +17,34 @@ interface NavSection {
     order: number;
     isCustom: boolean;
     firestoreCollection: string;
-    fields: { name: string; label: string; type: string }[];
+    fields: { name: string; label: string; type: string; defaultValue?: string }[];
 }
 
 const DEFAULT_SECTIONS: Omit<NavSection, 'id'>[] = [
-    { label: 'Profile', sectionId: 'profile', showInNavbar: false, isNew: false, order: 0, isCustom: false, firestoreCollection: '', fields: [] },
-    { label: 'Journals', sectionId: 'articles', showInNavbar: false, isNew: false, order: 1, isCustom: false, firestoreCollection: 'research_papers', fields: [] },
-    { label: 'Books', sectionId: 'books', showInNavbar: false, isNew: false, order: 2, isCustom: false, firestoreCollection: 'books', fields: [] },
-    { label: 'Conferences', sectionId: 'conferences', showInNavbar: false, isNew: false, order: 3, isCustom: false, firestoreCollection: 'conferences', fields: [] },
-    { label: 'Patents', sectionId: 'patents', showInNavbar: false, isNew: false, order: 4, isCustom: false, firestoreCollection: 'patents', fields: [] },
-    { label: 'Projects', sectionId: 'projects', showInNavbar: false, isNew: false, order: 5, isCustom: false, firestoreCollection: 'projects', fields: [] },
-    { label: 'Workshops', sectionId: 'workshops', showInNavbar: false, isNew: false, order: 6, isCustom: false, firestoreCollection: 'workshops', fields: [] },
-    { label: 'Awards', sectionId: 'awards', showInNavbar: false, isNew: false, order: 7, isCustom: false, firestoreCollection: 'awards', fields: [] },
+    { label: 'Home', sectionId: 'profile', showInNavbar: true, isNew: false, order: 0, isCustom: false, firestoreCollection: '', fields: [] },
+    { label: 'About', sectionId: 'about', showInNavbar: true, isNew: false, order: 1, isCustom: false, firestoreCollection: '', fields: [] },
+    { label: 'Projects', sectionId: 'projects', showInNavbar: true, isNew: false, order: 2, isCustom: false, firestoreCollection: 'projects', fields: [] },
+    { label: 'Blog', sectionId: 'articles', showInNavbar: true, isNew: false, order: 3, isCustom: false, firestoreCollection: 'research_papers', fields: [] },
+    { label: 'Contact', sectionId: 'contact', showInNavbar: true, isNew: false, order: 4, isCustom: false, firestoreCollection: '', fields: [] },
+    { label: 'Profile', sectionId: 'profile-tab', showInNavbar: false, isNew: false, order: 5, isCustom: false, firestoreCollection: '', fields: [] },
+    { label: 'Journals', sectionId: 'journals', showInNavbar: false, isNew: false, order: 6, isCustom: false, firestoreCollection: 'research_papers', fields: [] },
+    { label: 'Books', sectionId: 'books', showInNavbar: false, isNew: false, order: 7, isCustom: false, firestoreCollection: 'books', fields: [] },
+    { label: 'Conferences', sectionId: 'conferences', showInNavbar: false, isNew: false, order: 8, isCustom: false, firestoreCollection: 'conferences', fields: [] },
+    { label: 'Patents', sectionId: 'patents', showInNavbar: false, isNew: false, order: 9, isCustom: false, firestoreCollection: 'patents', fields: [] },
+    { label: 'Projects', sectionId: 'projects-tab', showInNavbar: false, isNew: false, order: 10, isCustom: false, firestoreCollection: 'projects', fields: [] },
+    { label: 'Workshops', sectionId: 'workshops', showInNavbar: false, isNew: false, order: 11, isCustom: false, firestoreCollection: 'workshops', fields: [] },
+    { label: 'Awards', sectionId: 'awards', showInNavbar: false, isNew: false, order: 12, isCustom: false, firestoreCollection: 'awards', fields: [] },
+    { label: 'credits', sectionId: 'credits', showInNavbar: false, isNew: false, order: 13, isCustom: false, firestoreCollection: '', fields: [] },
+    { label: 'Academics', sectionId: 'academics', showInNavbar: false, isNew: false, order: 14, isCustom: false, firestoreCollection: '', fields: [] },
 ];
 
 export default function SectionsManagement() {
     const [sections, setSections] = useState<NavSection[]>([]);
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
+    const [editingSection, setEditingSection] = useState<NavSection | null>(null);
     const [newSection, setNewSection] = useState({ label: '', sectionId: '', showInNavbar: false, isNew: true });
-    const [newFields, setNewFields] = useState<{ name: string; label: string; type: string }[]>([
+    const [newFields, setNewFields] = useState<{ name: string; label: string; type: string; defaultValue?: string }[]>([
         { name: 'title', label: 'Title', type: 'text' },
         { name: 'description', label: 'Description', type: 'textarea' },
     ]);
@@ -94,7 +103,7 @@ export default function SectionsManagement() {
     };
 
     const handleResetSections = async () => {
-        if (!confirm('This will remove ALL duplicates and re-seed the 8 default sections. Custom sections will be preserved. Continue?')) return;
+        if (!confirm('This will remove ALL duplicates and re-seed the default sections. Custom sections will be preserved. Continue?')) return;
         setLoading(true);
         try {
             const colRef = collection(db, 'navbar_sections');
@@ -102,7 +111,6 @@ export default function SectionsManagement() {
             
             // Separate custom from built-in, and deduplicate built-in by sectionId
             const customSections: any[] = [];
-            const builtInSeen = new Set<string>();
             const toDelete: string[] = [];
 
             for (const d of snap.docs) {
@@ -110,16 +118,11 @@ export default function SectionsManagement() {
                 if (data.isCustom) {
                     customSections.push({ id: d.id, ...data });
                 } else {
-                    if (builtInSeen.has(data.sectionId)) {
-                        toDelete.push(d.id); // duplicate
-                    } else {
-                        builtInSeen.add(data.sectionId);
-                        toDelete.push(d.id); // will re-seed cleanly
-                    }
+                    toDelete.push(d.id); 
                 }
             }
 
-            // Delete all built-in (including duplicates)
+            // Delete all built-in
             for (const id of toDelete) {
                 await deleteDoc(doc(db, 'navbar_sections', id));
             }
@@ -130,7 +133,7 @@ export default function SectionsManagement() {
             }
 
             await loadSections();
-            alert('Sections reset successfully! Duplicates removed.');
+            alert('Sections reset successfully!');
         } catch (err) {
             console.error('Reset failed:', err);
             alert('Error resetting sections.');
@@ -138,40 +141,59 @@ export default function SectionsManagement() {
         }
     };
 
+    const handleEditSection = (section: NavSection) => {
+        setEditingSection(section);
+        setNewSection({ 
+            label: section.label, 
+            sectionId: section.sectionId, 
+            showInNavbar: section.showInNavbar, 
+            isNew: section.isNew 
+        });
+        setNewFields(section.fields && section.fields.length > 0 ? [...section.fields] : [
+            { name: 'title', label: 'Title', type: 'text' },
+            { name: 'description', label: 'Description', type: 'textarea' },
+        ]);
+        setShowAddForm(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     const handleAddSection = async () => {
         if (!newSection.label.trim() || !newSection.sectionId.trim()) {
             alert('Please fill in the section name and ID.');
             return;
         }
-        // Check if adding to navbar would exceed limit
-        const willBeInNavbar = newSection.showInNavbar;
-        if (willBeInNavbar && navbarFull) {
-            alert(`Navbar already has ${MAX_NAVBAR_SECTIONS} sections. The new section will be added to the menu only. Move a section out of the navbar first to make room.`);
-            setNewSection({ ...newSection, showInNavbar: false });
-            return;
-        }
+        
         setSaving(true);
         try {
             const collectionName = newSection.sectionId.toLowerCase().replace(/\s+/g, '_') + '_items';
-            const maxOrder = sections.length > 0 ? Math.max(...sections.map(s => s.order)) : -1;
-            const docData = {
+            const validFields = newFields.filter(f => f.name.trim() && f.label.trim());
+            
+            const docData: any = {
                 label: newSection.label.trim(),
                 sectionId: newSection.sectionId.toLowerCase().replace(/\s+/g, '-'),
                 showInNavbar: newSection.showInNavbar,
                 isNew: newSection.isNew,
-                order: maxOrder + 1,
                 isCustom: true,
-                firestoreCollection: collectionName,
-                fields: newFields.filter(f => f.name.trim() && f.label.trim()),
+                fields: validFields,
             };
-            await addDoc(collection(db, 'navbar_sections'), docData);
+
+            if (editingSection) {
+                await updateDoc(doc(db, 'navbar_sections', editingSection.id), docData);
+            } else {
+                const maxOrder = sections.length > 0 ? Math.max(...sections.map(s => s.order)) : -1;
+                docData.order = maxOrder + 1;
+                docData.firestoreCollection = collectionName;
+                await addDoc(collection(db, 'navbar_sections'), docData);
+            }
+
             setShowAddForm(false);
+            setEditingSection(null);
             setNewSection({ label: '', sectionId: '', showInNavbar: false, isNew: true });
             setNewFields([{ name: 'title', label: 'Title', type: 'text' }, { name: 'description', label: 'Description', type: 'textarea' }]);
             await loadSections();
         } catch (err) {
-            console.error('Failed to add section:', err);
-            alert('Error adding section.');
+            console.error('Failed to save section:', err);
+            alert('Error saving section.');
         } finally {
             setSaving(false);
         }
@@ -229,21 +251,29 @@ export default function SectionsManagement() {
                         Fix Duplicates & Reset
                     </button>
                     <button
-                        onClick={() => setShowAddForm(!showAddForm)}
+                        onClick={() => {
+                            if (showAddForm) {
+                                setShowAddForm(false);
+                                setEditingSection(null);
+                                setNewSection({ label: '', sectionId: '', showInNavbar: false, isNew: true });
+                            } else {
+                                setShowAddForm(true);
+                            }
+                        }}
                         style={{ padding: '10px 20px', background: '#667eea', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, fontSize: '14px' }}
                     >
-                        <i className="fa-solid fa-plus" style={{ marginRight: '6px' }}></i>
+                        <i className={`fa-solid fa-${showAddForm ? 'times' : 'plus'}`} style={{ marginRight: '6px' }}></i>
                         {showAddForm ? 'Cancel' : 'Add Custom Section'}
                     </button>
                 </div>
             </div>
 
-            {/* Add Section Form */}
+            {/* Add/Edit Section Form */}
             {showAddForm && (
                 <div className="admin-card" style={{ marginBottom: '24px', border: '2px solid #667eea' }}>
                     <h3 style={{ margin: '0 0 20px', color: '#1a1a2e', fontSize: '18px' }}>
-                        <i className="fa-solid fa-plus-circle" style={{ marginRight: '8px', color: '#667eea' }}></i>
-                        New Custom Section
+                        <i className={`fa-solid fa-${editingSection ? 'pen' : 'plus-circle'}`} style={{ marginRight: '8px', color: '#667eea' }}></i>
+                        {editingSection ? `Edit Section: ${editingSection.label}` : 'New Custom Section'}
                     </h3>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
                         <div>
@@ -251,19 +281,20 @@ export default function SectionsManagement() {
                             <input
                                 type="text"
                                 value={newSection.label}
-                                onChange={(e) => setNewSection({ ...newSection, label: e.target.value, sectionId: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
+                                onChange={(e) => setNewSection({ ...newSection, label: e.target.value })}
                                 placeholder="e.g. Credits"
                                 style={{ width: '100%', padding: '10px 14px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px' }}
                             />
                         </div>
                         <div>
-                            <label style={{ display: 'block', fontWeight: 600, marginBottom: '6px', color: '#333', fontSize: '14px' }}>Section ID (auto-generated)</label>
+                            <label style={{ display: 'block', fontWeight: 600, marginBottom: '6px', color: '#333', fontSize: '14px' }}>Section ID</label>
                             <input
                                 type="text"
                                 value={newSection.sectionId}
                                 onChange={(e) => setNewSection({ ...newSection, sectionId: e.target.value })}
                                 placeholder="e.g. credits"
-                                style={{ width: '100%', padding: '10px 14px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', background: '#f7f7f7' }}
+                                disabled={!!(editingSection && !editingSection.isCustom)}
+                                style={{ width: '100%', padding: '10px 14px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', background: (editingSection && !editingSection.isCustom) ? '#f7f7f7' : '#fff' }}
                             />
                         </div>
                     </div>
@@ -273,9 +304,9 @@ export default function SectionsManagement() {
                                 type="checkbox"
                                 checked={newSection.showInNavbar}
                                 onChange={(e) => setNewSection({ ...newSection, showInNavbar: e.target.checked })}
-                                disabled={navbarFull && !newSection.showInNavbar}
+                                disabled={!!(navbarFull && !newSection.showInNavbar && (!editingSection || !editingSection.showInNavbar))}
                             />
-                            Show in Navbar {navbarFull ? `(full — ${MAX_NAVBAR_SECTIONS}/${MAX_NAVBAR_SECTIONS})` : `(${navbarSections.length}/${MAX_NAVBAR_SECTIONS})`}
+                            Show in Navbar
                         </label>
                         <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '14px' }}>
                             <input type="checkbox" checked={newSection.isNew} onChange={(e) => setNewSection({ ...newSection, isNew: e.target.checked })} />
@@ -284,50 +315,69 @@ export default function SectionsManagement() {
                     </div>
 
                     <h4 style={{ margin: '0 0 12px', color: '#1a1a2e', fontSize: '16px' }}>Content Fields</h4>
-                    <p style={{ color: '#888', fontSize: '13px', margin: '0 0 12px' }}>Define the input fields for content items in this section.</p>
                     {newFields.map((field, idx) => (
-                        <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto auto', gap: '10px', marginBottom: '10px', alignItems: 'center' }}>
-                            <input
-                                type="text"
-                                value={field.label}
-                                onChange={(e) => updateField(idx, 'label', e.target.value)}
-                                placeholder="Field Label (e.g. Title)"
-                                style={{ padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '13px' }}
-                            />
-                            <input
-                                type="text"
-                                value={field.name}
-                                onChange={(e) => updateField(idx, 'name', e.target.value)}
-                                placeholder="Field Key (e.g. title)"
-                                style={{ padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '13px' }}
-                            />
-                            <select
-                                value={field.type}
-                                onChange={(e) => updateField(idx, 'type', e.target.value)}
-                                style={{ padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '13px' }}
-                            >
-                                <option value="text">Text</option>
-                                <option value="textarea">Textarea</option>
-                                <option value="number">Number</option>
-                                <option value="url">URL</option>
-                                <option value="image">Image Upload</option>
-                            </select>
-                            <button onClick={() => removeField(idx)} style={{ background: 'transparent', border: 'none', color: '#e53e3e', cursor: 'pointer', fontSize: '16px' }}>
-                                <i className="fa-solid fa-trash"></i>
-                            </button>
+                        <div key={idx} style={{ marginBottom: '16px', padding: '16px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto auto', gap: '10px', marginBottom: '10px', alignItems: 'center' }}>
+                                <input
+                                    type="text"
+                                    value={field.label}
+                                    onChange={(e) => updateField(idx, 'label', e.target.value)}
+                                    placeholder="Field Label (e.g. Title)"
+                                    style={{ padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '13px' }}
+                                />
+                                <input
+                                    type="text"
+                                    value={field.name}
+                                    onChange={(e) => updateField(idx, 'name', e.target.value)}
+                                    placeholder="Field Key (e.g. title)"
+                                    style={{ padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '13px' }}
+                                />
+                                <select
+                                    value={field.type}
+                                    onChange={(e) => updateField(idx, 'type', e.target.value)}
+                                    style={{ padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '13px' }}
+                                >
+                                    <option value="text">Text</option>
+                                    <option value="textarea">Textarea</option>
+                                    <option value="number">Number</option>
+                                    <option value="url">URL</option>
+                                    <option value="image">Image Upload</option>
+                                </select>
+                                <button onClick={() => removeField(idx)} style={{ background: 'transparent', border: 'none', color: '#e53e3e', cursor: 'pointer', fontSize: '16px' }}>
+                                    <i className="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                            
+                            {field.type === 'image' && (
+                                <div style={{ marginTop: '12px', padding: '12px', background: '#fff', borderRadius: '8px', border: '1px dashed #cbd5e1' }}>
+                                    <p style={{ margin: '0 0 8px', fontSize: '12px', fontWeight: 600, color: '#64748b' }}>Set Default Image (Optional)</p>
+                                    <ImageUploader 
+                                        currentUrl={field.defaultValue || ''} 
+                                        onUrlChange={(url) => updateField(idx, 'defaultValue', url)} 
+                                        storagePath="images/section_defaults"
+                                        label="Uploader Preview" 
+                                    />
+                                </div>
+                            )}
                         </div>
                     ))}
                     <button onClick={addField} style={{ background: 'transparent', border: '1px dashed #667eea', color: '#667eea', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px', marginBottom: '20px' }}>
                         <i className="fa-solid fa-plus" style={{ marginRight: '4px' }}></i> Add Field
                     </button>
 
-                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                        <button
+                            onClick={() => { setShowAddForm(false); setEditingSection(null); }}
+                            style={{ padding: '10px 24px', background: '#f5f5f5', color: '#333', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, fontSize: '14px' }}
+                        >
+                            Cancel
+                        </button>
                         <button
                             onClick={handleAddSection}
                             disabled={saving}
                             style={{ padding: '10px 24px', background: '#667eea', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, fontSize: '14px' }}
                         >
-                            {saving ? 'Saving...' : 'Create Section'}
+                            {saving ? 'Saving...' : editingSection ? 'Update Section' : 'Create Section'}
                         </button>
                     </div>
                 </div>
@@ -362,16 +412,14 @@ export default function SectionsManagement() {
                                 title="Display order"
                             />
                             <button
-                                onClick={() => toggleField(section.id, 'isNew', section.isNew)}
-                                style={{ padding: '4px 10px', background: section.isNew ? '#e6000015' : '#f7f7f7', color: section.isNew ? '#e60000' : '#888', border: '1px solid ' + (section.isNew ? '#e60000' : '#ddd'), borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}
-                                title="Toggle NEW badge"
+                                onClick={() => handleEditSection(section)}
+                                style={{ padding: '4px 10px', background: '#f0f4f8', color: '#4a5568', border: '1px solid #cbd5e0', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}
                             >
-                                NEW
+                                <i className="fa-solid fa-pen" style={{ marginRight: '4px' }}></i> Edit
                             </button>
                             <button
                                 onClick={() => toggleField(section.id, 'showInNavbar', section.showInNavbar)}
                                 style={{ padding: '4px 10px', background: '#fff3e0', color: '#e65100', border: '1px solid #ffcc02', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}
-                                title="Move to menu only"
                             >
                                 <i className="fa-solid fa-arrow-down" style={{ marginRight: '4px' }}></i> To Menu
                             </button>
@@ -418,6 +466,12 @@ export default function SectionsManagement() {
                                 style={{ width: '50px', padding: '4px 8px', border: '1px solid #ddd', borderRadius: '4px', textAlign: 'center', fontSize: '13px' }}
                                 title="Display order"
                             />
+                            <button
+                                onClick={() => handleEditSection(section)}
+                                style={{ padding: '4px 10px', background: '#f0f4f8', color: '#4a5568', border: '1px solid #cbd5e0', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}
+                            >
+                                <i className="fa-solid fa-pen" style={{ marginRight: '4px' }}></i> Edit
+                            </button>
                             <button
                                 onClick={() => toggleField(section.id, 'showInNavbar', section.showInNavbar)}
                                 style={{
