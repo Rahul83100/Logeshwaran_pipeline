@@ -135,9 +135,9 @@ export default function AccessRequestForm() {
           type="text"
           required
           value={formData.name}
-          readOnly
+          onChange={handleChange}
           className="rbac-input"
-          style={{ opacity: 0.6, cursor: 'not-allowed' }}
+          disabled={status === 'submitting'}
         />
       </div>
 
@@ -151,9 +151,9 @@ export default function AccessRequestForm() {
           type="email"
           required
           value={formData.email}
-          readOnly
+          onChange={handleChange}
           className="rbac-input"
-          style={{ opacity: 0.6, cursor: 'not-allowed' }}
+          disabled={status === 'submitting'}
         />
       </div>
 
