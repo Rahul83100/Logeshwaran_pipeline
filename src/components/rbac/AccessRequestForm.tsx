@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/auth/AuthProvider'
+import { db } from '@/lib/firebase'
+import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore'
 import Link from 'next/link'
 
 export default function AccessRequestForm() {
@@ -41,23 +43,72 @@ export default function AccessRequestForm() {
     setErrorMessage('')
 
     try {
-      const res = await fetch('/api/request-access', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, uid: user?.uid }),
+      // Step 1: Check for existing requests (client-side, uses user's auth)
+      try {
+        const q = query(
+          collection(db, 'access_requests'),
+          where('requester_email', '==', formData.email),
+          where('status', 'in', ['pending', 'approved'])
+        )
+        const existingReqs = await getDocs(q)
+
+        if (!existingReqs.empty) {
+          const existing = existingReqs.docs[0].data()
+          if (existing.status === 'approved') {
+            setStatus('error')
+            setErrorMessage('Your account already has full private access! Simply log in to view all private research papers.')
+            return
+          } else {
+            setStatus('error')
+            setErrorMessage('You already have a pending access request. Please wait for the admin to review it.')
+            return
+          }
+        }
+      } catch (readErr) {
+        // If read fails (permissions), skip duplicate check and proceed
+        console.warn('Duplicate check skipped:', readErr)
+      }
+
+      // Step 2: Write access request directly to Firestore (client-side, user is authenticated)
+      const docRef = await addDoc(collection(db, 'access_requests'), {
+        uid: user?.uid || null,
+        requester_name: formData.name,
+        requester_email: formData.email,
+        institution: formData.institution || '',
+        reason: formData.reason,
+        status: 'pending',
+        created_at: serverTimestamp(),
+        approved_at: null,
       })
 
-      const data = await res.json()
-
-      if (res.ok && data.success) {
-        setStatus('success')
-      } else {
-        setStatus('error')
-        setErrorMessage(data.error || 'Something went wrong. Please try again.')
+      // Step 3: Send notification email via API route (server-side for SendGrid secret)
+      try {
+        await fetch('/api/request-access/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            institution: formData.institution,
+            reason: formData.reason,
+            requestId: docRef.id,
+          }),
+        })
+      } catch {
+        // Email notification failure is non-critical
+        console.warn('Email notification failed, but request was saved.')
       }
-    } catch {
+
+      setStatus('success')
+    } catch (err) {
+      console.error('Error submitting access request:', err)
       setStatus('error')
-      setErrorMessage('Network error. Please check your connection and try again.')
+      const errorMsg = err instanceof Error ? err.message : 'Something went wrong'
+      if (errorMsg.includes('permission') || errorMsg.includes('PERMISSION_DENIED')) {
+        setErrorMessage('Permission denied. Please make sure you are logged in and try again.')
+      } else {
+        setErrorMessage(errorMsg)
+      }
     }
   }
 
@@ -116,7 +167,7 @@ export default function AccessRequestForm() {
     )
   }
 
-  // LOGGED IN — Show form with Name/Email locked, only Institution & Reason editable
+  // LOGGED IN — Show form with Name/Email editable, Institution & Reason editable
   return (
     <form onSubmit={handleSubmit} className="rbac-form">
       <div style={{ background: 'rgba(108, 92, 231, 0.1)', border: '1px solid rgba(108, 92, 231, 0.3)', borderRadius: '8px', padding: '15px', marginBottom: '20px' }}>
