@@ -16,6 +16,7 @@ function LoginContent() {
   const searchParams = useSearchParams()
   // Generic redirect query parameter 
   const redirectParams = searchParams?.get('redirect')
+  const signupHref = redirectParams ? `/signup?redirect=${redirectParams}` : '/signup';
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -23,7 +24,7 @@ function LoginContent() {
     setError('')
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      router.push(redirectParams || '/request-access')
+      router.push(redirectParams || '/')
     } catch (err: any) {
       setError('Invalid email or password.')
     } finally {
@@ -34,6 +35,12 @@ function LoginContent() {
   return (
     <div className="rbac-page" style={{ paddingTop: '100px' }}>
       <div className="rbac-container" style={{ maxWidth: '450px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '20px', position: 'relative', zIndex: 100 }}>
+          <a href="/" style={{ color: '#9393a5', fontSize: '14px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer', position: 'relative', zIndex: 100, pointerEvents: 'auto' }}>
+            <i className="fa-solid fa-arrow-left" style={{ fontSize: '12px' }}></i>
+            Back to Portfolio
+          </a>
+        </div>
         <h2 className="rbac-page-title" style={{ textAlign: 'center' }}>Log In</h2>
         <p style={{ textAlign: 'center', color: '#9393a5', marginBottom: '30px' }}>Log in to view your private access or request new access.</p>
         
@@ -52,7 +59,7 @@ function LoginContent() {
           </button>
           
           <div className="rbac-form-footer" style={{ marginTop: '20px', textAlign: 'center' }}>
-            <p>Don't have an account? <Link href="/signup" className="rbac-link">Sign Up</Link></p>
+            <p>Don't have an account? <Link href={signupHref} className="rbac-link">Sign Up</Link></p>
             <div style={{ marginTop: '25px', paddingTop: '20px', borderTop: '1px solid #2a2a3a' }}>
               <Link href="/admin/login" style={{ fontSize: '13px', color: '#9393a5', textDecoration: 'none' }}>
                 <i className="fa-solid fa-lock" style={{ marginRight: '6px' }}></i>

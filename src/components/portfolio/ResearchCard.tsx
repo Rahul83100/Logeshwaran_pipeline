@@ -56,7 +56,7 @@ export default function ResearchCard({ paper }: ResearchCardProps) {
             : paper.abstract}
         </p>
         {isLocked ? (
-          <Link href="/signup" className="request-access-btn" style={{ marginTop: "10px", display: "inline-flex" }}>
+          <Link href="/signup?redirect=/request-access" className="request-access-btn" style={{ marginTop: "10px", display: "inline-flex" }}>
             <i className="fa-solid fa-lock"></i> Sign Up to Request Access
           </Link>
         ) : (
