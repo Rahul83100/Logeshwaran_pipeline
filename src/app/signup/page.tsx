@@ -54,15 +54,15 @@ function SignupContent() {
         <form onSubmit={handleSignup} className="rbac-form">
           <div className="rbac-form-group">
             <label className="rbac-label">Full Name</label>
-            <input required type="text" value={name} onChange={e => setName(e.target.value)} className="rbac-input rbac-code-input" style={{ textAlign: 'left', letterSpacing: 'normal' }} />
+            <input required type="text" value={name} onChange={e => setName(e.target.value)} className="rbac-input" style={{ textAlign: 'left', letterSpacing: 'normal' }} />
           </div>
           <div className="rbac-form-group">
             <label className="rbac-label">Email Address</label>
-            <input required type="email" value={email} onChange={e => setEmail(e.target.value)} className="rbac-input rbac-code-input" style={{ textAlign: 'left', letterSpacing: 'normal' }} />
+            <input required type="email" value={email} onChange={e => setEmail(e.target.value)} className="rbac-input" style={{ textAlign: 'left', letterSpacing: 'normal' }} />
           </div>
           <div className="rbac-form-group">
             <label className="rbac-label">Password</label>
-            <input required type="password" value={password} onChange={e => setPassword(e.target.value)} className="rbac-input rbac-code-input" style={{ textAlign: 'left', letterSpacing: 'normal' }} />
+            <input required type="password" value={password} onChange={e => setPassword(e.target.value)} className="rbac-input" style={{ textAlign: 'left', letterSpacing: 'normal' }} />
           </div>
           {error && <div className="rbac-error-message" style={{ margin: '15px 0' }}>{error}</div>}
           <button disabled={loading} type="submit" className="tmp-btn rbac-btn rbac-btn-submit" style={{ width: '100%' }}>
