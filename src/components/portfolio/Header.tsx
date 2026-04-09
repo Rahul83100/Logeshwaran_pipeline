@@ -117,10 +117,10 @@ export default function Header() {
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <div className="header-content" style={{ marginTop: '-25px' }}>
+              <div className="header-content">
                 <div className="logo">
                   <Link href="/" style={{ textDecoration: 'none', border: 'none', outline: 'none', display: 'inline-block' }}>
-                    <img src="/assets/images/logo/main-logo.png" alt="Logo" style={{ maxHeight: 'clamp(120px, 15vw + 60px, 200px)', objectFit: 'contain', padding: '10px 0', margin: '0', border: 'none', mixBlendMode: 'multiply' }} />
+                    <img src="/assets/images/logo/Logeshwaran-logo.png" alt="Logo" style={{ maxHeight: '100px', objectFit: 'contain', padding: '5px 0', margin: '0', border: 'none', mixBlendMode: 'multiply' }} />
                   </Link>
                 </div>
                 <nav className="tmp-mainmenu-nav d-none d-xl-block">
@@ -205,7 +205,7 @@ export default function Header() {
                 <div className="header-top" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
                   <div className="logo">
                     <Link href="/" className="logo-area" onClick={() => setMobileMenuOpen(false)} style={{ textDecoration: 'none', border: 'none', outline: 'none' }}>
-                      <img src="/assets/images/logo/main-logo.png" alt="Logo" style={{ maxHeight: '80px', objectFit: 'contain', border: 'none', margin: '-5px 0', mixBlendMode: 'multiply' }} />
+                      <img src="/assets/images/logo/Logeshwaran-logo.png" alt="Logo" style={{ maxHeight: '80px', objectFit: 'contain', border: 'none', margin: '0', mixBlendMode: 'multiply' }} />
                     </Link>
                   </div>
                   <div className="close-menu">
